@@ -1,0 +1,30 @@
+// Colors
+$white:                         #ffffff;
+
+$greyLight:                     #eef2ff;
+$greyDark:                      #111a21;
+
+$purpleLight:                   #b283ba;
+$purpleMid:                     #7f52a0;
+
+$blueDarkest:                   #1e2433;
+$blueDark:                      #343946;
+
+$yellowMid:                     #ff9017;
+
+$primaryColor:                  $purpleMid;
+$bgColor:                       $greyLight;
+$darkBgColor:                   $blueDarkest;
+
+// Body
+$body-bg: $bgColor;
+$body-color: $blueDarkest;
+
+// Typography
+$headings-font-family: "Montserrat", "Georgia", sans-serif;
+$font-family-sans-serif: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+//Bootstrap Colors
+$primary: $purpleMid;
+$light: $greyLight;
+$dark: $darkBgColor;

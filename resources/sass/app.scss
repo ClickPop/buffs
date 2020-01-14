@@ -1,0 +1,53 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+h1, .h1 {
+    letter-spacing: 0.1rem;
+    font-weight: 900;
+}
+h4, .h4 {
+    font-weight: 400;
+}
+
+.bg-dark {
+    color: $light;
+}
+
+#svg-logo {
+    width: 135px;
+
+    .text {
+        fill: #EEF2FF;
+    }
+    .stopper.cork {
+        &.cork {
+            fill: #D1A87C
+        }
+    }
+    .bottle {
+        .star {
+            fill: #FF9017;
+        }
+        .glass {
+            fill: #EEF2FF;
+        }
+        .fluid {
+            &.front {
+                fill: #7F52A0;
+            }
+            &.back {
+                fill: #B283BA
+            }
+        }
+    }
+}
+
+#svg-mage {
+    max-width: 600px;
+}
