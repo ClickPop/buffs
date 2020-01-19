@@ -12,9 +12,24 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
-Auth::routes();
+Auth::routes([
+    'register' => false,
+    'reset' => false,
+    'verify' => false,
+    'confirm' => false
+]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+/** START: OAuth Routes **/
+Route::prefix('oauth')->group(function () {
+    Route::get('{provider}/login', 'Auth\LoginController@redirectToProvider')
+        ->where('provider', 'twitch|wow')->name('oauth.login');
+    Route::get('{provider}/callback', 'Auth\LoginController@handleProviderCallback')
+        ->where('provider', 'twitch|wow')->name('oauth.callback');
+});
+/** END: OAuth Routes */
+
+
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard');

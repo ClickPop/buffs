@@ -9,9 +9,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
@@ -23,10 +20,4 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body class="bg-dark">
-    @include('dropins.components.header.no-nav')
-    <main role="main">
-        @yield('content')
-    </main>
-</body>
-</html>
+<body class="{{$bodyClass}}">

@@ -31,9 +31,9 @@ return [
     ],
 
     'twitch' => [
-        'client_id' => env('TWITCH_KEY'),
-        'client_secret' => env('TWITCH_SECRET'),
-        'redirect' => env('TWITCH_REDIRECT_URI')
+        'client_id' => env('OAUTH_TWITCH_CLIENT_ID'),
+        'client_secret' => env('OAUTH_TWITCH_CLIENT_SECRET'),
+        'redirect' => env('OAUTH_TWITCH_CALLBACK')
     ],
 
 ];

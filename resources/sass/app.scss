@@ -7,6 +7,7 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+html {overflow: auto; min-height: 100vh; }
 h1, .h1 {
     letter-spacing: 0.1rem;
     font-weight: 900;
@@ -19,35 +20,52 @@ h4, .h4 {
     color: $light;
 }
 
-#svg-logo {
-    width: 135px;
+body.bg-dark {
+    background-image: linear-gradient(33deg, $blueDarkest, $blueDarker);
+}
 
-    .text {
-        fill: #EEF2FF;
-    }
-    .stopper.cork {
-        &.cork {
-            fill: #D1A87C
-        }
-    }
-    .bottle {
-        .star {
-            fill: #FF9017;
-        }
-        .glass {
-            fill: #EEF2FF;
-        }
-        .fluid {
-            &.front {
-                fill: #7F52A0;
-            }
-            &.back {
-                fill: #B283BA
-            }
+.vertically-center {
+    min-height: 100vh;
+    align-items: center;
+}
+.logo {
+    width: 135px;
+}
+.mage {
+    max-width: 600px;
+}
+
+@include media-breakpoint-down(md) {
+    .wizard-after {
+        padding-bottom: 300px;
+        overflow: hidden;
+        align-items: start;
+        position: relative;
+
+        &::after {
+            content: '';
+            width: 300px; height: 320px;
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-image: url('/images/wizard.png');
+            background-size: 300px auto;
+            background-repeat: no-repeat;
+            background-position: center top;
         }
     }
 }
 
-#svg-mage {
-    max-width: 600px;
+.btn {
+    &.btn-brand {
+        background-color: $purpleMid;
+        color: $light;
+        border-radius: 100px;
+
+        &:hover {
+            background-color: $purpleDark;
+        }
+
+    }
 }
