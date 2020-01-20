@@ -180,6 +180,11 @@ return [
          */
         SocialiteProviders\Manager\ServiceProvider::class,
 
+        /*
+         * Helpers
+         */
+        App\Providers\HelperServiceProvider::class,
+
     ],
 
     /*

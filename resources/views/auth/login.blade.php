@@ -12,7 +12,13 @@
 
             <div class="login-box">
                 <div class="social-login">
-                    <a href="{{ route('oauth.login', ['provider' => 'twitch']) }}" class="btn btn-brand btn-round">Login with Twitch</a>
+                    <a data-href="{{ route('oauth.login', ['provider' => 'twitch']) }}" data-remember-href="{{ route('oauth.login', ['provider' => 'twitch']) }}?remember=true" href="{{ route('oauth.login', ['provider' => 'twitch']) }}" class="btn btn-brand btn-round oauth-button">Login with Twitch</a>
+                    <div class="mt-2 form-group form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input remember-me">
+                            Keep me logged in!
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>

@@ -12,11 +12,14 @@ class SocialAccount extends Model
      * @var array
      */
     protected $fillable = [
-        'provider_user_id', 'provider',
+        'platform_user_id', 'platform_id',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo('App\User');
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function platform() {
+        return $this->belongsTo(Platform::class);
     }
 }

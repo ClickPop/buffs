@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'username', 'name', 'email', 'password',
     ];
 
     /**
@@ -39,7 +39,7 @@ class User extends Authenticatable
     ];
 
     public function oauths() {
-        return $this->hasMany('App\SocialAccount');
+        return $this->hasMany(SocialAccount::class);
     }
 
     public function roles() {
