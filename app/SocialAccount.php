@@ -12,7 +12,7 @@ class SocialAccount extends Model
      * @var array
      */
     protected $fillable = [
-        'platform_user_id', 'platform_id',
+        'platform_user_id', 'platform_id', 'token', 'tokenSecret', 'refreshToken', 'expires'
     ];
 
     public function user() {
