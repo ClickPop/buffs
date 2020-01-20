@@ -113,6 +113,11 @@ class LoginController extends Controller
                 } else {
                     return false;
                 }
+            } else {
+                if ($user->email === $user->username) {
+                    $user->username = getUserNameFromSocialAccount($platformUser, $platform);
+                    $user->save();
+                }
             }
 
             //Create social account
