@@ -18,6 +18,10 @@ class CreateSocialAccountsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('platform_id')->unsigned();
             $table->string('platform_user_id');
+            $table->string('token');
+            $table->string('tokenSecret');
+            $table->string('refreshToken');
+            $table->timestamp('expires');
             $table->timestamps();
 
 	        $table->foreign('user_id')
