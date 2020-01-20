@@ -37078,6 +37078,22 @@ module.exports = function(module) {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+$(document).ready(function () {
+  $('input.remember-me').on('change', function () {
+    if ($(this).is(':checked')) {
+      $('a.oauth-button').each(function () {
+        var $link = $(this);
+        $link.attr('href', $link.data('remember-href'));
+      });
+    } else {
+      $('a.oauth-button').each(function () {
+        var $link = $(this);
+        $link.attr('href', $link.data('href'));
+      });
+    }
+  });
+});
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":

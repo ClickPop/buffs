@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Socialite;
-use App\SocialAccount;
-use App\User;
-use Auth;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+
+use Session, Auth, Socialite;
+use App\SocialAccount, App\User, App\Platform;
 
 
 class LoginController extends Controller
@@ -49,8 +49,9 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function redirectToProvider($provider)
-    {
+    public function redirectToProvider(Request $request, $provider) {
+        $remember = ($request->query('remember') === 'true') ? true : false;
+        Session::put('login-remember', $remember);
         return Socialite::driver($provider)->redirect();
     }
 
@@ -59,11 +60,13 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleProviderCallback($provider)
+    public function handleProviderCallback($platform_driver)
     {
-        $user = $this->createOrGetUser(Socialite::driver($provider)->user(), $provider);
+        $platform = Platform::where('socialite_driver', $platform_driver)->first();
+        $user = $this->createOrGetUser(Socialite::driver($platform->socialite_driver)->user(), $platform);
+        $remember = Session::get('login-remember');
 
-        Auth::login($user);
+        Auth::login($user, $remember);
 
         return redirect(RouteServiceProvider::HOME);
     }
@@ -73,33 +76,39 @@ class LoginController extends Controller
      *
      * @return Object $user
      */
-    private function createOrGetUser($providerUser, $provider)
+    private function createOrGetUser($platformUser, Platform $platform)
     {
-        $account = SocialAccount::where('provider', $provider)
-            ->where('provider_user_id', $providerUser->getId())
+        $account = SocialAccount::where('platform_id', $platform->id)
+            ->where('platform_user_id', $platformUser->getId())
             ->first();
 
         if ($account) {
             //Return account if found
-            return $account->user;
+            $user = $account->user;
+            if ($user->email == $user->username) {
+                $user->username = getUserNameFromSocialAccount($platformUser, $platform);
+                $user->save();
+            }
+            return $user;
         } else {
-
             //Check if user with same email address exist
-            $user = User::where('email', $providerUser->getEmail())->first();
+            $user = User::where('email', $platformUser->getEmail())->first();
 
             //Create user if dont'exist
             if (!$user) {
+                $username = getUserNameFromSocialAccount($platformUser, $platform);
                 $user = User::create([
-                    'email' => $providerUser->getEmail(),
-                    'name' => $providerUser->getName(),
+                    'email' => $platformUser->getEmail(),
+                    'name' => $platformUser->getName(),
+                    'username' => $username,
                     'password' => Str::random(24)
                 ]);
             }
 
             //Create social account
             $user->oauths()->create([
-                'provider_user_id' => $providerUser->getId(),
-                'provider' => $provider
+                'platform_user_id' => $platformUser->getId(),
+                'platform_id' => $platform->id
             ]);
 
             return $user;
