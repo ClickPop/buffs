@@ -91,7 +91,7 @@ class LoginController extends Controller
         if ($account) {
             //Return account if found
             $user = $account->user;
-            if ($platformUser->getEmail() == $user->username) {
+            if ($platformUser->getEmail() === $user->username) {
                 $user->username = getUserNameFromSocialAccount($platformUser, $platform);
                 $user->save();
             }
