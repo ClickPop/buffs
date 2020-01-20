@@ -14,6 +14,9 @@
 Route::get('/', function () {
     return view('index');
 });
+Route::get('sorry', function () {
+    return view('sorry');
+})->name('sorry');
 
 Auth::routes([
     'register' => false,
@@ -30,6 +33,5 @@ Route::prefix('oauth')->group(function () {
         ->where('provider', 'twitch|wow')->name('oauth.callback');
 });
 /** END: OAuth Routes */
-
 
 Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
