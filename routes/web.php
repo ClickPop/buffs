@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
     return view('index');
-});
+})->middleware('guest');
 Route::get('sorry', function () {
     return view('sorry');
 })->name('sorry');
@@ -34,4 +34,7 @@ Route::prefix('oauth')->group(function () {
 });
 /** END: OAuth Routes */
 
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+Route::prefix('app')->group(function() {
+    Route::get('/', 'DashboardController@index')->name('app.dashboard');
+});
+

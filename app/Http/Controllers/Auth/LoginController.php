@@ -51,6 +51,7 @@ class LoginController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function redirectToProvider(Request $request, $provider) {
+        Auth::logout();
         $remember = ($request->query('remember') === 'true') ? true : false;
         Session::put('login-remember', $remember);
         return Socialite::driver($provider)->redirect();

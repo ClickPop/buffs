@@ -18,10 +18,11 @@ h4, .h4 {
 
 .bg-dark {
     color: $light;
-}
-
-body.bg-dark {
     background-image: linear-gradient(33deg, $blueDarkest, $blueDarker);
+}
+.bg-app {
+    color: $blueDarkest;
+    background: $gray-400 linear-gradient(33deg, $gray-400, rgba($purpleLight, 0.5));
 }
 
 .vertically-center {

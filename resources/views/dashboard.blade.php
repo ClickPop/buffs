@@ -3,8 +3,19 @@
 @section('content')
 <div class="container dashboard-wrapper">
     <div class="row">
-        <div class="col">
-            You're logged in...
+        <div class="col-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="my-0">My Platforms</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Twitch
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>

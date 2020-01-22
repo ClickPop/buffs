@@ -1,6 +1,6 @@
-@include('dropins.core.head', ['bodyClass' => 'bg-dark'])
+@include('dropins.core.head', ['bodyClass' => 'bg-app'])
 
-<nav class="navbar navbar-expand-md navbar-dark bg-transparent shadow-sm">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark shadow py-3">
     <div class="container">
         <a href="/"><img class="my-1 logo" src="{{ asset('images/brand/buffs_logo.svg') }}" width="135"></a>
 
@@ -38,7 +38,7 @@
     </div>
 </nav>
 
-<main role="main">
+<main role="main" class="py-3">
     @yield('content')
 </main>
 

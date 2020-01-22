@@ -11375,10 +11375,12 @@ h4,
 
 .bg-dark {
   color: #eef2ff;
+  background-image: linear-gradient(33deg, #0b0d13, #1e2433);
 }
 
-body.bg-dark {
-  background-image: linear-gradient(33deg, #0b0d13, #1e2433);
+.bg-app {
+  color: #0b0d13;
+  background: #ced4da linear-gradient(33deg, #ced4da, rgba(178, 131, 186, 0.5));
 }
 
 .vertically-center {
