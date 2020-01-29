@@ -11397,6 +11397,19 @@ h4,
   max-width: 600px;
 }
 
+.login-cta {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  display: -webkit-box;
+  display: flex;
+}
+
+.login-cta p {
+  margin: 0;
+}
+
 @media (max-width: 991.98px) {
   .wizard-after {
     padding-bottom: 300px;

@@ -4,7 +4,7 @@
 <div class="container home-wrapper">
     <div class="row vertically-center wizard-after">
         <div class="col-12 col-lg-6 my-lg-5 mt-5">
-            <a href="/"><img class="mb-5 logo" src="{{ asset('images/brand/buffs_logo.svg') }}" width="135"></a>
+            @include('dropins.components.logo-link')
 
             <h1 class="mb-4">Beta Access</h1>
 
