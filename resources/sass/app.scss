@@ -36,6 +36,17 @@ h4, .h4 {
     max-width: 600px;
 }
 
+.login-cta {
+    position: absolute;
+    top: 0; right: 0;
+    padding: .5rem;
+    display: flex;
+
+    p {
+        margin: 0;
+    }
+}
+
 @include media-breakpoint-down(md) {
     .wizard-after {
         padding-bottom: 300px;
