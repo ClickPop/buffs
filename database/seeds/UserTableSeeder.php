@@ -18,27 +18,27 @@ class UserTableSeeder extends Seeder
         $role_streamer  = Role::where('name', 'streamer')->first();
 
         $user_sean = new User();
-        $user_sean->name = env('USERS_SEAN_NAME');
-        $user_sean->email = env('USERS_SEAN_EMAIL');
-        $user_sean->username = env('USERS_SEAN_EMAIL');
+        $user_sean->name = "Sean Metzgar";
+        $user_sean->email = "sean.metzgar@gmail.com";
+        $user_sean->username = "sean.metzgar@gmail.com";
         $user_sean->password = Str::random(24);
         $user_sean->save();
         $user_sean->roles()->attach($role_admin);
         $user_sean->roles()->attach($role_streamer);
 
         $user_graham = new User();
-        $user_graham->name = env('USERS_GRAHAM_NAME');
-        $user_graham->email = env('USERS_GRAHAM_EMAIL');
-        $user_graham->username = env('USERS_GRAHAM_USERNAME');
+        $user_graham->name = "Graham Vasquez";
+        $user_graham->email = "rescus1221@gmail.com";
+        $user_graham->username = "rescus1221@gmail.com";
         $user_graham->password = Str::random(24);
         $user_graham->save();
         $user_graham->roles()->attach($role_admin);
         $user_graham->roles()->attach($role_streamer);
 
         $user_chris = new User();
-        $user_chris->name = env('USERS_CHRIS_NAME');
-        $user_chris->email = env('USERS_CHRIS_EMAIL');
-        $user_chris->username = env('USERS_CHRIS_USERNAME');
+        $user_chris->name = "Chris Vasquez";
+        $user_chris->email = "chris.vqz@gmail.com";
+        $user_chris->username = "chris.vqz@gmail.com";
         $user_chris->password = Str::random(24);
         $user_chris->save();
         $user_chris->roles()->attach($role_admin);
