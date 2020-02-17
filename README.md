@@ -13,36 +13,23 @@ You will need to make sure you have the following installed before you even thin
 
 Once you are assured the above are installed, be sure you can access the following via your preferred shell/command prompt: `composer`, `npm`, `git`. If you can execute those commands, you're good for now.
 
-### Install Laravel Valet
+### Install and Setup Homestead
 
-Laravel's valet is amazing, it makes everything sooooooo easy. Unfortunately it only works on macOS. Thankfully there's a windows clone, but it's a big pain in the @$$ to set up. Sorry! :trombone:
+* For Windows, I would use [this tutorial](https://medium.com/@eaimanshoshi/i-am-going-to-write-down-step-by-step-procedure-to-setup-homestead-for-laravel-5-2-17491a423aa "Installing Homestead on Windows 10") from Medium. - *I have just found this one a little easier than the laravel docs because Windows is so weird*
 
-***Below you'll find instructions for setting it up on both windows and mac.***
+* For MacOS or Linux, I would use the [Laravel Docs](https://laravel.com/docs/5.8/homestead#installation-and-setup "macOS and Linux Installation").
 
-#### Install Valet for Windows
+### A quick note for those on Windows
 
-Install the windows clone of [Laravel's Valet](https://laravel.com/docs/6.x/valet). It can be found [here](https://github.com/cretueusebiu/valet-windows). To install it run:
-`composer global require cretueusebiu/valet-windows`.
+You will need to add 3 separate entries to your hosts file. They are:
 
-Once complete, launch your command prompt as an Administrator and run the command `valet install && valet domain test` to finish the setup. If it can't run valet, you may need to add the composer global /bin folder to your PATH variable. It should be located at `C:\Users\<username>\AppData\Roaming\Composer\vendor\bin` (be sure to replace <username> with your Windows username. Once it's complete, close the administrator version of the command prompt.
-    
-Run `valet link && valet secure && valet links` from within the Laravel project directory. Once it's complete you should see a table displaying that the site is currently running at something like: `https://buffs.test`.
+1. buffs.test
+2. oauth.buffs.test
+3. app.buffs.test
 
-#### Install Valet for macOS
+### A note about MySQL
 
-The official [laravel/valet](https://laravel.com/docs/6.x/valet) package only works on macOS. To install it run:
-`composer global require laravel/valet`
-
-Once complete, run the command `valet install && valet domain test` to finish the setup.
-    
-Run `valet link && valet secure && valet links` from within the Laravel project directory. Once it's complete you should see a table displaying that the site is currently running at something like: `https://buffs.test`.
-
-### Create your MySQL Table
-
-Connect to your instance of MySQL with your tool of choice (i.e. MySQL Workbench, Sequel Pro, etc). Once connected, create a database named `buffs_dev` or similar, and be sure to note which username/password has access to it (probably root if you're doing this quickly). **It's important to note, laravel prefers you to have a password set for MySQL.**
-
-> **A Note About MySQL**
-> If you want an easy way to manage MySQL, feel free to install a tool like MAMP/XAMP/WampServer2 and use it to manage MySQL. Keep in mind, you must either disable Apache/NGINX in those tools, or ensure they're not using port 80(HTTP)/443(HTTPS). Valet utilizes standard ports, and will cause problems if another service creates a conflict.
+Be sure to name your database something like **buffs_dev** and reflect that in your `homestead.yaml` file.
 
 ### Update .env File
 
@@ -51,15 +38,10 @@ Download the latest copy of the .env file from the Google Share (or request one 
 ### Install Dependcies
 
 Run the following commands to install & build any dependencies:
-- `composer install` (Installs PHP & Laravel based dependencies)
-- **IF YOU CREATED YOUR OWN .ENV FILE:** `php artisan key:generate` (Generates a new base64 app key, and adds it to your .env file)
-- `php artisan migrate:fresh --seed` (Setup the database tables & seed the initial data)
+- `composer install` (Installs PHP & Laravel based dependencies) *If on Windows, be sure to run this from within your Homestead VM via SSH*
 - `npm install` (Installs Node dependcies like bootstrap, jquery, etc)
 - `npm run dev` (Compiles the most recent JS/SCSS)
 
 ### Test Run
 
-Check it out by visiting the link listed in `valet links` in your browser. Probably something like. `https://buffs.dev`. If everything is running/built correctly you should be in business!
-
-
-
+Check it out by visiting the link listed in your `homestead.yaml` in your browser. Probably something like. `https://buffs.test`. If everything is running/built correctly you should be in business!
