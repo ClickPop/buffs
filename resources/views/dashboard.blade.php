@@ -13,6 +13,14 @@
                         <li class="list-group-item">
                             Twitch
                         </li>
+                        <ul>
+                            <li>
+                            <a href="/twitch/leaderboard/{{ Auth::user()->username }}/settings">Leaderboard Settings</a>
+                            </li>
+                            <li>
+                            <a href="/twitch/leaderboard/{{ Auth::user()->username }}">Leaderboard</a>
+                            </li>
+                        </ul>
                     </ul>
                 </div>
             </div>

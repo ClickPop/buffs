@@ -37,6 +37,16 @@ Route::domain(env('APP_SUBDOMAIN'), 'app.buffs.pro')->group(function() {
     ]);
 
     Route::get('/', 'DashboardController@index')->name('app.dashboard');
+    Route::get('/{provider}/leaderboard/{username}', function () {
+        return view('leaderboard');
+    })->name('app.leaderboard');
+    Route::get('{provider}/leaderboard/{username}/settings', function () {
+        if (Auth::check()) {
+            return view('leaderboardSettings');
+        } else {
+            return redirect('/');
+        }
+    })->name('app.leaderboardSettings');
 });
 
 
