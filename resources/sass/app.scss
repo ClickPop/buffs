@@ -7,13 +7,13 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-html {overflow: auto; min-height: 100vh; }
-h1, .h1 {
-    letter-spacing: 0.1rem;
-    font-weight: 900;
-}
-h4, .h4 {
-    font-weight: 400;
+// Partials
+@import 'video',
+        'type',
+        'buttons';
+
+html {
+    overflow: auto; min-height: 100vh;
 }
 
 .bg-dark {
@@ -25,10 +25,6 @@ h4, .h4 {
     background: $gray-400 linear-gradient(33deg, $gray-400, rgba($purpleLight, 0.5));
 }
 
-.vertically-center {
-    min-height: 100vh;
-    align-items: center;
-}
 .logo {
     width: 135px;
 }
@@ -66,18 +62,5 @@ h4, .h4 {
             background-repeat: no-repeat;
             background-position: center top;
         }
-    }
-}
-
-.btn {
-    &.btn-brand {
-        background-color: $purpleMid;
-        color: $light;
-        border-radius: 100px;
-
-        &:hover {
-            background-color: $purpleDark;
-        }
-
     }
 }
