@@ -38,7 +38,7 @@ Download the latest copy of the .env file from the Google Share (or request one 
 ### Install Dependcies
 
 Run the following commands to install & build any dependencies:
-- `composer install` (Installs PHP & Laravel based dependencies) *If on Windows, be sure to run this from within your Homestead VM via SSH*
+- `composer install` (Installs PHP & Laravel based dependencies) *If on Windows, be sure to run this from within your Homestead VM via SSH* `ssh vagrant@127.0.0.1 -p 2222`
 - `npm install` (Installs Node dependcies like bootstrap, jquery, etc)
 - `npm run dev` (Compiles the most recent JS/SCSS)
 
