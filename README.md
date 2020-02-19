@@ -39,6 +39,8 @@ Download the latest copy of the .env file from the Google Share (or request one 
 
 Run the following commands to install & build any dependencies:
 - `composer install` (Installs PHP & Laravel based dependencies) *If on Windows, be sure to run this from within your Homestead VM via SSH* `ssh vagrant@127.0.0.1 -p 2222`
+- **IF YOU CREATED YOUR OWN .ENV FILE:** `php artisan key:generate` (Generates a new base64 app key, and adds it to your .env file)
+- `php artisan migrate:fresh --seed` (Setup the database tables & seed the initial data)
 - `npm install` (Installs Node dependcies like bootstrap, jquery, etc)
 - `npm run dev` (Compiles the most recent JS/SCSS)
 
