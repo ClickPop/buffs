@@ -1,0 +1,12 @@
+.btn {
+    &.btn-brand {
+        background-color: $purpleMid;
+        color: $light;
+        border-radius: 100px;
+
+        &:hover {
+            background-color: $purpleDark;
+        }
+
+    }
+}
