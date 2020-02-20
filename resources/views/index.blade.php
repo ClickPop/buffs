@@ -1,9 +1,9 @@
 @extends('layouts.static.dark.no-header')
 
 @section('content')
-<div class="container home-wrapper">
-    <div class="row vertically-center wizard-after">
-        <div class="col-12 col-lg-6 my-lg-5 mt-5">
+<div class="container">
+    <div class="row align-items-center my-lg-4">
+        <div class="col-12 col-lg-6 my-lg-5 mt-5 pr-lg-5">
             @include('dropins.components.logo-link')
 
             <h1 class="mb-4">Let the people who love your stream build your stream.</h1>
@@ -16,7 +16,25 @@
             </div>
         </div>
         <div class="col-12 col-lg-6 my-5 text-center d-none d-lg-block">
-            <img class="mb-5 mage" src="{{ asset('images/brand/mage.svg') }}">
+            <img class="mb-5 img-fluid" src="{{ asset('images/brand/wizard.png') }}">
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col">
+            <h1 class="text-center">What we're conjuring.</h1>
+        </div>
+    </div>
+    <div class="row align-items-center my-5">
+        <div class="col-lg-5 offset-lg-1 text-center">
+            <video class="img-fluid video" poster="" autoplay="true" playsinline="true" loop="true" muted="true">
+                <source src="{{ asset('videos/leaderboard-sm.mp4')}}" type="video/mp4">
+            </video>
+        </div>
+        <div class="col-lg-5">
+            <h2>The Referral Leaderboard</h2>
+            <p>
+                Encourage your viewers to share your show by using a leaderboard to award swag, select questions to answer, or just get your audience's competitive juices flowing.
+            </p>
         </div>
     </div>
 </div>
