@@ -16,10 +16,10 @@
             </div>
         </div>
         <div class="col-12 col-lg-6 my-5 text-center d-none d-lg-block">
-            <img class="mb-5 img-fluid" src="{{ asset('images/brand/wizard.png') }}">
+            <img class="img-fluid" src="{{ asset('images/brand/wizard.png') }}">
         </div>
     </div>
-    <div class="row my-4">
+    <div class="row mb-4 mt-5">
         <div class="col">
             <h1 class="text-center">What we're conjuring.</h1>
         </div>
@@ -30,10 +30,21 @@
                 <source src="{{ asset('videos/leaderboard-sm.mp4')}}" type="video/mp4">
             </video>
         </div>
-        <div class="col-lg-5">
-            <h2>The Referral Leaderboard</h2>
+        <div class="col-lg-5 px-5">
+            <h2 class="pt-3">The Referral Leaderboard</h2>
             <p>
                 Encourage your viewers to share your show by using a leaderboard to award swag, select questions to answer, or just get your audience's competitive juices flowing.
+            </p>
+        </div>
+    </div>
+    <div class="row align-items-center my-5 pt-lg-3">
+        <div class="col-lg-5 order-lg-2 text-center">
+            <img src="{{ asset('images/brand/pet.gif')}}" class="img-fluid" />
+        </div>
+        <div class="col-lg-5 offset-lg-1 order-lg-1 px-5">
+            <h2>Coming in the future...</h2>
+            <p>
+                A companion for your stream.
             </p>
         </div>
     </div>
