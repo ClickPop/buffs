@@ -15,7 +15,23 @@ class CreateLeaderboardsTable extends Migration
     {
         Schema::create('leaderboards', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('platform_id')->unsigned()->nullable();
+            $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->string('name');
+            // $table->string('referrer');
+            // $table->string('ip_addr');
+            // $table->string('userAgent');
             $table->timestamps();
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+
+            $table->foreign('platform_id')
+                ->references('id')
+                ->on('platforms')
+                ->onDelete('cascade');
         });
     }
 

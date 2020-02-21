@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Leaderboard;
+use App\Platform;
+use App\User;
 
 class LeaderboardSeeder extends Seeder
 {
@@ -11,6 +14,17 @@ class LeaderboardSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $platform_twitch = Platform::where('name', 'twitch')->first();
+        $users = User::all();
+
+        foreach ($users as $user) {
+            // dd($user);
+            $tempLeaderboard = new Leaderboard();
+            $tempLeaderboard->name = 'My Leaderboard';
+            $tempLeaderboard->save();
+            // dd($tempLeaderboard);
+            $tempLeaderboard->user()->associate($user);
+            $tempLeaderboard->platform()->associate($platform_twitch);
+        }
     }
 }
