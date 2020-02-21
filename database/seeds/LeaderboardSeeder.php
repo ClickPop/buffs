@@ -18,13 +18,11 @@ class LeaderboardSeeder extends Seeder
         $users = User::all();
 
         foreach ($users as $user) {
-            // dd($user);
             $tempLeaderboard = new Leaderboard();
             $tempLeaderboard->name = 'My Leaderboard';
-            $tempLeaderboard->save();
-            // dd($tempLeaderboard);
             $tempLeaderboard->user()->associate($user);
             $tempLeaderboard->platform()->associate($platform_twitch);
+            $tempLeaderboard->save();
         }
     }
 }
