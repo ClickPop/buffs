@@ -15,7 +15,7 @@ class CreateLeaderboardReferralsTable extends Migration
     {
         Schema::create('leaderboard_referrals', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('leaderboard_id')->unsinged();
+            $table->bigInteger('leaderboard_id')->unsigned();
             $table->bigInteger('platform_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
             $table->string('referrer');
@@ -23,10 +23,10 @@ class CreateLeaderboardReferralsTable extends Migration
             $table->string('userAgent');
             $table->timestamps();
 
-            // $table->foreign('leaderboard_id')
-            //     ->references('id')
-            //     ->on('leaderboards')
-            //     ->onDelete('cascade');
+            $table->foreign('leaderboard_id')
+                ->references('id')
+                ->on('leaderboards')
+                ->onDelete('cascade');
 
             $table->foreign('platform_id')
                 ->references('id')
