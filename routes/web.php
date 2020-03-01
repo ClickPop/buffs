@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::domain(env('DOMAIN', 'buffs.pro'))->middleware('guest')->group(function() {
+Route::domain(env('DOMAIN', 'buffs.pro'))->middleware('guest')->group(function () {
     Route::get('/', function () {
         return view('index');
     })->name('home');
@@ -19,7 +19,7 @@ Route::domain(env('DOMAIN', 'buffs.pro'))->middleware('guest')->group(function()
     })->name('sorry');
 });
 
-Route::domain(env('OAUTH_SUBDOMAIN', 'oauth.buffs.pro'))->group(function() {
+Route::domain(env('OAUTH_SUBDOMAIN', 'oauth.buffs.pro'))->group(function () {
     /** START: OAuth Routes **/
     Route::get('{provider}/login', 'Auth\LoginController@redirectToProvider')
         ->where('provider', 'twitch|wow')->name('oauth.login');
@@ -28,7 +28,7 @@ Route::domain(env('OAUTH_SUBDOMAIN', 'oauth.buffs.pro'))->group(function() {
     /** END: OAuth Routes */
 });
 
-Route::domain(env('APP_SUBDOMAIN'), 'app.buffs.pro')->group(function() {
+Route::domain(env('APP_SUBDOMAIN'), 'app.buffs.pro')->group(function () {
     Auth::routes([
         'register' => false,
         'reset' => false,
@@ -37,9 +37,14 @@ Route::domain(env('APP_SUBDOMAIN'), 'app.buffs.pro')->group(function() {
     ]);
 
     Route::get('/', 'DashboardController@index')->name('app.dashboard');
+    Route::get('/{provider}/leaderboard/{username}', function () {
+        return view('leaderboard');
+    })->name('app.leaderboard');
+    Route::get('{provider}/leaderboard/{username}/settings', function () {
+        if (Auth::check()) {
+            return view('leaderboardSettings');
+        } else {
+            return redirect('/');
+        }
+    })->name('app.leaderboardSettings');
 });
-
-
-
-
-
