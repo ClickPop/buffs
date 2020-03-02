@@ -17,21 +17,5 @@ class LeaderboardReferralSeeder extends Seeder
     public function run(Faker $faker)
     {
         factory(\App\LeaderboardReferral::class, 100)->create();
-        // $leaderboards = Leaderboard::all();
-        // $platform = Platform::where('name', 'twitch')->first();
-
-        // foreach ($leaderboards as $leaderboard) {
-        //     $user = User::find($leaderboard->user_id);
-        //     for ($i = 0; $i < 20; $i++) {
-        //         $referral = new LeaderboardReferral;
-        //         $referral->leaderboard()->associate($leaderboard);
-        //         $referral->user()->associate($user);
-        //         $referral->platform()->associate($platform);
-        //         $referral->referrer = $faker->userName;
-        //         $referral->ip_address = $faker->ipv4;
-        //         $referral->userAgent = $faker->userAgent;
-        //         $referral->save();
-        //     }
-        // }
     }
 }

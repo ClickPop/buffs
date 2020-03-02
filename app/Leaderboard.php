@@ -6,13 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Leaderboard extends Model
 {
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = [ 'stream_id', 'name' ];
 
     public function stream()
     {
         return $this->belongsTo(Stream::class);
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(LeaderboardReferral::class);
     }
 }
