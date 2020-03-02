@@ -16,14 +16,26 @@ class LeaderboardController extends Controller
     {
         $this->middleware('auth', ['except' => 'index']);
     }
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($platform, $channel_name)
+    public function index()
     {
-        //
+        return "index";
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function adminIndex()
+    {
+        $leaderboards = Leaderboard::withTrashed()->get();
+        return view('leaderboards.admin')->with('leaderboards', $leaderboards);
     }
 
     /**
