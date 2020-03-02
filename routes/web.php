@@ -17,6 +17,7 @@ Route::domain(env('DOMAIN', 'buffs.pro'))->middleware('guest')->group(function (
     Route::get('sorry', function () {
         return view('sorry');
     })->name('sorry');
+    Route::get('/api/referrals/{provider}/{channel_name}', 'LeaderboardReferralController@index');
 });
 
 Route::domain(env('OAUTH_SUBDOMAIN', 'oauth.buffs.pro'))->group(function () {
@@ -37,7 +38,7 @@ Route::domain(env('APP_SUBDOMAIN'), 'app.buffs.pro')->group(function () {
     ]);
 
     Route::get('/', 'DashboardController@index')->name('app.dashboard');
-    Route::get('/{provider}/leaderboard/{username}', 'LeaderboardController@index')->name('app.leaderboard');
-    Route::get('{provider}/leaderboard/{username}/settings', 'LeaderboardController@settings')->name('app.leaderboardSettings');
-    Route::get('{provider}/referral/{username}/{referrer}', 'LeaderboardReferralController@store')->name('app.referral');
+    Route::get('/leaderboard/{provider}/{channel_name}', 'LeaderboardController@index')->name('app.leaderboard');
+    Route::get('/leaderboard/{provider}/{channel_name}/settings', 'LeaderboardController@settings')->name('app.leaderboardSettings');
+    Route::get('/referral/{provider}/{channel_name}/{referrer}', 'LeaderboardReferralController@store')->name('app.referral');
 });
