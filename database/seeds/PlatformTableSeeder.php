@@ -11,13 +11,13 @@ class PlatformTableSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        $platform_twitch = new Platform();
-        $platform_twitch->name = 'twitch';
-        $platform_twitch->description = 'Twitch';
-        $platform_twitch->socialite_driver = 'twitch';
-        $platform_twitch->channel_url_structure = 'https://www.twitch.tv/%%CHANNEL_NAME%%';
-        $platform_twitch->url = 'https://twitch.tv';
-        $platform_twitch->save();
+    {   
+        $platform_twitch = Platform::create([
+            'name' => 'twitch',
+            'description' => 'Twitch',
+            'socialite_driver' => 'twitch',
+            'channel_url_structure' => 'https://www.twitch.tv/%%CHANNEL_NAME%%',
+            'url' => 'https://twitch.tv'
+        ]);
     }
 }

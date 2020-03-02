@@ -17,12 +17,13 @@ class LeaderboardSeeder extends Seeder
         $users = User::all();
 
         foreach ($users as $user) {
-            $stream = Stream::where('user_id', $user->id)->first();
-            $tempLeaderboard = new Leaderboard();
-            $tempLeaderboard->name = 'My Leaderboard';
-            $tempLeaderboard->user()->associate($user);
-            $tempLeaderboard->stream()->associate($stream);
-            $tempLeaderboard->save();
+            $streams = $user->streams;
+            foreach ($streams as $stream) {
+                $temp_leaderboard = Leaderboard::create([ 'name' => 'Referral Leaderboard' ]);
+                $temp_leaderboard->stream()->associate($stream);
+                $temp_leaderboard->save();
+                $temp_leaderboard = null;
+            }
         }
     }
 }

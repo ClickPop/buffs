@@ -16,14 +16,9 @@ class CreateLeaderboardsTable extends Migration
         Schema::create('leaderboards', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('stream_id')->unsigned()->nullable();
-            $table->bigInteger('user_id')->unsigned()->nullable();
-            $table->string('name');
+            $table->string('name')->default('Referral Leaderboard');
             $table->timestamps();
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+            $table->softDeletes();
 
             $table->foreign('stream_id')
                 ->references('id')

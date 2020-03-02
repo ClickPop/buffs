@@ -16,27 +16,22 @@ class CreateLeaderboardReferralsTable extends Migration
         Schema::create('leaderboard_referrals', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('leaderboard_id')->unsigned();
-            $table->bigInteger('stream_id')->unsigned();
-            $table->bigInteger('user_id')->unsigned();
             $table->string('referrer');
+            $table->bigInteger('referrer_id')->unsigned()->nullable(); // Use to record associated User/Stream if they are an active user
             $table->string('ip_address');
-            $table->string('userAgent');
+            $table->string('user_agent');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('leaderboard_id')
                 ->references('id')
                 ->on('leaderboards')
                 ->onDelete('cascade');
 
-            $table->foreign('stream_id')
+            $table->foreign('referrer_id')
                 ->references('id')
                 ->on('streams')
-                ->onDelete('cascade');
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+                ->onDelete('set null');
         });
     }
 

@@ -18,11 +18,14 @@ class StreamSeeder extends Seeder
         $users = User::all();
 
         foreach ($users as $user) {
-            $tempLeaderboard = new Stream();
-            $tempLeaderboard->channel_name = $user->username;
-            $tempLeaderboard->user()->associate($user);
-            $tempLeaderboard->platform()->associate($platform_twitch);
-            $tempLeaderboard->save();
+            if ($user->username !== null) {
+                $temp_stream = new Stream();
+                $temp_stream->channel_name = $user->username;
+                $temp_stream->user()->associate($user);
+                $temp_stream->platform()->associate($platform_twitch);
+                $temp_stream->save();
+                $temp_stream = null;
+            }
         }
     }
 }

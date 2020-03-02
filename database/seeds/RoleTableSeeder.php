@@ -11,15 +11,14 @@ class RoleTableSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        $role_admin = new Role();
-        $role_admin->name = 'admin';
-        $role_admin->description = 'Administrator';
-        $role_admin->save();
-
-        $role_streamer = new Role();
-        $role_streamer->name = 'streamer';
-        $role_streamer->description = 'Streamer';
-        $role_streamer->save();
+    {   
+        $role_admin = Role::create([
+            'name' => 'admin',
+            'description' => 'Administrator'
+        ]);
+        $role_streamer = Role::create([
+            'name' => 'streamer',
+            'description' => 'Streamer'
+        ]);
     }
 }
