@@ -16,7 +16,7 @@ class CreateLeaderboardReferralsTable extends Migration
         Schema::create('leaderboard_referrals', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('leaderboard_id')->unsigned();
-            $table->bigInteger('platform_id')->unsigned();
+            $table->bigInteger('stream_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
             $table->string('referrer');
             $table->string('ip_address');
@@ -28,9 +28,9 @@ class CreateLeaderboardReferralsTable extends Migration
                 ->on('leaderboards')
                 ->onDelete('cascade');
 
-            $table->foreign('platform_id')
+            $table->foreign('stream_id')
                 ->references('id')
-                ->on('platforms')
+                ->on('streams')
                 ->onDelete('cascade');
 
             $table->foreign('user_id')

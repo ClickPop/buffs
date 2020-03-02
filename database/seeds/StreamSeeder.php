@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Leaderboard;
 use App\Stream;
 use App\User;
+use App\Platform;
 
-class LeaderboardSeeder extends Seeder
+class StreamSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,14 +14,14 @@ class LeaderboardSeeder extends Seeder
      */
     public function run()
     {
+        $platform_twitch = Platform::where('name', 'twitch')->first();
         $users = User::all();
 
         foreach ($users as $user) {
-            $stream = Stream::where('user_id', $user->id)->first();
-            $tempLeaderboard = new Leaderboard();
-            $tempLeaderboard->name = 'My Leaderboard';
+            $tempLeaderboard = new Stream();
+            $tempLeaderboard->channel_name = $user->username;
             $tempLeaderboard->user()->associate($user);
-            $tempLeaderboard->stream()->associate($stream);
+            $tempLeaderboard->platform()->associate($platform_twitch);
             $tempLeaderboard->save();
         }
     }

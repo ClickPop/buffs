@@ -15,7 +15,7 @@ class CreateLeaderboardsTable extends Migration
     {
         Schema::create('leaderboards', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('platform_id')->unsigned()->nullable();
+            $table->bigInteger('stream_id')->unsigned()->nullable();
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->string('name');
             $table->timestamps();
@@ -25,9 +25,9 @@ class CreateLeaderboardsTable extends Migration
                 ->on('users')
                 ->onDelete('cascade');
 
-            $table->foreign('platform_id')
+            $table->foreign('stream_id')
                 ->references('id')
-                ->on('platforms')
+                ->on('streams')
                 ->onDelete('cascade');
         });
     }

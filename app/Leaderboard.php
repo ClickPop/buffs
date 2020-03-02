@@ -11,8 +11,8 @@ class Leaderboard extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function platform()
+    public function stream()
     {
-        return $this->belongsTo(Platform::class);
+        return $this->belongsTo(Stream::class);
     }
 }
