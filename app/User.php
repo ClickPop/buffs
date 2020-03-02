@@ -38,19 +38,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function oauths() {
+    public function oauths()
+    {
         return $this->hasMany(SocialAccount::class);
     }
 
-    public function roles() {
+    public function roles()
+    {
         return $this->belongsToMany(Role::class);
     }
 
-    public function streams() {
+    public function streams()
+    {
         return $this->hasMany(Stream::class);
     }
 
-    public function authorizeRoles($roles) {
+    public function authorizeRoles($roles)
+    {
         if (is_array($roles)) {
             return $this->hasAnyRole($roles) ||
                 abort(401, 'This action is unauthorized.');
@@ -59,11 +63,18 @@ class User extends Authenticatable
             abort(401, 'This action is unauthorized.');
     }
 
-    public function hasAnyRole($roles) {
+    public function hasAnyRole($roles)
+    {
         return null !== $this->roles()->whereIn(‘name’, $roles)->first();
     }
 
-    public function hasRole($role) {
+    public function hasRole($role)
+    {
         return null !== $this->roles()->where(‘name’, $role)->first();
+    }
+
+    public function leaderboards()
+    {
+        return $this->hasMany(Leaderboard::class);
     }
 }
