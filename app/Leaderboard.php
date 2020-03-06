@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Leaderboard extends Model
@@ -11,12 +13,12 @@ class Leaderboard extends Model
     
     protected $fillable = [ 'stream_id', 'name' ];
 
-    public function stream()
+    public function stream(): BelongsTo
     {
         return $this->belongsTo(Stream::class);
     }
 
-    public function referrals()
+    public function referrals(): HasMany
     {
         return $this->hasMany(LeaderboardReferral::class);
     }

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SocialAccount extends Model
 {
@@ -15,11 +16,13 @@ class SocialAccount extends Model
         'platform_user_id', 'platform_id', 'token', 'tokenSecret', 'refreshToken', 'expires'
     ];
 
-    public function user() {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function platform() {
+    public function platform(): BelongsTo
+    {
         return $this->belongsTo(Platform::class);
     }
 }

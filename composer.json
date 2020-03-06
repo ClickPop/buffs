@@ -13,6 +13,8 @@
         "laravel/framework": "^6.2",
         "laravel/socialite": "^4.3",
         "laravel/tinker": "^2.0",
+        "mll-lab/laravel-graphql-playground": "^2.1",
+        "nuwave/lighthouse": "^4.10",
         "plank/laravel-metable": "^2.0",
         "socialiteproviders/twitch": "^5.1"
     },
