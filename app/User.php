@@ -6,6 +6,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Plank\Metable\Metable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -38,17 +40,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function oauths()
+    public function oauths(): HasMany
     {
         return $this->hasMany(SocialAccount::class);
     }
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
 
-    public function streams()
+    public function streams(): HasMany
     {
         return $this->hasMany(Stream::class);
     }
@@ -65,15 +67,15 @@ class User extends Authenticatable
 
     public function hasAnyRole($roles)
     {
-        return null !== $this->roles()->whereIn(‘name’, $roles)->first();
+        return null !== $this->roles()->whereIn('name', $roles)->first();
     }
 
     public function hasRole($role)
     {
-        return null !== $this->roles()->where(‘name’, $role)->first();
+        return null !== $this->roles()->where('name', $role)->first();
     }
 
-    public function leaderboards()
+    public function leaderboards(): HasMany
     {
         return $this->hasMany(Leaderboard::class);
     }
