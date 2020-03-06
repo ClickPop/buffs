@@ -25,7 +25,7 @@ You will need to add 3 separate entries to your hosts file. They are:
 
 1. buffs.test
 2. oauth.buffs.test
-3. app.buffs.test
+3. cauldron.buffs.test
 
 ### A note about MySQL
 
@@ -38,7 +38,7 @@ Download the latest copy of the .env file from the Google Share (or request one 
 ### Install Dependcies
 
 Run the following commands to install & build any dependencies:
-- `composer install` (Installs PHP & Laravel based dependencies) *If on Windows, be sure to run this from within your Homestead VM via SSH* `ssh vagrant@127.0.0.1 -p 2222`
+- `composer install` (Installs PHP & Laravel based dependencies) *If on Windows, be sure to run this from within your Homestead VM via SSH* `vagrant ssh`
 - **IF YOU CREATED YOUR OWN .ENV FILE:** `php artisan key:generate` (Generates a new base64 app key, and adds it to your .env file)
 - `php artisan migrate:fresh --seed` (Setup the database tables & seed the initial data)
 - `npm install` (Installs Node dependcies like bootstrap, jquery, etc)
@@ -47,3 +47,7 @@ Run the following commands to install & build any dependencies:
 ### Test Run
 
 Check it out by visiting the link listed in your `homestead.yaml` in your browser. Probably something like. `https://buffs.test`. If everything is running/built correctly you should be in business!
+
+### GraphQL
+
+GraphQL has been implemented for this project. During testing, the GraphQL-Playground library will be available, and accessible via the `buffs.test/graphql-playground` url. To edit the schema, checkout the file in the `/graphql` directory.
