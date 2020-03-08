@@ -11385,6 +11385,236 @@ h4,
   background-color: #3D1E5E;
 }
 
+.app-wrapper.has-sidebar {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: stretch;
+          align-items: stretch;
+}
+
+.app-wrapper.has-sidebar #sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  background: #3D1E5E;
+  color: white;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: left;
+}
+
+.app-wrapper.has-sidebar #sidebar .sidebar-header {
+  padding: 20px;
+  background: #30184b;
+}
+
+.app-wrapper.has-sidebar #sidebar .sidebar-header strong {
+  display: none;
+  text-align: center;
+  font-size: 30px;
+  line-height: 40px;
+  width: 60px;
+  height: 40px;
+  overflow: hidden;
+  position: relative;
+  text-indent: -9999em;
+}
+
+.app-wrapper.has-sidebar #sidebar .sidebar-header strong::before {
+  content: "";
+  background-image: url("/images/brand/potion.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-color: transparent;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.app-wrapper.has-sidebar #sidebar .sidebar-header h3 {
+  margin: 0;
+}
+
+.app-wrapper.has-sidebar #sidebar .sidebar-header h3 .logo {
+  width: 140px;
+  height: auto;
+  display: block;
+}
+
+.app-wrapper.has-sidebar #sidebar a[aria-expanded=true] {
+  color: white;
+  background: #30184b;
+}
+
+.app-wrapper.has-sidebar #sidebar a[data-toggle=collapse] {
+  position: relative;
+}
+
+.app-wrapper.has-sidebar #sidebar .dropdown-toggle::after {
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.app-wrapper.has-sidebar #sidebar ul li a {
+  display: -webkit-box;
+  display: flex;
+  padding: 10px;
+  font-size: 1.1em;
+  color: #bc9cdf;
+}
+
+.app-wrapper.has-sidebar #sidebar ul li a svg {
+  width: 20px;
+  height: auto;
+  margin-right: 3px;
+}
+
+.app-wrapper.has-sidebar #sidebar ul li a:hover {
+  color: #3D1E5E;
+  background: #bc9cdf;
+  text-decoration: none;
+}
+
+.app-wrapper.has-sidebar #sidebar ul li.active > a {
+  color: white;
+  background: #30184b;
+}
+
+.app-wrapper.has-sidebar #sidebar ul ul li a {
+  font-size: 0.9em;
+  padding-left: 30px;
+  background: #30184b;
+}
+
+.app-wrapper.has-sidebar #sidebar ul.components {
+  padding: 20px 0;
+  border-bottom: 1px solid #241237;
+}
+
+.app-wrapper.has-sidebar #sidebar ul.CTAs {
+  padding: 20px;
+}
+
+.app-wrapper.has-sidebar #sidebar ul.CTAs a {
+  text-align: center;
+  font-size: 0.9em !important;
+  display: block;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.app-wrapper.has-sidebar #sidebar.active {
+  min-width: 100px;
+  max-width: 100px;
+  text-align: center;
+  margin-left: 0;
+}
+
+.app-wrapper.has-sidebar #sidebar.active .dropdown-toggle::after {
+  top: auto;
+  bottom: 10px;
+  right: 50%;
+  -webkit-transform: translateX(50%);
+  transform: translateX(50%);
+}
+
+.app-wrapper.has-sidebar #sidebar.active .sidebar-header h3,
+.app-wrapper.has-sidebar #sidebar.active .CTAs {
+  display: none;
+}
+
+.app-wrapper.has-sidebar #sidebar.active .sidebar-header strong {
+  display: block;
+}
+
+.app-wrapper.has-sidebar #sidebar.active ul li a {
+  display: block;
+  padding: 20px 5px;
+  font-size: 0.75rem;
+}
+
+.app-wrapper.has-sidebar #sidebar.active ul li a svg {
+  margin-right: auto;
+  margin-left: auto;
+  display: block;
+  width: 24px;
+}
+
+.app-wrapper.has-sidebar #sidebar.active ul ul li a {
+  padding: 10px 5px;
+  font-size: 0.7rem;
+}
+
+.app-wrapper.has-sidebar #sidebar.active.active {
+  margin-left: 0 !important;
+}
+
+@media (max-width: 991.98px) {
+  .app-wrapper.has-sidebar #sidebar {
+    min-width: 100px;
+    max-width: 100px;
+    text-align: center;
+    margin-left: 0;
+  }
+
+  .app-wrapper.has-sidebar #sidebar .dropdown-toggle::after {
+    top: auto;
+    bottom: 10px;
+    right: 50%;
+    -webkit-transform: translateX(50%);
+    transform: translateX(50%);
+  }
+
+  .app-wrapper.has-sidebar #sidebar .sidebar-header h3,
+  .app-wrapper.has-sidebar #sidebar .CTAs {
+    display: none;
+  }
+
+  .app-wrapper.has-sidebar #sidebar .sidebar-header strong {
+    display: block;
+  }
+
+  .app-wrapper.has-sidebar #sidebar ul li a {
+    display: block;
+    padding: 20px 5px;
+    font-size: 0.75rem;
+  }
+
+  .app-wrapper.has-sidebar #sidebar ul li a svg {
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    width: 24px;
+  }
+
+  .app-wrapper.has-sidebar #sidebar ul ul li a {
+    padding: 10px 5px;
+    font-size: 0.7rem;
+  }
+
+  .app-wrapper.has-sidebar #sidebar.active {
+    margin-left: 0 !important;
+  }
+}
+
+.app-wrapper.has-sidebar #sidebar #sidebarCollapse span {
+  display: none;
+}
+
+.app-wrapper.has-sidebar .app-content {
+  width: 100%;
+  padding: 20px;
+  min-height: 100vh;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
 html {
   overflow: auto;
   min-height: 100vh;
@@ -11439,7 +11669,7 @@ html {
     left: 50%;
     -webkit-transform: translateX(-50%);
             transform: translateX(-50%);
-    background-image: url("/images/wizard.png");
+    background-image: url("/images/brand/wizard.png");
     background-size: 300px auto;
     background-repeat: no-repeat;
     background-position: center top;
