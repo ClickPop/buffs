@@ -38,12 +38,15 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
         'confirm' => false
     ]);
 
-    Route::get('/', 'DashboardController@index')->name('app.dashboard');
+    Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::prefix('/admin')->group(function() {
         Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('leaderboards.admin');
         Route::get('/referrals', 'LeaderboardReferralController@adminIndex')->name('leaderboardReferrals.admin');
     });
 
+    Route::prefix('/admin')->group(function() {
+        Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('admin.leaderboards');
+    });
     Route::prefix('/leaderboards')->group(function() {
         Route::get('/', 'LeaderboardController@index')->name('leaderboards.index');
     });

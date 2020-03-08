@@ -12,11 +12,18 @@ $blueDarkest:                   #0b0d13;
 $blueDarker:                    #1e2433;
 $blueDark:                      #343946;
 
+
+
 $yellowMid:                     #ff9017;
 
 $primaryColor:                  $purpleMid;
 $bgColor:                       $greyLight;
 $darkBgColor:                   $blueDarkest;
+$adminNavBg:                    $purpleDark;
+$adminNavBgDarker:              darken($adminNavBg, 5%);
+$adminNavBgDarkest:             darken($adminNavBg, 10%);
+$adminNavLinkColor:             lighten($adminNavBg, 50%);
+$adminNavLinkColorActive:       lighten($adminNavBg, 30%);
 
 // Body
 $body-bg: $bgColor;

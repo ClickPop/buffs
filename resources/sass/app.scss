@@ -10,7 +10,8 @@
 // Partials
 @import 'video',
         'type',
-        'buttons';
+        'buttons',
+        'admin';
 
 html {
     overflow: auto; min-height: 100vh;
@@ -57,7 +58,7 @@ html {
             bottom: -25px;
             left: 50%;
             transform: translateX(-50%);
-            background-image: url('/images/wizard.png');
+            background-image: url('/images/brand/wizard.png');
             background-size: 300px auto;
             background-repeat: no-repeat;
             background-position: center top;

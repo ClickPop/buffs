@@ -20,4 +20,4 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body class="{{$bodyClass}}">
+<body class="{{$bodyClass ?? ''}}">
