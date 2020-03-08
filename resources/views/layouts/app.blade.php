@@ -52,6 +52,12 @@
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="#" class="logout-link">
+                    @svg('icons/arrow-bar-right')
+                    Logout
+                </a>
+            </li>
         </ul>
 
     </nav>
