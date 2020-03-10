@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Plank\Metable\Metable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
@@ -55,6 +56,11 @@ class User extends Authenticatable
         return $this->hasMany(Stream::class);
     }
 
+    public function leaderboards(): HasManyThrough
+    {
+        return $this->hasManyThrough(Leaderboard::class, Stream::class);
+    }
+
     public function authorizeRoles($roles)
     {
         if (is_array($roles)) {
@@ -73,10 +79,5 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         return null !== $this->roles()->where('name', $role)->first();
-    }
-
-    public function leaderboards(): HasMany
-    {
-        return $this->hasMany(Leaderboard::class);
     }
 }

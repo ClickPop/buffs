@@ -17,6 +17,7 @@ class CreateLeaderboardsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('stream_id')->unsigned()->nullable();
             $table->string('name')->default('Referral Leaderboard');
+            $table->timestamp('reset_at')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
 

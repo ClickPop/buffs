@@ -38,22 +38,24 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
         'confirm' => false
     ]);
 
-    Route::get('/', 'DashboardController@index')->name('dashboard');
-    Route::prefix('/admin')->group(function() {
-        Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('leaderboards.admin');
-        Route::get('/referrals', 'LeaderboardReferralController@adminIndex')->name('leaderboardReferrals.admin');
+    Route::middleware('auth')->group(function() {
+        Route::get('/', 'DashboardController@index')->name('dashboard');
+        Route::prefix('/admin')->group(function() {
+            Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('admin.leaderboards');
+            Route::get('/referrals', 'LeaderboardReferralController@adminIndex')->name('admin.referrals');
+        });
+
+        Route::prefix('/leaderboards')->group(function() {
+            Route::get('/', 'LeaderboardController@index')->name('leaderboards.index');
+        });
+
+        Route::prefix('/referrals')->group(function() {
+            Route::get('/', 'LeaderboardReferralController@index')->name('referrals.index');
+        });
     });
 
-    Route::prefix('/admin')->group(function() {
-        Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('admin.leaderboards');
-    });
-    Route::prefix('/leaderboards')->group(function() {
-        Route::get('/', 'LeaderboardController@index')->name('leaderboards.index');
-    });
 
-    Route::prefix('/referrals')->group(function() {
-        Route::get('/', 'LeaderboardReferralController@index')->name('leaderboardReferrals.index');
-    });
+
     
     // Route::get('/leaderboard/{provider}/{channel_name}', 'LeaderboardController@index')->name('app.leaderboard');
     // Route::get('/leaderboard/{provider}/{channel_name}/settings', 'LeaderboardController@settings')->name('app.leaderboardSettings');

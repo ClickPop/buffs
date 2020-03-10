@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Leaderboard;
+use App\LeaderboardTheme;
 use Illuminate\Http\Request;
+use Auth;
 
 class LeaderboardController extends Controller
 {
@@ -24,7 +26,15 @@ class LeaderboardController extends Controller
      */
     public function index()
     {
-        return "index";
+        $availableThemes = LeaderboardTheme::all();
+        $leaderboards = null;
+
+            $user = Auth::user();
+            $leaderboards = $user->leaderboards;
+
+
+        return view('leaderboards.index', ['leaderboards' => $leaderboards, 'themes' => $availableThemes]);
+
     }
 
     /**
@@ -34,8 +44,9 @@ class LeaderboardController extends Controller
      */
     public function adminIndex()
     {
+        $availableThemes = LeaderboardTheme::all();
         $leaderboards = Leaderboard::withTrashed()->get();
-        return view('leaderboards.admin')->with('leaderboards', $leaderboards);
+        return view('leaderboards.admin', ['leaderboards' => $leaderboards, 'themes' => $availableThemes]);
     }
 
     /**

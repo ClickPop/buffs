@@ -21,7 +21,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.leaderboards') }}">
+                <a href="{{ route('leaderboards.index') }}">
                     @svg('icons/kanban')
                     Leaderboards
                 </a>
@@ -45,7 +45,7 @@
                         <a href="#">Streams</a>
                     </li>
                     <li>
-                        <a href="{{route('leaderboards.index')}}">Leaderboards</a>
+                        <a href="{{route('admin.leaderboards')}}">Leaderboards</a>
                     </li>
                     <li>
                         <a href="#">Referrals</a>
@@ -59,11 +59,12 @@
                 </a>
             </li>
         </ul>
-
     </nav>
 
     <main role="main" class="app-content py-3">
-        @yield('content')
+        <div class="container-fluid dashboard-wrapper">
+            @yield('content')
+        </div>
     </main>
 </div>
 
