@@ -4,8 +4,9 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
-type Query {
-    users: [User!]! @all
+type Query @middleware(checks: ["auth:api"]) {
+    me: User @auth(guard: "api")
+    users: [User!]! @all 
     user(id: ID @eq): User @find
 
     streams: [Stream!]! @all
@@ -18,7 +19,9 @@ type Query {
     platform(id: ID @eq, name: String @eq): Platform @find
 }
 
-type Mutation {
+type Mutation @middleware(checks: ["auth:api"]) {
+    removeApiToken(id: ID!): String @field(resolver: "AuthMutator@removeApiToken")
+
     userCreate(input: UserInput @spread): User @create
     userUpdate(id: ID!, input: UserInput @spread): User @update
     userDelete(input: ID!): User @delete
@@ -39,9 +42,14 @@ type Mutation {
     leaderboardUpdate(id: ID!, input: LeaderboardInput @spread): Leaderboard @update
     leaderboardDelete(input: ID!): Leaderboard @delete
     
-    leaderboardReferralCreate(input: LeaderboardReferralInput @spread): LeaderboardReferral @create
     leaderboardReferralUpdate(id: ID!, input: LeaderboardReferralInput @spread): LeaderboardReferral @update
     leaderboardReferralDelete(input: ID!): LeaderboardReferral @delete
+}
+
+extend type Mutation {
+    login(email: String!, password: String!): String @field(resolver: "AuthMutator@login")
+    
+    leaderboardReferralCreate(input: LeaderboardReferralInput @spread): LeaderboardReferral @create
 }
 
 input LeaderboardReferralInput {
@@ -55,7 +63,7 @@ input UserInput {
     username: String
     name: String
     email: String
-    password: String
+    password: String @hash
     streams: StreamRelation
     leaderboard: LeaderboardRelation
     roles: RoleRelation
