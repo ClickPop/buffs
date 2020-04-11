@@ -11615,6 +11615,187 @@ h4,
   transition: all 0.3s;
 }
 
+@-webkit-keyframes FadeIn {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.95);
+            transform: scale(0.95);
+  }
+
+  70% {
+    opacity: 1;
+    -webkit-transform: scale(1.02);
+            transform: scale(1.02);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes FadeIn {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.95);
+            transform: scale(0.95);
+  }
+
+  70% {
+    opacity: 1;
+    -webkit-transform: scale(1.02);
+            transform: scale(1.02);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+.leaderboard-wrapper.light {
+  font-size: 20px;
+  padding: 30px;
+}
+
+.leaderboard-wrapper.light .leaderboard__container {
+  background-color: transparent;
+  color: #223333;
+}
+
+.leaderboard-wrapper.light .leaderboard__row {
+  -webkit-animation: FadeIn 0.3s ease-in-out;
+          animation: FadeIn 0.3s ease-in-out;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  border-radius: 6px;
+  box-shadow: rgba(33, 38, 45, 0.2) 0 4px 12px, rgba(33, 38, 45, 0.15) 0 8px 24px;
+  display: -webkit-box;
+  display: flex;
+  margin-bottom: 0.5rem;
+  width: 600px;
+}
+
+.leaderboard-wrapper.light .leaderboard__row div {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 10px;
+}
+
+.leaderboard-wrapper.light .leaderboard__row div:first-child {
+  border-radius: 6px 0 0 6px;
+  -webkit-box-flex: 3;
+          flex: 3;
+}
+
+.leaderboard-wrapper.light .leaderboard__row div:last-child {
+  border-radius: 0 6px 6px 0;
+  text-align: center;
+  -webkit-box-flex: 1;
+          flex: 1;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:first-child {
+  -webkit-animation: none;
+          animation: none;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(2) {
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(3) {
+  -webkit-animation-delay: 0.3s;
+          animation-delay: 0.3s;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(4) {
+  -webkit-animation-delay: 0.4s;
+          animation-delay: 0.4s;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(5) {
+  -webkit-animation-delay: 0.5s;
+          animation-delay: 0.5s;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(6) {
+  -webkit-animation-delay: 0.6s;
+          animation-delay: 0.6s;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(7) {
+  -webkit-animation-delay: 0.7s;
+          animation-delay: 0.7s;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(8) {
+  -webkit-animation-delay: 0.8s;
+          animation-delay: 0.8s;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(9) {
+  -webkit-animation-delay: 0.9s;
+          animation-delay: 0.9s;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(10) {
+  -webkit-animation-delay: 1s;
+          animation-delay: 1s;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(2) div {
+  font-size: 1.3rem;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(2) div:first-child::before {
+  content: "\1F947";
+  margin-right: 5px;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(2) div:last-child {
+  box-shadow: inset #ffd700 -6px 0 0 0;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(2) div {
+  font-size: 1.3rem;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(2) div:first-child::before {
+  content: "\1F947";
+  margin-right: 5px;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(2) div:last-child {
+  box-shadow: inset #ffd700 -6px 0 0 0;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(3) div {
+  font-size: 1.2rem;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(3) div:first-child::before {
+  content: "\1F948";
+  margin-right: 5px;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(3) div:last-child {
+  box-shadow: inset #C0C0C0 -6px 0 0 0;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(4) div {
+  font-size: 1.1rem;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(4) div:first-child::before {
+  content: "\1F949";
+  margin-right: 5px;
+}
+
+.leaderboard-wrapper.light .leaderboard__row:nth-child(4) div:last-child {
+  box-shadow: inset #cd7f32 -6px 0 0 0;
+}
+
 html {
   overflow: auto;
   min-height: 100vh;

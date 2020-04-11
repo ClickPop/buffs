@@ -50,10 +50,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public function streams(): HasMany
-    {
-        return $this->hasMany(Stream::class);
-    }
+    // public function streams(): HasMany
+    // {
+    //     return $this->hasMany(Stream::class);
+    // }
 
     public function authorizeRoles($roles)
     {
