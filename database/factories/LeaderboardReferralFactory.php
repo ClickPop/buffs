@@ -5,7 +5,7 @@
 use App\LeaderboardReferral;
 use Faker\Generator as Faker;
 use App\Leaderboard;
-use App\Stream;
+// use App\Stream;
 use App\User;
 
 $factory->define(LeaderboardReferral::class, function (Faker $faker) {
@@ -28,7 +28,8 @@ $factory->define(LeaderboardReferral::class, function (Faker $faker) {
     $leaderboard = Leaderboard::all()->random();
     $username = $usernames[rand(0, count($usernames) - 1)];
 
-    while ($username === $leaderboard->stream->user->username) {
+    // while ($username === $leaderboard->stream->user->username) {
+    while ($username === $leaderboard->user->username) {
         $username = $usernames[rand(0, count($usernames) - 1)];
     }
 

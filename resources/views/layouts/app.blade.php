@@ -8,13 +8,19 @@
         </div>
 
         <ul class="list-unstyled components">
-            <li class="active">
+            <!--<li class="active">
                 <a href="{{ route('dashboard') }}">
                     @svg('icons/columns-gutters')
                     Dashboard
                 </a>
-            </li>
+            </li>-->
             <li>
+                <a href="{{ route('dashboard') }}">
+                    @svg('icons/kanban')
+                    Leaderboard
+                </a>
+            </li>
+            <!-- <li>
                 <a href="#">
                     @svg('icons/wifi')
                     Streams
@@ -51,7 +57,7 @@
                         <a href="#">Referrals</a>
                     </li>
                 </ul>
-            </li>
+            </li> -->
             <li>
                 <a href="#" class="logout-link">
                     @svg('icons/arrow-bar-right')

@@ -1,0 +1,13 @@
+@keyframes FadeIn {
+    0% {
+      opacity: 0;
+      transform: scale(.95);
+    }
+    70% {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
