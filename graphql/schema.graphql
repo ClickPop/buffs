@@ -4,8 +4,9 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
-type Query {
-    users: [User!]! @all
+type Query @middleware(checks: ["auth:api"]) {
+    me: User @auth(guard: "api")
+    users: [User!]! @all 
     user(id: ID @eq): User @find
 
     streams: [Stream!]! @all
@@ -16,6 +17,113 @@ type Query {
 
     platforms: [Platform!]! @all
     platform(id: ID @eq, name: String @eq): Platform @find
+}
+
+type Mutation @middleware(checks: ["auth:api"]) {
+    removeApiToken(id: ID!): String @field(resolver: "AuthMutator@removeApiToken")
+
+    userCreate(input: UserInput @spread): User @create
+    userUpdate(id: ID!, input: UserInput @spread): User @update
+    userDelete(input: ID!): User @delete
+
+    roleCreate(input: RoleInput @spread): Role @create
+    roleUpdate(id: ID!, input: RoleInput @spread): Role @update
+    roleDelete(input: ID!): Role @delete
+
+    platformCreate(input: PlatformInput @spread): Platform @create
+    platformUpdate(id: ID!, input: PlatformInput @spread): Platform @update
+    platformDelete(input: ID!): Platform @delete
+    
+    streamCreate(input: StreamInput @spread): Stream @create
+    streamUpdate(id: ID!, input: StreamInput @spread): Stream @update
+    streamDelete(input: ID!): Stream @delete
+
+    leaderboardCreate(input: LeaderboardInput @spread): Leaderboard @create
+    leaderboardUpdate(id: ID!, input: LeaderboardInput @spread): Leaderboard @update
+    leaderboardDelete(input: ID!): Leaderboard @delete
+    
+    leaderboardReferralUpdate(id: ID!, input: LeaderboardReferralInput @spread): LeaderboardReferral @update
+    leaderboardReferralDelete(input: ID!): LeaderboardReferral @delete
+}
+
+extend type Mutation {
+    login(email: String!, password: String!): String @field(resolver: "AuthMutator@login")
+    
+    leaderboardReferralCreate(input: LeaderboardReferralInput @spread): LeaderboardReferral @create
+}
+
+input LeaderboardReferralInput {
+    leaderboard: LeaderboardRelation
+    referrer: String
+    user_agent: String
+    ip_address: String
+}
+
+input UserInput {
+    username: String
+    name: String
+    email: String
+    password: String @hash
+    streams: StreamRelation
+    leaderboard: LeaderboardRelation
+    roles: RoleRelation
+}
+
+input RoleInput {
+    name: String
+    description: String
+    users: UserRelation
+}
+
+input PlatformInput {
+    name: String
+    socialite_drive: String
+    description: String
+    url: String
+    channel_url_structure: String
+    leaderboards: Leaderboard
+    streams: Stream
+}
+
+input StreamInput {
+    channel_name: String
+    platform: PlatformRelation
+    user: UserRelation
+}
+
+input LeaderboardInput {
+    name: String
+    stream: StreamRelation
+}
+
+input LeaderboardRelation {
+    connect: ID!
+    create: LeaderboardInput
+    update: LeaderboardInput
+}
+
+input UserRelation {
+    connect: ID!
+    create: UserInput
+    update: UserInput
+}
+
+input StreamRelation {
+    connect: ID!
+    create: StreamInput
+    update: StreamInput
+}
+
+input RoleRelation {
+    connect: [ID!]
+    create: RoleInput
+    update: RoleInput
+}
+
+input PlatformRelation {
+    connect: ID!
+    create: PlatformInput
+    update: PlatformInput
 }
 
 input PlatformFilters {
@@ -61,8 +169,8 @@ type Stream {
     created_at: DateTime!
     updated_at: DateTime!
     deleted_at: DateTime!
-    platform: [Platform!]! @belongsTo
-    user: [User!]! @belongsTo
+    platform: Platform! @belongsTo
+    user: User! @belongsTo
 }
 
 type Leaderboard {
@@ -71,12 +179,13 @@ type Leaderboard {
     created_at: DateTime!
     updated_at: DateTime!
     deleted_at: DateTime!
-    stream: [Stream!] @belongsTo
-    referrals: [LeaderboardReferrals!] @hasMany
+    stream: Stream! @belongsTo
+    referrals: [LeaderboardReferral!] @hasMany
 }
 
-type LeaderboardReferrals {
+type LeaderboardReferral {
     id: ID!
+    leaderboard: Leaderboard! @belongsTo
     referrer: String!
     user_agent: String!
     ip_address: String!

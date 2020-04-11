@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Role;
 use App\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class UserTableSeeder extends Seeder
 {
@@ -21,7 +22,7 @@ class UserTableSeeder extends Seeder
             'name' => "Sean Metzgar",
             'username' => "Gelatinous3",
             'email' => "sean.metzgar@gmail.com",
-            'password' => Str::random(24),
+            'password' => Hash::make('password'),
         ]);
         $user_sean->roles()->attach($role_admin);
         $user_sean->roles()->attach($role_streamer);
@@ -30,7 +31,7 @@ class UserTableSeeder extends Seeder
             'name' => "Graham Vasquez",
             'username' => "datboi_fourtwenty",
             'email' => "rescus1221@gmail.com",
-            'password' => Str::random(24),
+            'password' => Hash::make('password'),
         ]);
         $user_graham->roles()->attach($role_admin);
         $user_graham->roles()->attach($role_streamer);
@@ -39,7 +40,7 @@ class UserTableSeeder extends Seeder
             'name' => "Chris Vasquez",
             'username' => "shorkattack",
             'email' => "chris.vqz@gmail.com",
-            'password' => Str::random(24),
+            'password' => Hash::make('password'),
         ]);
         $user_chris->roles()->attach($role_admin);
         $user_chris->roles()->attach($role_streamer);
