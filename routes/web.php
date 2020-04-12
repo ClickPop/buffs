@@ -17,8 +17,11 @@ Route::domain(env('DOMAIN', 'buffs.app'))->middleware('guest')->group(function (
     Route::get('sorry', function () {
         return view('sorry');
     })->name('sorry');
-    Route::get('/api/referrals/{provider}/{channel_name}', 'LeaderboardReferralController@index');
-    
+});
+
+Route::domain(env('DOMAIN', 'buffs.app'))->group(function () {
+    Route::get('/embed/leaderboard/{channel_name}', 'LeaderboardController@embed')->name('leaderboard.embed');
+    Route::get('/r/{channel_name}/{referrer}', 'LeaderboardReferralController@referral');
 });
 
 Route::domain(env('OAUTH_SUBDOMAIN', 'oauth.buffs.app'))->group(function () {
@@ -49,13 +52,10 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     });
     Route::prefix('/leaderboards')->group(function() {
         Route::get('/', 'LeaderboardController@index')->name('leaderboards.index');
+        Route::get('/quick-start', 'LeaderboardController@quickStart')->name('leaderboards.quickStart');
     });
 
     Route::prefix('/referrals')->group(function() {
         Route::get('/', 'LeaderboardReferralController@index')->name('leaderboardReferrals.index');
     });
-    
-    // Route::get('/leaderboard/{provider}/{channel_name}', 'LeaderboardController@index')->name('app.leaderboard');
-    // Route::get('/leaderboard/{provider}/{channel_name}/settings', 'LeaderboardController@settings')->name('app.leaderboardSettings');
-    // Route::get('/referral/{provider}/{channel_name}/{referrer}', 'LeaderboardReferralController@store')->name('app.referral');
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\LeaderboardReferral;
+use App\User;
 use App\Stream;
 use App\Platform;
 use App\Leaderboard;
@@ -100,5 +101,35 @@ class LeaderboardReferralController extends Controller
     public function destroy(LeaderboardReferral $leaderboardReferral)
     {
         //
+    }
+
+    public function referral(Request $request, $channel_name, $referrer) {
+        if (isset($channel_name) && isset($referrer)) {
+            if(is_string($channel_name) && strlen($channel_name) > 0
+                && is_string($referrer) && strlen($referrer) > 0) {
+                
+                $channel_name = strtolower($channel_name);
+                $referrer = strtolower($referrer);
+                $ip_address = $request->ip();
+                $user_agent = $request->userAgent();
+
+                if ($channel_name !== $referrer) {
+                    $user = User::where('username', $channel_name)->first();
+                    if ($user && $user->leaderboards) {
+                        $leaderboard = $user->leaderboards->first();
+                        $addIt = (\App::environment() === 'production') ? validateReferral($leaderboard, $ip_address, $user_agent) : true;
+                        if ($addIt) {
+                            $newReferral = LeaderboardReferral::create([
+                                'leaderboard_id' => $leaderboard->id,
+                                'referrer' => $referrer,
+                                'ip_address' => $ip_address,
+                                'user_agent' => $user_agent
+                            ]);
+                        }
+                        return redirect('https://twitch.tv/' . $channel_name);
+                    }
+                } else { abort(403, "No gaming the system!"); }
+            } else { return abort(403, "Invalid url parameters."); }
+        } else { return abort(403, "Missing url parameters."); }
     }
 }

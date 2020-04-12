@@ -4,7 +4,7 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
-type Query @middleware(checks: ["auth:api"]) {
+type Query {
     me: User @auth(guard: "api")
     users: [User!]! @all 
     user(id: ID @eq): User @find
@@ -94,6 +94,7 @@ input StreamInput {
 input LeaderboardInput {
     name: String
     stream: StreamRelation
+    user: UserRelation
 }
 
 input LeaderboardRelation {
@@ -179,6 +180,7 @@ type Leaderboard {
     created_at: DateTime!
     updated_at: DateTime!
     deleted_at: DateTime!
+    user: User! @belongsTo
     stream: Stream! @belongsTo
     referrals: [LeaderboardReferral!] @hasMany
 }
