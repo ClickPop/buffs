@@ -26,6 +26,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $leaderboard = $user->leaderboards;
+        $referrals = null;
         if (isset($leaderboard) && $leaderboard->count() > 0) {
             $leaderboard = $leaderboard->first();
             $referrals = $leaderboard->referralCounts();

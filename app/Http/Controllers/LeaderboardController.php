@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Leaderboard;
 use Illuminate\Http\Request;
+use Auth;
+use App\User;
 
 class LeaderboardController extends Controller
 {
@@ -65,6 +67,27 @@ class LeaderboardController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function quickStart(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->leaderboards->count() === 0) {
+                $leaderboard = new Leaderboard;
+                $leaderboard->user()->associate($user);
+                $leaderboard->save();
+            }
+            return redirect()->route('dashboard');
+        } else {
+            return abort(403);
+        }
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  \App\Leaderboard  $leaderboard
@@ -73,6 +96,30 @@ class LeaderboardController extends Controller
     public function show(Leaderboard $leaderboard)
     {
         return view('leaderboard');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Leaderboard  $leaderboard
+     * @return \Illuminate\Http\Response
+     */
+    public function embed(Request $request, $channel_name)
+    {
+        $user = User::where('username', $channel_name)->first();
+
+        if ($user) {
+            $leaderboard = $user->leaderboards;
+            $referrals = null;
+            if (isset($leaderboard) && $leaderboard->count() > 0) {
+                $leaderboard = $leaderboard->first();
+                $referrals = $leaderboard->referralCounts();
+            } else { $leaderboard = null; }
+
+            return view('embeds.leaderboard', ['leaderboard' => $leaderboard, 'referrals' => $referrals]);
+        } else {
+            return abort(404);
+        }
     }
 
     /**

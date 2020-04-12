@@ -18,18 +18,18 @@ class UserTableSeeder extends Seeder
         $role_admin = Role::where('name', 'admin')->first();
         $role_streamer  = Role::where('name', 'streamer')->first();
 
-        $user_sean = User::create([
-            'name' => "Sean Metzgar",
-            'username' => "Gelatinous3",
-            'email' => "sean.metzgar@gmail.com",
-            'password' => Hash::make('password'),
-        ]);
-        $user_sean->roles()->attach($role_admin);
-        $user_sean->roles()->attach($role_streamer);
+        // $user_sean = User::create([
+        //     'name' => "Sean Metzgar",
+        //     'username' => "sean.metzgar@gmail.com",
+        //     'email' => "sean.metzgar@gmail.com",
+        //     'password' => Hash::make('password'),
+        // ]);
+        // $user_sean->roles()->attach($role_admin);
+        // $user_sean->roles()->attach($role_streamer);
 
         $user_graham = User::create([
             'name' => "Graham Vasquez",
-            'username' => "datboi_fourtwenty",
+            'username' => "rescus1221@gmail.com",
             'email' => "rescus1221@gmail.com",
             'password' => Hash::make('password'),
         ]);
@@ -38,7 +38,7 @@ class UserTableSeeder extends Seeder
 
         $user_chris = User::create([
             'name' => "Chris Vasquez",
-            'username' => "shorkattack",
+            'username' => "chris.vqz@gmail.com",
             'email' => "chris.vqz@gmail.com",
             'password' => Hash::make('password'),
         ]);

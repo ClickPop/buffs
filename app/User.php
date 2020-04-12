@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Plank\Metable\Metable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -78,5 +79,15 @@ class User extends Authenticatable
     public function leaderboards(): HasMany
     {
         return $this->hasMany(Leaderboard::class);
+    }
+
+    public function betalist(): HasOne
+    {
+        return $this->hasOne(BetaList::class, 'user_id');
+    }
+
+    public function invited_beta_users(): HasMany
+    {
+        return $this->hasMany(BetaList::class, 'created_by');
     }
 }

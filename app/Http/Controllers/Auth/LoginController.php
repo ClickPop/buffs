@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 use Session, Auth, Socialite;
-use App\SocialAccount, App\User, App\Platform;
+use App\SocialAccount, App\User, App\Platform, App\BetaList;
 
 
 class LoginController extends Controller
@@ -85,7 +85,9 @@ class LoginController extends Controller
         $account = SocialAccount::where('platform_id', $platform->id)
             ->where('platform_user_id', $platformUser->getId())
             ->first();
-
+        
+        $betaListUser = BetaList::where('email', $platformUser->getEmail())->first();
+                
         if ($account) {
             //Return account if found
             $user = $account->user;
@@ -95,6 +97,10 @@ class LoginController extends Controller
                 $user->username = $tempUsername;
                 $user->save();
             }
+            if ($betaListUser && !$betaListUser->user) {
+                $betaListUser->user()->associate($user);
+                $betaListUser->save();
+            }
 
             return $user;
         } else {
@@ -103,7 +109,7 @@ class LoginController extends Controller
 
             //Create user if dont'exist
             if (!$user) {
-                if (strtolower(env('USER_REGISTRATION_ENABLED', 'false')) === 'true') {
+                if (env('USER_REGISTRATION_ENABLED', false) === true || $betaListUser) {
                     $username = getUserNameFromSocialAccount($platformUser, $platform);
                     $user = User::create([
                         'email' => $platformUser->getEmail(),
@@ -111,6 +117,10 @@ class LoginController extends Controller
                         'username' => $username,
                         'password' => Str::random(24)
                     ]);
+                    if ($betaListUser) {
+                        $betaListUser->user()->associate($user);
+                        $betaListUser->save();
+                    }
                 } else {
                     return false;
                 }
@@ -119,6 +129,10 @@ class LoginController extends Controller
                 if ($tempUsername !== $user->username) {
                     $user->username = $tempUsername;
                     $user->save();
+                }
+                if ($betaListUser && !$betaListUser->user) {
+                    $betaListUser->user()->associate($user);
+                    $betaListUser->save();
                 }
             }
 

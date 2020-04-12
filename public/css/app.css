@@ -11655,7 +11655,6 @@ h4,
 
 .leaderboard-wrapper.light {
   font-size: 20px;
-  padding: 30px;
 }
 
 .leaderboard-wrapper.light .leaderboard__container {
@@ -11799,6 +11798,13 @@ h4,
 html {
   overflow: auto;
   min-height: 100vh;
+  background: transparent;
+  background-image: none;
+}
+
+body.embed {
+  background-color: transparent;
+  background-image: none;
 }
 
 .bg-dark {

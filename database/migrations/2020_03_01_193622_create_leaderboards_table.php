@@ -25,6 +25,7 @@ class CreateLeaderboardsTable extends Migration
                 ->on('streams')
                 ->onDelete('cascade');
         });
+        
     }
 
     /**
