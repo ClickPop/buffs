@@ -49,6 +49,7 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     });
     Route::prefix('/leaderboards')->group(function() {
         Route::get('/', 'LeaderboardController@index')->name('leaderboards.index');
+        Route::post('/quick-start', 'LeaderboardController@quickStart')->name('leaderboards.quickStart');
     });
 
     Route::prefix('/referrals')->group(function() {

@@ -89,10 +89,13 @@ class LoginController extends Controller
         if ($account) {
             //Return account if found
             $user = $account->user;
-            if ($user->email === $user->username) {
-                $user->username = getUserNameFromSocialAccount($platformUser, $platform);
+            //Check for update username
+            $tempUsername = getUserNameFromSocialAccount($platformUser, $platform);
+            if ($tempUsername !== $user->username) {
+                $user->username = $tempUsername;
                 $user->save();
             }
+
             return $user;
         } else {
             //Check if user with same email address exist
@@ -112,8 +115,9 @@ class LoginController extends Controller
                     return false;
                 }
             } else {
-                if ($user->email === $user->username) {
-                    $user->username = getUserNameFromSocialAccount($platformUser, $platform);
+                $tempUsername = getUserNameFromSocialAccount($platformUser, $platform);
+                if ($tempUsername !== $user->username) {
+                    $user->username = $tempUsername;
                     $user->save();
                 }
             }
