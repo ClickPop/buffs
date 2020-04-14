@@ -44,6 +44,10 @@ class Leaderboard extends Model
                 array_push($referralCounts, $tempItem);
             }
         }
+
+        while (count($referralCounts) > 10) {
+            array_pop($referralCounts);
+        }
         
         return $referralCounts;
     }

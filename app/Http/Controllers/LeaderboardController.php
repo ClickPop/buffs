@@ -114,9 +114,10 @@ class LeaderboardController extends Controller
             if (isset($leaderboard) && $leaderboard->count() > 0) {
                 $leaderboard = $leaderboard->first();
                 $referrals = $leaderboard->referralCounts();
+                $theme = $leaderboard->theme;
             } else { $leaderboard = null; }
 
-            return view('embeds.leaderboard', ['leaderboard' => $leaderboard, 'referrals' => $referrals]);
+            return view('embeds.leaderboard', ['leaderboard' => $leaderboard, 'referrals' => $referrals, 'theme' => $theme]);
         } else {
             return abort(404);
         }

@@ -12,6 +12,14 @@
             @endempty
             @isset($leaderboard)
                 @include('dropins.components.leaderboard', ['preview' => false])
+                <div id='theme' class="d-flex flex-row my-4">
+                    <select id="theme-selector" class="form-control" value="Theme">
+                        <option value="" selected disabled hidden>Theme</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                    <button class="btn btn-primary form-control" id='theme-submit' type="submit" value="Submit">Submit</button>
+                </div>
             @endisset
         </div>
     </div>
