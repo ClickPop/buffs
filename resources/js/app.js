@@ -54,7 +54,7 @@ $(document).ready(function() {
         }, 4000);
       })
   });
-  if ($('.leaderboard')) {
+  if ($('.leaderboard') && location.pathname.includes('/leaderboard/')) {
     let channel = location.pathname.replace('/leaderboard/', '');
     let leaderboard;
     fetch(`/referrals/${channel}`)
@@ -80,4 +80,19 @@ $(document).ready(function() {
       })
     }, 5000);
   }
+  $('#embed-copy').click(function (e) { 
+    e.preventDefault();
+    $('#embed-link').removeAttr('disabled');
+    $('#embed-link').select();
+    document.execCommand("copy");
+    $('#embed-link').attr('disabled', 'disabled');
+    $('#embed-info').after('<div id="embed-alert"></div>');
+    let alert = $('#embed-alert').hide();
+    alert.addClass("alert alert-success text-center").text('Link copied to clipboard').slideDown('fast');
+    setTimeout(function () {
+      alert.slideUp('fast', function () {
+        alert.remove();
+      });
+    }, 4000);
+  });
 });

@@ -259,7 +259,7 @@ $(document).ready(function () {
     });
   });
 
-  if ($('.leaderboard')) {
+  if ($('.leaderboard') && location.pathname.includes('/leaderboard/')) {
     var channel = location.pathname.replace('/leaderboard/', '');
     var leaderboard;
     fetch("/referrals/".concat(channel)).then(function (res) {
@@ -285,6 +285,22 @@ $(document).ready(function () {
       });
     }, 5000);
   }
+
+  $('#embed-copy').click(function (e) {
+    e.preventDefault();
+    $('#embed-link').removeAttr('disabled');
+    $('#embed-link').select();
+    document.execCommand("copy");
+    $('#embed-link').attr('disabled', 'disabled');
+    $('#embed-info').after('<div id="embed-alert"></div>');
+    var alert = $('#embed-alert').hide();
+    alert.addClass("alert alert-success text-center").text('Link copied to clipboard').slideDown('fast');
+    setTimeout(function () {
+      alert.slideUp('fast', function () {
+        alert.remove();
+      });
+    }, 4000);
+  });
 });
 
 /***/ }),
