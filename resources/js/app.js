@@ -27,15 +27,15 @@ $(document).ready(function() {
       theme = e.target.value;
       $('.leaderboard').hide();
       $('.leaderboard-wrapper')
-        .removeClass('dark')
-        .addClass('light');
+        .removeClass('leaderboard-theme_dark')
+        .addClass('leaderboard-theme_light');
       $('.leaderboard').show(1);
     } else if (e.target.value === 'dark') {
       theme = e.target.value;
       $('.leaderboard').hide();
       $('.leaderboard-wrapper')
-        .removeClass('light')
-        .addClass('dark');
+        .removeClass('leaderboard-theme_light')
+        .addClass('leaderboard-theme_dark');
       $('.leaderboard').show(1);
     }
   });

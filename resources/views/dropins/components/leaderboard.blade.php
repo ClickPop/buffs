@@ -1,7 +1,7 @@
 @php
     $preview = (isset($preview) && $preview === true) ? "preview" : "";
 @endphp
-<div class="leaderboard-wrapper {{ $theme }} {{ $preview }}"> <!-- Set leaderboard theme in class -->
+<div class="leaderboard-wrapper leaderboard-theme_{{ $theme }} {{ $preview }}"> <!-- Set leaderboard theme in class -->
     @isset($leaderboard)
     <div class="leaderboard">
         <div class="leaderboard__container">

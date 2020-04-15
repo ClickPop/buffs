@@ -210,7 +210,7 @@
 
 Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1)]).then(__webpack_require__.t.bind(null, /*! ./bootstrap */ "./resources/js/bootstrap.js", 7));
 $(document).ready(function () {
-  let theme;
+  var theme;
   $('input.remember-me').on('change', function () {
     if ($(this).is(':checked')) {
       $('a.oauth-button').each(function () {
@@ -228,38 +228,35 @@ $(document).ready(function () {
     e.preventDefault();
     $('#logout-form').submit();
   });
-  $('#theme-selector').change(function(e) {
+  $('#theme-selector').change(function (e) {
     e.preventDefault();
+
     if (e.target.value === 'light') {
       theme = e.target.value;
       $('.leaderboard').hide();
-      $('.leaderboard-wrapper')
-        .removeClass('dark')
-        .addClass('light');
+      $('.leaderboard-wrapper').removeClass('leaderboard-theme_dark').addClass('leaderboard-theme_light');
       $('.leaderboard').show(1);
     } else if (e.target.value === 'dark') {
       theme = e.target.value;
       $('.leaderboard').hide();
-      $('.leaderboard-wrapper')
-        .removeClass('light')
-        .addClass('dark');
+      $('.leaderboard-wrapper').removeClass('leaderboard-theme_light').addClass('leaderboard-theme_dark');
       $('.leaderboard').show(1);
     }
   });
-  $('#theme-submit').click(function (e) { 
+  $('#theme-submit').click(function (e) {
     e.preventDefault();
-    fetch(`/leaderboard/theme/${theme}`)
-      .then(res => res.json())
-      .then(data => {
-        $('#theme').before('<div id="theme-alert"></div>');
-        let alert = $('#theme-alert').hide();
-        alert.addClass("alert alert-success text-center").text(`Theme changed to ${data[0].theme}`).slideDown('fast');
-        setTimeout(() => {
-          alert.slideUp('fast', () => {
-            alert.remove();
-          });
-        }, 4000);
-      })
+    fetch("/leaderboard/theme/".concat(theme)).then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      $('#theme').before('<div id="theme-alert"></div>');
+      var alert = $('#theme-alert').hide();
+      alert.addClass("alert alert-success text-center").text("Theme changed to ".concat(data[0].theme)).slideDown('fast');
+      setTimeout(function () {
+        alert.slideUp('fast', function () {
+          alert.remove();
+        });
+      }, 4000);
+    });
   });
 });
 
