@@ -14,10 +14,10 @@ class LeaderboardController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth', ['except' => 'index']);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth', ['except' => 'index']);
+    // }
     
     /**
      * Display a listing of the resource.
