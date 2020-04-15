@@ -31,9 +31,8 @@ class DashboardController extends Controller
         if (isset($leaderboard) && $leaderboard->count() > 0) {
             $leaderboard = $leaderboard->first();
             $referrals = $leaderboard->referralCounts();
-            $theme = $leaderboard->theme;
         } else { $leaderboard = null; }
-        return view('dashboard', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals, 'theme' => $theme]);
+        return view('dashboard', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
     }
     public function changeTheme(Request $req, $themeName)
     {

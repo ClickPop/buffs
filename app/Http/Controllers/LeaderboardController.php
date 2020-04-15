@@ -114,10 +114,27 @@ class LeaderboardController extends Controller
             if (isset($leaderboard) && $leaderboard->count() > 0) {
                 $leaderboard = $leaderboard->first();
                 $referrals = $leaderboard->referralCounts();
-                $theme = $leaderboard->theme;
             } else { $leaderboard = null; }
 
-            return view('embeds.leaderboard', ['leaderboard' => $leaderboard, 'referrals' => $referrals, 'theme' => $theme]);
+            return view('embeds.leaderboard', ['leaderboard' => $leaderboard, 'referrals' => $referrals]);
+        } else {
+            return abort(404);
+        }
+    }
+
+    public function referrals(Request $req, $channel_name)
+    {
+        $user = User::where('username', $channel_name)->first();
+
+        if ($user) {
+            $leaderboard = $user->leaderboards;
+            $referrals = null;
+            if (isset($leaderboard) && $leaderboard->count() > 0) {
+                $leaderboard = $leaderboard->first();
+                $referrals = $leaderboard->referralCounts();
+            } else { $leaderboard = null; }
+
+            return response()->json(['referrals' => $referrals]);
         } else {
             return abort(404);
         }
