@@ -14,10 +14,10 @@ class LeaderboardController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth', ['except' => 'index']);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth', ['except' => 'index']);
+    // }
     
     /**
      * Display a listing of the resource.
@@ -117,6 +117,24 @@ class LeaderboardController extends Controller
             } else { $leaderboard = null; }
 
             return view('embeds.leaderboard', ['leaderboard' => $leaderboard, 'referrals' => $referrals]);
+        } else {
+            return abort(404);
+        }
+    }
+
+    public function referrals(Request $req, $channel_name)
+    {
+        $user = User::where('username', $channel_name)->first();
+
+        if ($user) {
+            $leaderboard = $user->leaderboards;
+            $referrals = null;
+            if (isset($leaderboard) && $leaderboard->count() > 0) {
+                $leaderboard = $leaderboard->first();
+                $referrals = $leaderboard->referralCounts();
+            } else { $leaderboard = null; }
+
+            return response()->json(['referrals' => $referrals]);
         } else {
             return abort(404);
         }

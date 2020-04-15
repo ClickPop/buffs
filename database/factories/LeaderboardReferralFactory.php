@@ -11,16 +11,16 @@ use App\User;
 $factory->define(LeaderboardReferral::class, function (Faker $faker) {
     $usernames = [
         'datboi_fourtwenty',
-        'Gelatinous3',
+        'gelatinous3',
         'shorkattack',
-        'GV14982',
-        'Bruack',
+        'gv14982',
+        'bruack',
         'clickpop',
-        'NIS_Killbot',
-        'NIS_Reidbot',
+        'nis_killbot',
+        'nis_reidbot',
         'lordjack',
-        'Rick_Spaniel',
-        'Tom_Malufe',
+        'ricky_spaniel',
+        'tom_malufe',
         'dogwash7'
     ];
 

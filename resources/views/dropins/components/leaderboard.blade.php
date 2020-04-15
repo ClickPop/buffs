@@ -1,9 +1,9 @@
 @php
     $preview = (isset($preview) && $preview === true) ? "preview" : "";
 @endphp
-<div class="leaderboard-wrapper light {{ $preview }}"> <!-- Set leaderboard theme in class -->
+<div class="leaderboard-wrapper {{ $preview }}"> <!-- Set leaderboard theme in class -->
     @isset($leaderboard)
-    <div class="leaderboard">
+    <div class="leaderboard leaderboard-theme_{{ $leaderboard->theme }}">
         <div class="leaderboard__container">
             <div class="leaderboard__row">
                 <div>Name</div>
