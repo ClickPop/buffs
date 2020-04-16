@@ -259,8 +259,8 @@ $(document).ready(function () {
     });
   });
 
-  if ($('.leaderboard') && location.pathname.includes('/leaderboard/')) {
-    var channel = location.pathname.replace('/leaderboard/', '');
+  if ($('.leaderboard') && location.pathname.includes('/embed/leaderboard/')) {
+    var channel = location.pathname.replace('/embed/leaderboard/', '');
     var leaderboard;
     fetch("/referrals/".concat(channel)).then(function (res) {
       return res.json();

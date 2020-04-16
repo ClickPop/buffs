@@ -54,8 +54,8 @@ $(document).ready(function() {
         }, 4000);
       })
   });
-  if ($('.leaderboard') && location.pathname.includes('/leaderboard/')) {
-    let channel = location.pathname.replace('/leaderboard/', '');
+  if ($('.leaderboard') && location.pathname.includes('/embed/leaderboard/')) {
+    let channel = location.pathname.replace('/embed/leaderboard/', '');
     let leaderboard;
     fetch(`/referrals/${channel}`)
     .then(res => res.json())
