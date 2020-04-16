@@ -1,7 +1,8 @@
-import('./bootstrap');
+require('./bootstrap');
 
 $(document).ready(function() {
   let theme;
+  let alert_timeout;
   $('input.remember-me').on('change', function() {
     if ($(this).is(':checked')) {
       $('a.oauth-button').each(function() {
@@ -44,14 +45,9 @@ $(document).ready(function() {
     fetch(`/leaderboard/theme/${theme}`)
       .then(res => res.json())
       .then(data => {
-        $('#theme').before('<div id="theme-alert"></div>');
-        let alert = $('#theme-alert').hide();
-        alert.addClass("alert alert-success text-center").text(`Theme changed to ${data[0].theme}`).slideDown('fast');
-        setTimeout(() => {
-          alert.slideUp('fast', () => {
-            alert.remove();
-          });
-        }, 4000);
+        let $alert = $('#leaderboard-alert');
+        $alert.text(`Theme changed to ${data[0].theme}`).slideDown('fast');
+        alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
       })
   });
   if ($('.leaderboard') && location.pathname.includes('/embed/leaderboard/')) {
@@ -86,13 +82,23 @@ $(document).ready(function() {
     $('#embed-link').select();
     document.execCommand("copy");
     $('#embed-link').attr('disabled', 'disabled');
-    $('#embed-info').after('<div id="embed-alert"></div>');
-    let alert = $('#embed-alert').hide();
-    alert.addClass("alert alert-success text-center").text('Link copied to clipboard').slideDown('fast');
-    setTimeout(function () {
-      alert.slideUp('fast', function () {
-        alert.remove();
-      });
-    }, 4000);
+    if ($('#embed-alert')) {
+
+    }
+    let $alert = $('#leaderboard-alert');
+    $alert.addClass("alert alert-success text-center").text('Link copied to clipboard').slideDown('fast');
+    alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
+  });
+  $('#leaderboard-length-slider').on('input', function (e) { 
+    e.preventDefault();
+    $('#leaderboard-length').text(e.target.value);
+  });
+  $('#leaderboard-length-slider').change(function (e) { 
+    $('.leaderboard__row').each((index, row) => { 
+         $(row).hide();
+    });
+    for (let i = 0; i <= e.target.value; i++) {
+      $(`.leaderboard__row:eq(${i})`).show();
+    }
   });
 });
