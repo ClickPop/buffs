@@ -37112,19 +37112,16 @@ $(document).ready(function () {
       $('.leaderboard').removeClass('leaderboard-theme_light').addClass('leaderboard-theme_dark');
       $('.leaderboard').show(1);
     }
-  });
-  $('#theme-submit').click(function (e) {
-    e.preventDefault();
-    fetch("/leaderboard/theme/".concat(theme)).then(function (res) {
-      return res.json();
-    }).then(function (data) {
-      var $alert = $('#leaderboard-alert');
-      $alert.text("Theme changed to ".concat(data[0].theme)).slideDown('fast');
-      alert_timeout = setTimeout(function () {
-        $alert.slideUp('fast');
-      }, 4000);
-    });
-  });
+  }); // $('#theme-submit').click(function (e) { 
+  //   e.preventDefault();
+  //   fetch(`/leaderboard/theme/${theme}`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       let $alert = $('#leaderboard-alert');
+  //       $alert.text(`Theme changed to ${data[0].theme}`).slideDown('fast');
+  //       alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
+  //     })
+  // });
 
   if ($('.leaderboard') && location.pathname.includes('/embed/leaderboard/')) {
     var channel = location.pathname.replace('/embed/leaderboard/', '');

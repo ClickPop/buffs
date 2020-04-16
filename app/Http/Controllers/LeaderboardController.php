@@ -113,7 +113,7 @@ class LeaderboardController extends Controller
             $referrals = null;
             if (isset($leaderboard) && $leaderboard->count() > 0) {
                 $leaderboard = $leaderboard->first();
-                $referrals = $leaderboard->referralCounts();
+                $referrals = $leaderboard->referralCounts($leaderboard->length);
             } else { $leaderboard = null; }
 
             return view('embeds.leaderboard', ['leaderboard' => $leaderboard, 'referrals' => $referrals]);

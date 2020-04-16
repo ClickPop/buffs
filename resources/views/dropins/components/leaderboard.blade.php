@@ -12,7 +12,7 @@
             <!-- LOOP -->
             @if (is_array($referrals) && count($referrals))
             @foreach($referrals as $referral)
-            <div class="leaderboard__row">
+            <div class="leaderboard__row" style="display: {{ $loop->index >= $leaderboard->length ? "none;" : "" }}">
                 <div>{{ $referral->referrer }}</div>
                 <div>{{ $referral->count }}</div>
             </div>

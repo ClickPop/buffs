@@ -40,16 +40,16 @@ $(document).ready(function() {
       $('.leaderboard').show(1);
     }
   });
-  $('#theme-submit').click(function (e) { 
-    e.preventDefault();
-    fetch(`/leaderboard/theme/${theme}`)
-      .then(res => res.json())
-      .then(data => {
-        let $alert = $('#leaderboard-alert');
-        $alert.text(`Theme changed to ${data[0].theme}`).slideDown('fast');
-        alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
-      })
-  });
+  // $('#theme-submit').click(function (e) { 
+  //   e.preventDefault();
+  //   fetch(`/leaderboard/theme/${theme}`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       let $alert = $('#leaderboard-alert');
+  //       $alert.text(`Theme changed to ${data[0].theme}`).slideDown('fast');
+  //       alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
+  //     })
+  // });
   if ($('.leaderboard') && location.pathname.includes('/embed/leaderboard/')) {
     let channel = location.pathname.replace('/embed/leaderboard/', '');
     let leaderboard;

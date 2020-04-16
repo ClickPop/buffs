@@ -30,7 +30,7 @@ class Leaderboard extends Model
         return $this->hasMany(LeaderboardReferral::class);
     }
 
-    public function referralCounts() {
+    public function referralCounts($length) {
         $referrals = $this->referrals->groupBy('referrer')->map->count()->toArray();
         $referralCounts = [];
 
