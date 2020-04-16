@@ -17,13 +17,12 @@ Route::domain(env('DOMAIN', 'buffs.app'))->middleware('guest')->group(function (
     Route::get('sorry', function () {
         return view('sorry');
     })->name('sorry');
-    Route::get('/leaderboard/{channel_name}', 'LeaderboardController@embed')->name('embedded-leaderboard');
-    Route::get('/referrals/{channel_name}', 'LeaderboardController@referrals')->name('referrals');
 });
 
 Route::domain(env('DOMAIN', 'buffs.app'))->group(function () {
     Route::get('/embed/leaderboard/{channel_name}', 'LeaderboardController@embed')->name('leaderboard.embed');
     Route::get('/r/{channel_name}/{referrer}', 'LeaderboardReferralController@referral');
+    Route::get('/referrals/{channel_name}', 'LeaderboardController@referrals')->name('referrals');
 });
 
 Route::domain(env('OAUTH_SUBDOMAIN', 'oauth.buffs.app'))->group(function () {

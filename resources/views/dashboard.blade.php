@@ -24,7 +24,7 @@
                     <div id="embed-info" class="form-group">
                         <label for="embed-link">Leaderboard Embed Link</label>
                         <div class="d-flex flex-row align-items-center">
-                            <input id="embed-link" name="embed-link" class="form-control" type="text" disabled value="{{ $_SERVER['SERVER_NAME'] }}/leaderboard/{{ Auth::user()->username }}"/>
+                            <input id="embed-link" name="embed-link" class="form-control" type="text" disabled value="{{ $_SERVER['SERVER_NAME'] }}/embed/leaderboard/{{ Auth::user()->username }}"/>
                             <button id="embed-copy" class="btn btn-secondary form-control">
                                 @svg('icons/info')
                                 COPY
