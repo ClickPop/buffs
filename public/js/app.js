@@ -37136,12 +37136,26 @@ $(document).ready(function () {
         return res.json();
       }).then(function (data) {
         if (JSON.stringify(data) !== JSON.stringify(leaderboard)) {
+          if ($('.leaderboard').hasClass('leaderboard-theme_dark') && data.leaderboard.theme === 'light') {
+            $('.leaderboard').hide();
+            $('.leaderboard').removeClass('leaderboard-theme_dark').addClass('leaderboard-theme_light');
+            $('.leaderboard').show(1);
+          } else if ($('.leaderboard').hasClass('leaderboard-theme_light') && data.leaderboard.theme === 'dark') {
+            $('.leaderboard').hide();
+            $('.leaderboard').removeClass('leaderboard-theme_light').addClass('leaderboard-theme_dark');
+            $('.leaderboard').show(1);
+          }
+
           $('.leaderboard__row').each(function (index, row) {
             if (index > 0) {
-              $(row).hide();
-              $(row).find('div:eq(0)').text(data.referrals[index - 1].referrer);
-              $(row).find('div:eq(1)').text(data.referrals[index - 1].count);
-              $(row).show('fast');
+              if (index <= data.leaderboard.length) {
+                $(row).hide();
+                $(row).find('div:eq(0)').text(data.referrals[index - 1].referrer);
+                $(row).find('div:eq(1)').text(data.referrals[index - 1].count);
+                $(row).show('fast');
+              } else {
+                $(row).hide();
+              }
             }
           });
           leaderboard = data;

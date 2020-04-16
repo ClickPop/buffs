@@ -31,7 +31,7 @@ class DashboardController extends Controller
         $referrals = null;
         if (isset($leaderboard) && $leaderboard->count() > 0) {
             $leaderboard = $leaderboard->first();
-            $referrals = $leaderboard->referralCounts($leaderboard->length);
+            $referrals = $leaderboard->referralCounts();
         } else { $leaderboard = null; }
         return view('dashboard', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
     }

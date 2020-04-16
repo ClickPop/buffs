@@ -113,7 +113,7 @@ class LeaderboardController extends Controller
             $referrals = null;
             if (isset($leaderboard) && $leaderboard->count() > 0) {
                 $leaderboard = $leaderboard->first();
-                $referrals = $leaderboard->referralCounts($leaderboard->length);
+                $referrals = $leaderboard->referralCounts();
             } else { $leaderboard = null; }
 
             return view('embeds.leaderboard', ['leaderboard' => $leaderboard, 'referrals' => $referrals]);
@@ -134,7 +134,7 @@ class LeaderboardController extends Controller
                 $referrals = $leaderboard->referralCounts();
             } else { $leaderboard = null; }
 
-            return response()->json(['referrals' => $referrals]);
+            return response()->json(['leaderboard' => ['theme' => $leaderboard->theme, 'length' => $leaderboard->length], 'referrals' => $referrals]);
         } else {
             return abort(404);
         }
