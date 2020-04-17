@@ -11,7 +11,7 @@
             <p class="h4 mb-5">We're building tools to help you find people who might like your content, and then get them to love it.</p>
 
             <div class="optin">
-                <p>Sign up to get updates on new BUFFS and other neat stuff we're doing.</p>
+                <p>Sign up for the beta waiting list and to get updates on new BUFFS and other neat stuff we're doing.</p>
                 @include('dropins.components.forms.optin')
             </div>
         </div>
@@ -37,14 +37,10 @@
             </p>
         </div>
     </div>
-    <div class="row align-items-center my-5 pt-lg-3">
-        <div class="col-lg-5 order-lg-2 text-center">
-            <img src="{{ asset('images/brand/pet.gif')}}" class="img-fluid" />
-        </div>
-        <div class="col-lg-5 offset-lg-1 order-lg-1 px-5">
-            <h2>Coming in the future...</h2>
-            <p>
-                A companion for your stream.
+    <div class="row mb-4 mt-5 pt-3">
+        <div class="col">
+            <p class="text-center">
+              Born and 🍞 in Pennsylvania. Made by <a href="https://www.clickpopmedia.com" target="_blank">Clickpop</a>.
             </p>
         </div>
     </div>

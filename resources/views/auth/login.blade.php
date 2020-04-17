@@ -6,9 +6,9 @@
         <div class="col-12 col-lg-6 my-lg-5 mt-5">
             @include('dropins.components.logo-link')
 
-            <h1 class="mb-4">Beta Access</h1>
+            <h1 class="mb-4">Beta Login</h1>
 
-            <p class="h4 mb-5">Are you one of the chosen few, selected to be a part of the next best thing?</p>
+            <p class="h4 mb-5">If you got a beta invite email, just click to login to BUFFS using your Twitch login.</p>
 
             <div class="login-box">
                 <div class="social-login">
