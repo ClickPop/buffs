@@ -124,6 +124,7 @@ class LeaderboardController extends Controller
 
     public function referrals(Request $req, $channel_name)
     {
+        $preview = true;
         $user = User::where('username', $channel_name)->first();
 
         if ($user) {
@@ -131,10 +132,10 @@ class LeaderboardController extends Controller
             $referrals = null;
             if (isset($leaderboard) && $leaderboard->count() > 0) {
                 $leaderboard = $leaderboard->first();
-                $referrals = $leaderboard->referralCounts();
+                $referrals = $leaderboard->referralCounts($preview);
             } else { $leaderboard = null; }
 
-            return response()->json(['referrals' => $referrals]);
+            return response()->json(['leaderboard' => ['theme' => $leaderboard->theme, 'length' => $leaderboard->length], 'referrals' => $referrals]);
         } else {
             return abort(404);
         }

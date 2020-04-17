@@ -10,21 +10,15 @@ $bronze:                          #cd7f32;
 $borderRadius:                    6px;
 
 // Styles
-.leaderboard-theme_dark {
+.leaderboard-wrapper.theme-dark {
   font-size: 20px;
-  padding: 30px;
+  padding: 24px;
 
   .leaderboard {
 
     &__container {
       background-color: transparent;
       color: $textColor;
-
-      .admin-preview & {
-          max-width: 80%;
-          margin-left: auto;
-          margin-right: auto;
-      }
     }
 
     &__row {

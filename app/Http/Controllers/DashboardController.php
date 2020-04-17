@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Leaderboard;
 use Illuminate\Http\Request;
 use Auth;
+use Facade\FlareClient\Http\Response;
 
 class DashboardController extends Controller
 {
@@ -30,16 +31,19 @@ class DashboardController extends Controller
         $referrals = null;
         if (isset($leaderboard) && $leaderboard->count() > 0) {
             $leaderboard = $leaderboard->first();
-            $referrals = $leaderboard->referralCounts();
+            $referrals = $leaderboard->referralCounts(true);
         } else { $leaderboard = null; }
         return view('dashboard', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
     }
-    public function changeTheme(Request $req, $themeName)
+    public function updateSettings(Request $req)
     {
         $user = Auth::user();
         $leaderboard =  Leaderboard::find($user->leaderboards->first()->id);
-        $leaderboard->theme = $themeName;
+        $theme = $req->all()['theme-selector'];
+        $length = $req->all()['leaderboard-length-slider'];
+        $leaderboard->theme = $theme;
+        $leaderboard->length = $length;
         $leaderboard->save();
-        return response()->json(['status' => 'success', ['leaderboard' => $leaderboard->id, 'theme' => $themeName]]);
+        return redirect('/');
     }
 }
