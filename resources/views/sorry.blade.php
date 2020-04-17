@@ -8,10 +8,10 @@
 
                 <h1 class="mb-4">We're so sorry!</h1>
 
-                <p class="h4 mb-5">We hate to be the bearer of bad news, but we're currently not accepting registrations.</p>
+                <p class="h4 mb-5">It doesn't look like your Twitch account is on the beta list yet.</p>
 
                 <div class="optin">
-                    <p>Sign up to get updates on new BUFFS and other neat stuff we're doing.</p>
+                    <p>Sign up to join the beta waiting list and get updates on new BUFFS and other neat stuff we're doing.</p>
                     @include('dropins.components.forms.optin')
                 </div>
             </div>
