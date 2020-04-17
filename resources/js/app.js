@@ -35,7 +35,7 @@ $(document).ready(function() {
 
   if ($leaderboard.length > 0) {
     let isPreview = $leaderboard.parents('.leaderboard-wrapper').hasClass('preview') ? true : false;
-    console.log(isPreview);
+
     $('#theme-selector').change(function(e) {
       e.preventDefault();
       let $this = $(this);
@@ -58,7 +58,7 @@ $(document).ready(function() {
       let channel = location.pathname.replace('/embed/leaderboard/', '');
       let leaderboard;
       let referralsURL = `/referrals/${channel}${isPreview ? '/preview' : ''}`;
-      console.log(referralsURL);
+
       fetch(referralsURL)
       .then(res => res.json())
       .then(data => {

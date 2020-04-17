@@ -37111,7 +37111,6 @@ $(document).ready(function () {
 
   if ($leaderboard.length > 0) {
     var isPreview = $leaderboard.parents('.leaderboard-wrapper').hasClass('preview') ? true : false;
-    console.log(isPreview);
     $('#theme-selector').change(function (e) {
       e.preventDefault();
       var $this = $(this);
@@ -37132,7 +37131,6 @@ $(document).ready(function () {
       var channel = location.pathname.replace('/embed/leaderboard/', '');
       var leaderboard;
       var referralsURL = "/referrals/".concat(channel).concat(isPreview ? '/preview' : '');
-      console.log(referralsURL);
       fetch(referralsURL).then(function (res) {
         return res.json();
       }).then(function (data) {
