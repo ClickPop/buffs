@@ -34,7 +34,6 @@ $(document).ready(function() {
 
   $('#bot-part-button').click(function (e) { 
     e.preventDefault();
-    jqtog
     $(e.target).attr('disabled', 'disabled').addClass('disabled');
     fetch('/chatbot/part')
       .then(res => res.json())
