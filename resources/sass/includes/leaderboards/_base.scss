@@ -1,0 +1,14 @@
+.leaderboard-wrapper {
+    &.preview {
+        padding: 1rem 0;
+
+        &::after {
+            content: 'This is a preview, test data may have been inserted for your viewing pleasure!';
+            font-style: italic;
+            font-size: .8rem;
+            opacity: .75;
+            text-align: center;
+            display: block;
+        }
+    }
+}

@@ -37078,9 +37078,19 @@ module.exports = function(module) {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+function updateTheme($leaderboard, theme) {
+  var $wrapper = $leaderboard.parents('.leaderboard-wrapper');
+  $leaderboard.hide();
+  $wrapper.removeClass(function (index, className) {
+    return (className.match(/\btheme-\S+/g) || []).join(' ');
+  }).addClass("theme-".concat(theme));
+  $leaderboard.show(1);
+}
+
 $(document).ready(function () {
   var theme;
   var alert_timeout;
+  var $leaderboard = $('.leaderboard');
   $('input.remember-me').on('change', function () {
     if ($(this).is(':checked')) {
       $('a.oauth-button').each(function () {
@@ -37098,100 +37108,92 @@ $(document).ready(function () {
     e.preventDefault();
     $('#logout-form').submit();
   });
-  $('#theme-selector').change(function (e) {
-    e.preventDefault();
 
-    if (e.target.value === 'light') {
-      theme = e.target.value;
-      $('.leaderboard').hide();
-      $('.leaderboard').removeClass('leaderboard-theme_dark').addClass('leaderboard-theme_light');
-      $('.leaderboard').show(1);
-    } else if (e.target.value === 'dark') {
-      theme = e.target.value;
-      $('.leaderboard').hide();
-      $('.leaderboard').removeClass('leaderboard-theme_light').addClass('leaderboard-theme_dark');
-      $('.leaderboard').show(1);
-    }
-  }); // $('#theme-submit').click(function (e) { 
-  //   e.preventDefault();
-  //   fetch(`/leaderboard/theme/${theme}`)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       let $alert = $('#leaderboard-alert');
-  //       $alert.text(`Theme changed to ${data[0].theme}`).slideDown('fast');
-  //       alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
-  //     })
-  // });
+  if ($leaderboard.length > 0) {
+    var isPreview = $leaderboard.parents('.leaderboard-wrapper').hasClass('preview') ? true : false;
+    console.log(isPreview);
+    $('#theme-selector').change(function (e) {
+      e.preventDefault();
+      var $this = $(this);
+      var theme = $this.val();
+      updateTheme($leaderboard, theme);
+    }); // $('#theme-submit').click(function (e) { 
+    //   e.preventDefault();
+    //   fetch(`/leaderboard/theme/${theme}`)
+    //     .then(res => res.json())
+    //     .then(data => {
+    //       let $alert = $('#leaderboard-alert');
+    //       $alert.text(`Theme changed to ${data[0].theme}`).slideDown('fast');
+    //       alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
+    //     })
+    // });
 
-  if ($('.leaderboard') && location.pathname.includes('/embed/leaderboard/')) {
-    var channel = location.pathname.replace('/embed/leaderboard/', '');
-    var leaderboard;
-    fetch("/referrals/".concat(channel)).then(function (res) {
-      return res.json();
-    }).then(function (data) {
-      leaderboard = data;
-    });
-    setInterval(function () {
-      fetch("/referrals/".concat(channel)).then(function (res) {
+    if ($leaderboard && location.pathname.includes('/embed/leaderboard/')) {
+      var channel = location.pathname.replace('/embed/leaderboard/', '');
+      var leaderboard;
+      var referralsURL = "/referrals/".concat(channel).concat(isPreview ? '/preview' : '');
+      console.log(referralsURL);
+      fetch(referralsURL).then(function (res) {
         return res.json();
       }).then(function (data) {
-        if (JSON.stringify(data) !== JSON.stringify(leaderboard)) {
-          if ($('.leaderboard').hasClass('leaderboard-theme_dark') && data.leaderboard.theme === 'light') {
-            $('.leaderboard').hide();
-            $('.leaderboard').removeClass('leaderboard-theme_dark').addClass('leaderboard-theme_light');
-            $('.leaderboard').show(1);
-          } else if ($('.leaderboard').hasClass('leaderboard-theme_light') && data.leaderboard.theme === 'dark') {
-            $('.leaderboard').hide();
-            $('.leaderboard').removeClass('leaderboard-theme_light').addClass('leaderboard-theme_dark');
-            $('.leaderboard').show(1);
-          }
-
-          $('.leaderboard__row').each(function (index, row) {
-            if (index > 0) {
-              if (index <= data.leaderboard.length) {
-                $(row).hide();
-                $(row).find('div:eq(0)').text(data.referrals[index - 1].referrer);
-                $(row).find('div:eq(1)').text(data.referrals[index - 1].count);
-                $(row).show('fast');
-              } else {
-                $(row).hide();
-              }
-            }
-          });
-          leaderboard = data;
-        }
+        leaderboard = data;
       });
-    }, 5000);
-  }
+      setInterval(function () {
+        fetch(referralsURL).then(function (res) {
+          return res.json();
+        }).then(function (data) {
+          if (JSON.stringify(data) !== JSON.stringify(leaderboard)) {
+            if (typeof data.leaderboard.theme === "string" && data.leaderboard.theme.length > 0) {
+              updateTheme($leaderboard, data.leaderboard.theme);
+            }
 
-  $('#embed-copy').click(function (e) {
-    e.preventDefault();
-    $('#embed-link').removeAttr('disabled');
-    $('#embed-link').select();
-    document.execCommand("copy");
-    $('#embed-link').attr('disabled', 'disabled');
-
-    if ($('#embed-alert')) {}
-
-    var $alert = $('#leaderboard-alert');
-    $alert.addClass("alert alert-success text-center").text('Link copied to clipboard').slideDown('fast');
-    alert_timeout = setTimeout(function () {
-      $alert.slideUp('fast');
-    }, 4000);
-  });
-  $('#leaderboard-length-slider').on('input', function (e) {
-    e.preventDefault();
-    $('#leaderboard-length').text(e.target.value);
-  });
-  $('#leaderboard-length-slider').change(function (e) {
-    $('.leaderboard__row').each(function (index, row) {
-      $(row).hide();
-    });
-
-    for (var i = 0; i <= e.target.value; i++) {
-      $(".leaderboard__row:eq(".concat(i, ")")).show();
+            $('.leaderboard__row').each(function (index, row) {
+              if (index > 0) {
+                if (index <= data.leaderboard.length) {
+                  $(row).hide();
+                  $(row).find('div:eq(0)').text(data.referrals[index - 1].referrer);
+                  $(row).find('div:eq(1)').text(data.referrals[index - 1].count);
+                  $(row).show('fast');
+                } else {
+                  $(row).hide();
+                }
+              }
+            });
+            leaderboard = data;
+          }
+        });
+      }, 5000);
     }
-  });
+
+    $('#embed-copy').click(function (e) {
+      e.preventDefault();
+      $('#embed-link').removeAttr('disabled');
+      $('#embed-link').select();
+      document.execCommand("copy");
+      $('#embed-link').attr('disabled', 'disabled');
+
+      if ($('#embed-alert')) {}
+
+      var $alert = $('#leaderboard-alert');
+      $alert.addClass("alert alert-success text-center").text('Link copied to clipboard').slideDown('fast');
+      alert_timeout = setTimeout(function () {
+        $alert.slideUp('fast');
+      }, 4000);
+    });
+    $('#leaderboard-length-slider').on('input', function (e) {
+      e.preventDefault();
+      $('#leaderboard-length').text(e.target.value);
+    });
+    $('#leaderboard-length-slider').change(function (e) {
+      $('.leaderboard__row').each(function (index, row) {
+        $(row).hide();
+      });
+
+      for (var i = 0; i <= e.target.value; i++) {
+        $(".leaderboard__row:eq(".concat(i, ")")).show();
+      }
+    });
+  }
 });
 
 /***/ }),
@@ -37259,8 +37261,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/vagrant/github/buffs/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/vagrant/github/buffs/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

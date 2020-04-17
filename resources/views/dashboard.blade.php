@@ -11,7 +11,7 @@
             <a href="{{ route( 'leaderboards.quickStart' ) }}" class="btn btn-primary">Create Leaderboard</a>
             @endempty
             @isset($leaderboard)
-                @include('dropins.components.leaderboard', ['preview' => false])
+                @include('dropins.components.leaderboard', ['preview' => true])
                 <div class="form-group">
                     <form method="POST">
                         @csrf

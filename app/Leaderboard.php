@@ -30,7 +30,7 @@ class Leaderboard extends Model
         return $this->hasMany(LeaderboardReferral::class);
     }
 
-    public function referralCounts() {
+    public function referralCounts($preview = false) {
         $referrals = $this->referrals->groupBy('referrer')->map->count()->toArray();
         $referralCounts = [];
 
@@ -47,6 +47,38 @@ class Leaderboard extends Model
 
         while (count($referralCounts) > 10) {
             array_pop($referralCounts);
+        }
+         
+        if($preview === true && count($referralCounts) < 10) {
+            $wizards = [
+                'Gandalf',
+                'Merlin',
+                'Dumbledore',
+                'Hermione Granger',
+                'Sabrina',
+                'Prospero',
+                'Saruman',
+                'Voldemort',
+                'Elminster',
+                'Tim',
+                'Harry Dresden',
+                'Orwen',
+                'Glinda',
+                'Morgana Le Fay',
+                'Kiki'
+            ];
+            shuffle($wizards);
+            
+            $wizard_num = 0;
+
+            while(count($referralCounts) < 10) {
+                $tempItem = (object)[
+                    "referrer" => $wizards[$wizard_num],
+                    "count" => 1
+                ];
+                array_push($referralCounts, $tempItem);
+                $wizard_num++;
+            }
         }
         
         return $referralCounts;
