@@ -19,7 +19,8 @@
         "nothingworks/blade-svg": "^0.3.4",
         "nuwave/lighthouse": "^4.10",
         "plank/laravel-metable": "^2.0",
-        "socialiteproviders/twitch": "^5.1"
+        "socialiteproviders/twitch": "^5.1",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

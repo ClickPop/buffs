@@ -5,7 +5,13 @@ namespace App\Http\Controllers;
 use App\Leaderboard;
 use Illuminate\Http\Request;
 use Auth;
-use Facade\FlareClient\Http\Response;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\RequestException as ExceptionRequestException;
+
+use function GuzzleHttp\json_decode;
+use function GuzzleHttp\json_encode;
 
 class DashboardController extends Controller
 {
@@ -33,8 +39,39 @@ class DashboardController extends Controller
             $leaderboard = $leaderboard->first();
             $referrals = $leaderboard->referralCounts(true);
         } else { $leaderboard = null; }
-        return view('dashboard', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
+        $client = new Client(['/'], array(
+            'request.options' => array(
+               'exceptions' => false,
+            )
+        ));
+        $twitch_userId =  DB::table('social_accounts')->where('id', $user->id)->first()->platform_user_id;
+        try {
+            $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);
+            $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+            return view('dashboard', ['chatbot' => json_decode($data), 'user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
+        } catch (ExceptionRequestException $e) {
+            return view('dashboard', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
+        }
     }
+
+    // public function chatbot(Request $req)
+    // {
+    //     $user = Auth::user();
+    //     $client = new Client(['/'], array(
+    //         'request.options' => array(
+    //            'exceptions' => false,
+    //          )
+    //       ));
+    //     $twitch_userId =  DB::table('social_accounts')->where('id', $user->id)->first()->platform_user_id;
+    //     try {
+    //         $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);
+    //         $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+    //         return view('dashboardChatbot', ['chatbot' => json_decode($data)]);
+    //     } catch (ExceptionRequestException $e) {
+    //         return view('dashboardChatbot');
+    //     }
+    // }
+
     public function updateSettings(Request $req)
     {
         $user = Auth::user();
@@ -44,6 +81,6 @@ class DashboardController extends Controller
         $leaderboard->theme = $theme;
         $leaderboard->length = $length;
         $leaderboard->save();
-        return redirect('/');
+        return redirect()->route('dashboard');
     }
 }
