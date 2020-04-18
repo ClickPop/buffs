@@ -23,7 +23,7 @@
 				</div>
 			</div>
 			<div class="af-element tag" style="display:none;">
-				<input id="awf_tag-106326138" type="hidden" name="tag_106326138" value="beta" />
+				<input id="awf_tag-106326138" type="hidden" name="tag_106326138" value="beta-interest" />
 			</div>
 		</div>
 	</div>
