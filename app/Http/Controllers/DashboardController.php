@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Leaderboard;
 use Illuminate\Http\Request;
-use Auth;
+
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
