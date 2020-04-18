@@ -44,6 +44,7 @@
                     Referrals
                 </a>
             </li> -->
+            @if(Auth::user()->hasRole('admin'))
             <li>
                 <a href="#adminSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     @svg('icons/shield-lock')
@@ -67,6 +68,7 @@
                     </li>
                 </ul>
             </li>
+            @endif
             <li>
                 <a href="#" class="logout-link">
                     @svg('icons/arrow-bar-right')
