@@ -51,6 +51,17 @@ $(document).ready(function() {
     });
   });
 
+  $('#leaderboard-reset').change(function (e) { 
+    e.preventDefault();
+    if (this.checked) {
+      $('#leaderboard-reset-label').addClass('active');
+      $('#leaderboard-reset-confirm-alert').slideDown('fast');
+    } else {
+      $('#leaderboard-reset-label').removeClass('active');
+      $('#leaderboard-reset-confirm-alert').slideUp('fast');
+    }
+  });
+
   if ($leaderboard.length > 0) {
     let isPreview = $leaderboard.parents('.leaderboard-wrapper').hasClass('preview') ? true : false;
 

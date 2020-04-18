@@ -31,7 +31,11 @@ class Leaderboard extends Model
     }
 
     public function referralCounts($preview = false) {
-        $referrals = $this->referrals->groupBy('referrer')->map->count()->toArray();
+        if (isset($this->reset_timestamp)) {
+            $referrals = $this->referrals->where('created_at', '>=', $this->reset_timestamp)->groupBy('referrer')->map->count()->toArray();
+        } else {
+            $referrals = $this->referrals->groupBy('referrer')->map->count()->toArray();
+        }
         $referralCounts = [];
 
         if (count($referrals) > 0) {
