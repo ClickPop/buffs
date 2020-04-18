@@ -50,7 +50,7 @@
         <div class="btn-group-toggle form-group">
           <label id="leaderboard-reset-label" for="leaderboard-reset" class="btn btn-danger">
             <input name="leaderboard-reset" id="leaderboard-reset" type="checkbox"/>
-            Reset Leaderboard
+            Reset referrals
           </label>
         </div>
         <div id="leaderboard-reset-confirm-alert" class="alert alert-danger text-center" style="display: none;">
