@@ -65,10 +65,15 @@
     #sidebar {
         min-width: 250px;
         max-width: 250px;
+        height: 100vh;
         background: $adminNavBg;
         color: white;
         transition: all 0.3s;
         text-align: left;
+        position: sticky;
+        top: 0; left: 0;
+        overflow: hidden;
+
 
         .sidebar-header {
             padding: 20px;

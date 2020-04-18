@@ -11395,11 +11395,17 @@ h4,
 .app-wrapper.has-sidebar #sidebar {
   min-width: 250px;
   max-width: 250px;
+  height: 100vh;
   background: #3D1E5E;
   color: white;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
   text-align: left;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 }
 
 .app-wrapper.has-sidebar #sidebar .sidebar-header {

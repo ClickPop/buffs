@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Leaderboard;
-use Illuminate\Http\Request;
 use Auth;
-use App\User;
+use Illuminate\Http\Request;
+use App\Leaderboard, App\User;
 
 class LeaderboardController extends Controller
 {
