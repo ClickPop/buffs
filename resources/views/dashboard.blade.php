@@ -1,22 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container dashboard-wrapper">
+<div class="container-fluid dashboard-wrapper">
     <div class="row">
-        <div class="col-8">
+        <div class="col-12 my-4">
             <h2>My Leaderboard</h2>
             <!-- if no leaderboard, show something else -->
             @empty($leaderboard)
-            <h4>Looks like you currently don't have a leaderboard, click the button to create yours now!</h4>
+            <p>Ready to get started growing your audience? Just click below to create your leaderboard.</p>
             <a href="{{ route( 'leaderboards.quickStart' ) }}" class="btn btn-primary">Create Leaderboard</a>
             @endempty
             @isset($leaderboard)
-                @include('dropins.components.leaderboard', ['preview' => true])
                 @include('dropins.components.forms.leaderboard-settings', ['leaderboard' => $leaderboard])
             @endisset
         </div>
-        <div class="col-8">
-            <h2 class="my-3">My Chatbot</h2>
+        <div class="col-12 my-4">
+            <h2 class="my-3">BUFFS Chatbot</h2>
+            <p>
+              The chatbot bot lets your viewers get their unique referral link by typing <strong>!buffs</strong>.
+            </p>
             @if (isset($chatbot))
             <div class="d-flex flex-column justify-content-center">
                 @include('dropins.components.chatbot', ['chatbot' => $chatbot])
@@ -27,6 +29,7 @@
                     <a href="{{ route( 'chatbot.quickStart' ) }}" class="btn btn-primary">Create Chatbot</a>
                 @endempty
             @endif
+        </div>
     </div>
 </div>
 @endsection
