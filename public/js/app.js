@@ -37125,6 +37125,17 @@ $(document).ready(function () {
       $('#bot-part-button').removeClass('disabled').removeAttr('disabled');
     });
   });
+  $('#leaderboard-reset').change(function (e) {
+    e.preventDefault();
+
+    if (this.checked) {
+      $('#leaderboard-reset-label').addClass('active');
+      $('#leaderboard-reset-confirm-alert').slideDown('fast');
+    } else {
+      $('#leaderboard-reset-label').removeClass('active');
+      $('#leaderboard-reset-confirm-alert').slideUp('fast');
+    }
+  });
 
   if ($leaderboard.length > 0) {
     var isPreview = $leaderboard.parents('.leaderboard-wrapper').hasClass('preview') ? true : false;

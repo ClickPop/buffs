@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Leaderboard;
 use Illuminate\Http\Request;
 use Auth;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Psr\Http\Message\ResponseInterface;
@@ -76,10 +77,11 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $leaderboard =  Leaderboard::find($user->leaderboards->first()->id);
-        $theme = $req->all()['theme-selector'];
-        $length = $req->all()['leaderboard-length-slider'];
-        $leaderboard->theme = $theme;
-        $leaderboard->length = $length;
+        $leaderboard->theme = $req->all()['theme-selector'];
+        $leaderboard->length = $req->all()['leaderboard-length-slider'];
+        if (isset($req->all()['leaderboard-reset']) && isset($req->all()['leaderboard-reset-confirm-checkbox'])) {
+            $leaderboard->reset_timestamp = Carbon::now()->toDateTimeString();
+        }
         $leaderboard->save();
         return redirect()->route('dashboard');
     }
