@@ -1,6 +1,6 @@
 <div class="form-group">
   <div class="row">
-    <div class="col-12 col-lg-6">
+    <div class="col-12 col-xl-6">
       @include('dropins.components.leaderboard', ['preview' => true])
     </div>
 

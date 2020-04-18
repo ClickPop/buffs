@@ -11692,7 +11692,7 @@ h4,
   display: -webkit-box;
   display: flex;
   margin-bottom: 0.5rem;
-  width: 600px;
+  width: 100%;
 }
 
 .leaderboard-wrapper.theme-light .leaderboard__row div {
@@ -11840,7 +11840,7 @@ h4,
   display: -webkit-box;
   display: flex;
   margin-bottom: 0.5rem;
-  width: 600px;
+  width: 100%;
 }
 
 .leaderboard-wrapper.theme-dark .leaderboard__row div {
