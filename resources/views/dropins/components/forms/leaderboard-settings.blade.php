@@ -1,13 +1,14 @@
 <div class="form-group">
   <div class="row">
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-lg-6">
       @include('dropins.components.leaderboard', ['preview' => true])
     </div>
 
-    <form method="POST" class="col-12 col-md-6">
+    <form method="POST" class="col-12 col-xl-6">
 
-      <div id='settings'>
-        <div id="embed-info" class="form-group mb-4">
+      <div id='settings' class="card p-4">
+        <h3>Leaderboard Settings</h3>
+        <div id="embed-info" class="form-group xl-4">
           <p>
             Add a source in OBS or your tool of choice with the link below. The leaderboard will update in realtime when people refer your stream to their friends!
           </p>
@@ -46,8 +47,8 @@
           <button class="btn btn-primary" id='settings-submit' type="submit" value="Submit">Save</button>
         </div>
 
-        <div class="btn-group btn-group-toggle form-group">
-          <label id="leaderboard-reset-label" for="leaderboard-reset" class="btn btn-danger form-control">
+        <div class="btn-group-toggle form-group">
+          <label id="leaderboard-reset-label" for="leaderboard-reset" class="btn btn-danger">
             <input name="leaderboard-reset" id="leaderboard-reset" type="checkbox"/>
             Reset Leaderboard
           </label>
