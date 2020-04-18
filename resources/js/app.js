@@ -10,7 +10,6 @@ function updateTheme($leaderboard, theme) {
 }
 
 $(document).ready(function() {
-  let theme;
   let alert_timeout;
   let $leaderboard = $('.leaderboard');
 
@@ -33,6 +32,25 @@ $(document).ready(function() {
     $('#logout-form').submit();
   });
 
+  $('#bot-part-button').click(function (e) { 
+    e.preventDefault();
+    $(e.target).attr('disabled', 'disabled').addClass('disabled');
+    fetch('/chatbot/part')
+      .then(res => res.json())
+      .then(data => {
+        $('#bot-join-button').removeClass('disabled').removeAttr('disabled');
+      });
+  });
+  $('#bot-join-button').click(function (e) { 
+    e.preventDefault();
+    $(e.target).attr('disabled', 'disabled').addClass('disabled');
+    fetch('/chatbot/join')
+    .then(res => res.json())
+    .then(data => {
+      $('#bot-part-button').removeClass('disabled').removeAttr('disabled');
+    });
+  });
+
   if ($leaderboard.length > 0) {
     let isPreview = $leaderboard.parents('.leaderboard-wrapper').hasClass('preview') ? true : false;
 
@@ -42,17 +60,6 @@ $(document).ready(function() {
       let theme = $this.val();
       updateTheme($leaderboard, theme);
     });
-
-    // $('#theme-submit').click(function (e) { 
-    //   e.preventDefault();
-    //   fetch(`/leaderboard/theme/${theme}`)
-    //     .then(res => res.json())
-    //     .then(data => {
-    //       let $alert = $('#leaderboard-alert');
-    //       $alert.text(`Theme changed to ${data[0].theme}`).slideDown('fast');
-    //       alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
-    //     })
-    // });
 
     if ($leaderboard && location.pathname.includes('/embed/leaderboard/')) {
       let channel = location.pathname.replace('/embed/leaderboard/', '');

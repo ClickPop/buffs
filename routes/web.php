@@ -43,6 +43,7 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     ]);
 
     Route::get('/', 'DashboardController@index')->name('dashboard');
+    Route::get('/chatbot', 'DashboardController@chatbot')->name('dashboard-chatbot');
     Route::post('/', 'DashboardController@updateSettings')->name('change-theme');
     Route::prefix('/admin')->group(function() {
         Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('leaderboards.admin');
@@ -56,7 +57,15 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
         Route::get('/', 'LeaderboardController@index')->name('leaderboards.index');
         Route::get('/quick-start', 'LeaderboardController@quickStart')->name('leaderboards.quickStart');
     });
-
+    Route::prefix('/chatbot')->group(function() {
+        Route::get('/', 'DashboardController@chatbot')->name('dashboard-chatbot');
+        Route::get('/quick-start', 'Chatbot@quickStart')->name('chatbot.quickStart');
+        Route::get('/join', 'Chatbot@join')->name('chatbot.join');
+        Route::get('/part', 'Chatbot@part')->name('chatbot.part');
+        Route::get('/updateUsername', 'Chatbot@updateUsername')->name('chatbot.updateUsername');
+        Route::get('/delete', 'Chatbot@delete')->name('chatbot.delete');
+        Route::get('/status', 'Chatbot@status')->name('chatbot.status');
+    });
     Route::prefix('/referrals')->group(function() {
         Route::get('/', 'LeaderboardReferralController@index')->name('leaderboardReferrals.index');
     });

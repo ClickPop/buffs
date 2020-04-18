@@ -17,9 +17,15 @@
             <li>
                 <a href="{{ route('dashboard') }}">
                     @svg('icons/kanban')
-                    Leaderboard
+                    Dashboard
                 </a>
             </li>
+            {{-- <li>
+                <a href="{{ route('dashboard-chatbot') }}">
+                    @svg('icons/chat')
+                    Chatbot
+                </a>
+            </li> --}}
             <!-- <li>
                 <a href="#">
                     @svg('icons/wifi')

@@ -37088,7 +37088,6 @@ function updateTheme($leaderboard, theme) {
 }
 
 $(document).ready(function () {
-  var theme;
   var alert_timeout;
   var $leaderboard = $('.leaderboard');
   $('input.remember-me').on('change', function () {
@@ -37108,6 +37107,24 @@ $(document).ready(function () {
     e.preventDefault();
     $('#logout-form').submit();
   });
+  $('#bot-part-button').click(function (e) {
+    e.preventDefault();
+    $(e.target).attr('disabled', 'disabled').addClass('disabled');
+    fetch('/chatbot/part').then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      $('#bot-join-button').removeClass('disabled').removeAttr('disabled');
+    });
+  });
+  $('#bot-join-button').click(function (e) {
+    e.preventDefault();
+    $(e.target).attr('disabled', 'disabled').addClass('disabled');
+    fetch('/chatbot/join').then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      $('#bot-part-button').removeClass('disabled').removeAttr('disabled');
+    });
+  });
 
   if ($leaderboard.length > 0) {
     var isPreview = $leaderboard.parents('.leaderboard-wrapper').hasClass('preview') ? true : false;
@@ -37116,16 +37133,7 @@ $(document).ready(function () {
       var $this = $(this);
       var theme = $this.val();
       updateTheme($leaderboard, theme);
-    }); // $('#theme-submit').click(function (e) { 
-    //   e.preventDefault();
-    //   fetch(`/leaderboard/theme/${theme}`)
-    //     .then(res => res.json())
-    //     .then(data => {
-    //       let $alert = $('#leaderboard-alert');
-    //       $alert.text(`Theme changed to ${data[0].theme}`).slideDown('fast');
-    //       alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
-    //     })
-    // });
+    });
 
     if ($leaderboard && location.pathname.includes('/embed/leaderboard/')) {
       var channel = location.pathname.replace('/embed/leaderboard/', '');
@@ -37259,8 +37267,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/vagrant/github/buffs/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/vagrant/github/buffs/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
