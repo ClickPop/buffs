@@ -14,7 +14,7 @@ class AddResetTimestampToLeaderboardsTable extends Migration
     public function up()
     {
         Schema::table('leaderboards', function (Blueprint $table) {
-            $table->timestamp('reset_timestamp');
+            $table->timestamp('reset_timestamp')->nullable();
         });
     }
 
