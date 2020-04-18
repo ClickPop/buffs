@@ -43,6 +43,10 @@ class CreateSocialAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('socialite_users');
+        Schema::table('social_accounts', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['platform_id']);
+        });
+        Schema::dropIfExists('social_accounts');
     }
 }

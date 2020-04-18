@@ -39,7 +39,7 @@ class Chatbot extends Controller
             $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
             return redirect()->route('dashboard');
         } catch (ExceptionRequestException $e) {
-            return view('dashboard', [$error => true]);
+            return view('dashboard.index', [$error => true]);
         }
     }
 
@@ -57,7 +57,7 @@ class Chatbot extends Controller
             $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
             return response()->json(json_decode($data));
         } catch (ExceptionRequestException $e) {
-            return view('dashboard', [$error => true]);
+            return view('dashboard.index', [$error => true]);
         }
     }
 
@@ -75,7 +75,7 @@ class Chatbot extends Controller
             $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
             return response()->json(json_decode($data));
         } catch (ExceptionRequestException $e) {
-            return view('dashboard', [$error => true]);
+            return view('dashboard.index', [$error => true]);
         }
     }
 
@@ -93,7 +93,7 @@ class Chatbot extends Controller
             $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
             return response()->json(json_decode($data));
         } catch (ExceptionRequestException $e) {
-            return view('dashboard', [$error => true]);
+            return view('dashboard.index', [$error => true]);
         }
     }
 
@@ -111,7 +111,7 @@ class Chatbot extends Controller
             $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
             return response()->json(json_decode($data));
         } catch (ExceptionRequestException $e) {
-            return view('dashboard', [$error => true]);
+            return view('dashboard.index', [$error => true]);
         }
     }
 
@@ -129,7 +129,7 @@ class Chatbot extends Controller
             $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
             return response()->json(json_decode($data));
         } catch (ExceptionRequestException $e) {
-            return view('dashboard', [$error => true]);
+            return view('dashboard.index', [$error => true]);
         }
     }
 }

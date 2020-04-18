@@ -30,7 +30,8 @@ class SimplifyLeaderboards extends Migration
     public function down()
     {
         Schema::table('leaderboards', function (Blueprint $table) {
-            $table->dropForeign('user_id');
+            $table->dropForeign(['user_id']);
+            $table->dropColumn(['user_id']);
         });
     }
 }

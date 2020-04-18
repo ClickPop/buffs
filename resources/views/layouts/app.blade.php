@@ -33,7 +33,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.leaderboards') }}">
+                <a href="#">
                     @svg('icons/kanban')
                     Leaderboards
                 </a>
@@ -43,7 +43,7 @@
                     @svg('icons/eye')
                     Referrals
                 </a>
-            </li>
+            </li> -->
             <li>
                 <a href="#adminSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     @svg('icons/shield-lock')
@@ -51,10 +51,13 @@
                 </a>
                 <ul class="collapse list-unstyled" id="adminSubmenu">
                     <li>
-                        <a href="#">Users</a>
+                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </li>
                     <li>
-                        <a href="#">Streams</a>
+                        <a href="{{ route('admin.chatbots') }}">Chatbots</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.betalist') }}">BetaList</a>
                     </li>
                     <li>
                         <a href="{{route('leaderboards.index')}}">Leaderboards</a>
@@ -63,7 +66,7 @@
                         <a href="#">Referrals</a>
                     </li>
                 </ul>
-            </li> -->
+            </li>
             <li>
                 <a href="#" class="logout-link">
                     @svg('icons/arrow-bar-right')

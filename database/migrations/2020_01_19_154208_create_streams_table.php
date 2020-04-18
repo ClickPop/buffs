@@ -40,6 +40,10 @@ class CreateStreamsTable extends Migration
      */
     public function down()
     {
+        Schema::table('streams', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['platform_id']);
+        });
         Schema::dropIfExists('streams');
     }
 }
