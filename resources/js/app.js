@@ -32,24 +32,26 @@ $(document).ready(function() {
     $('#logout-form').submit();
   });
 
-  $('#bot-action-button').click(function (e) { 
+  $('#bot-action-button').click(function (e) {
     e.preventDefault();
     if ($(this).text() === 'Part') {
       fetch('/chatbot/part')
       .then(res => res.json())
       .then(data => {
         $(this).removeClass('btn-danger').addClass('btn-primary').text('Join');
+        $('#bot-action-statement').text('The bot isn\'t in your channel yet.');
       });
     } else if ($(this).text() === 'Join') {
       fetch('/chatbot/join')
       .then(res => res.json())
       .then(data => {
         $(this).removeClass('btn-primary').addClass('btn-danger').text('Part');
+        $('#bot-action-statement').text('The bot is in your channel.');
       });
     }
   });
 
-  $('#leaderboard-reset').change(function (e) { 
+  $('#leaderboard-reset').change(function (e) {
     e.preventDefault();
     if (this.checked) {
       $('#leaderboard-reset-label').addClass('active');
@@ -88,8 +90,8 @@ $(document).ready(function() {
             if (typeof data.leaderboard.theme === "string" && data.leaderboard.theme.length > 0) {
               updateTheme($leaderboard, data.leaderboard.theme);
             }
-          
-            $('.leaderboard__row').each(function (index, row) { 
+
+            $('.leaderboard__row').each(function (index, row) {
               if (index > 0) {
                 if (index <= data.leaderboard.length) {
                   $(row).hide()
@@ -106,25 +108,25 @@ $(document).ready(function() {
         })
       }, 5000);
     }
-    $('#embed-copy').click(function (e) { 
+    $('#embed-copy').click(function (e) {
       e.preventDefault();
       $('#embed-link').removeAttr('disabled');
       $('#embed-link').select();
       document.execCommand("copy");
       $('#embed-link').attr('disabled', 'disabled');
       if ($('#embed-alert')) {
-  
+
       }
       let $alert = $('#leaderboard-alert');
       $alert.addClass("alert alert-success text-center").text('Link copied to clipboard').slideDown('fast');
       alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
     });
-    $('#leaderboard-length-slider').on('input', function (e) { 
+    $('#leaderboard-length-slider').on('input', function (e) {
       e.preventDefault();
       $('#leaderboard-length').text(e.target.value);
     });
-    $('#leaderboard-length-slider').change(function (e) { 
-      $('.leaderboard__row').each((index, row) => { 
+    $('#leaderboard-length-slider').change(function (e) {
+      $('.leaderboard__row').each((index, row) => {
            $(row).hide();
       });
       for (let i = 0; i <= e.target.value; i++) {

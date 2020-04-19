@@ -1,0 +1,50 @@
+.nav {
+  align-content: baseline;
+  background: $adminNavBg;
+  color: white;
+  width: 400px;
+
+  > div,
+  > ul {
+    width: 100%;
+  }
+
+  &__header {
+    background: $adminNavBgDarker;
+  }
+
+  .logo {
+    width: 200px;
+  }
+
+  &__items {
+    a {
+      color: $adminNavLinkColor;
+
+      &:hover {
+        background: $adminNavLinkColor;
+        color: $adminNavBgDarker;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .collapse {
+    background: $adminNavBgDarker;
+  }
+
+  @media (max-width: $md) {
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    > div,
+    > ul {
+      width: auto;
+    }
+
+    .logo {
+      width: 80px;
+    }
+  }
+}

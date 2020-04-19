@@ -11,7 +11,8 @@
 @import 'includes/video',
         'includes/type',
         'includes/buttons',
-        'includes/admin';
+        'includes/nav',
+        'includes/layout';
 
 // Leaderboard Stuff
 @import 'includes/leaderboards/animation',
@@ -20,63 +21,44 @@
         'includes/leaderboards/dark';
 
 html {
-    overflow: auto; min-height: 100vh;
-    background: transparent;
-    background-image: none;
+  overflow: auto; min-height: 100vh;
+  background: transparent;
+  background-image: none;
 }
 
 body {
-    &.embed {
-        background-color: transparent;
-        background-image: none;
-    }
+  min-height: 100vh;
+  
+  &.embed {
+    background-color: transparent;
+    background-image: none;
+  }
 }
 
 .bg-dark {
-    color: $light;
-    background-image: linear-gradient(33deg, $blueDarkest, $blueDarker);
+  color: $light;
+  background-image: linear-gradient(33deg, $blueDarkest, $blueDarker);
 }
 .bg-app {
-    color: $blueDarkest;
-    background: $gray-400 linear-gradient(33deg, $gray-400, rgba($purpleLight, 0.5));
+  color: $blueDarkest;
+  background: $gray-400 linear-gradient(33deg, $gray-400, rgba($purpleLight, 0.5));
 }
 
 .logo {
-    width: 135px;
+  width: 135px;
 }
+
 .mage {
-    max-width: 600px;
+  max-width: 600px;
 }
 
 .login-cta {
-    position: absolute;
-    top: 0; right: 0;
-    padding: .5rem;
-    display: flex;
+  position: absolute;
+  top: 0; right: 0;
+  padding: .5rem;
+  display: flex;
 
-    p {
-        margin: 0;
-    }
-}
-
-@include media-breakpoint-down(md) {
-    .wizard-after {
-        padding-bottom: 300px;
-        overflow: hidden;
-        align-items: start;
-        position: relative;
-
-        &::after {
-            content: '';
-            width: 300px; height: 320px;
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-image: url('/images/brand/wizard.png');
-            background-size: 300px auto;
-            background-repeat: no-repeat;
-            background-position: center top;
-        }
-    }
+  p {
+    margin: 0;
+  }
 }

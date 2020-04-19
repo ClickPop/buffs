@@ -3,8 +3,8 @@
 @section('content')
 <div class="container-fluid dashboard-wrapper">
     <div class="row">
-        <div class="col-12 my-4">
-            <h2>My Leaderboard</h2>
+        <div class="col-12 mb-4">
+            <h2 class="mb-3">My Leaderboard</h2>
             <!-- if no leaderboard, show something else -->
             @empty($leaderboard)
             <p>Ready to get started growing your audience? Just click below to create your leaderboard.</p>
@@ -14,8 +14,8 @@
                 @include('dropins.components.forms.leaderboard-settings', ['leaderboard' => $leaderboard])
             @endisset
         </div>
-        <div class="col-12 my-4">
-            <h2 class="my-3">BUFFS Chatbot</h2>
+        <div class="col-12">
+            <h2 class="my-3">Chatbot</h2>
             <p>
               The chatbot bot lets your viewers get their unique referral link by typing <strong>!buffs</strong>.
             </p>
