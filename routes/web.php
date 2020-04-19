@@ -45,13 +45,16 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::get('/chatbot', 'DashboardController@chatbot')->name('dashboard-chatbot');
     Route::post('/', 'DashboardController@updateSettings')->name('change-theme');
-    Route::prefix('/admin')->group(function() {
-        Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('leaderboards.admin');
-        Route::get('/referrals', 'LeaderboardReferralController@adminIndex')->name('leaderboardReferrals.admin');
-    });
+    // Route::prefix('/admin')->group(function() {
+    //     Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('leaderboards.admin');
+    //     Route::get('/referrals', 'LeaderboardReferralController@adminIndex')->name('leaderboardReferrals.admin');
+    // });
 
     Route::prefix('/admin')->group(function() {
-        Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('admin.leaderboards');
+        Route::get('/', 'DashboardController@adminIndex')->name('admin.dashboard');
+        Route::get('/chatbot', 'DashboardController@adminChatbot')->name('admin.chatbots');
+        Route::get('/betalist', 'DashboardController@adminBetaList')->name('admin.betalist');
+        // Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('admin.leaderboards');
     });
     Route::prefix('/leaderboards')->group(function() {
         Route::get('/', 'LeaderboardController@index')->name('leaderboards.index');

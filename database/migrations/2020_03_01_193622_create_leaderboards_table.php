@@ -37,6 +37,9 @@ class CreateLeaderboardsTable extends Migration
      */
     public function down()
     {
+        Schema::table('leaderboards', function (Blueprint $table) {
+            $table->dropForeign(['stream_id']);
+        });
         Schema::dropIfExists('leaderboards');
     }
 }

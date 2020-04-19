@@ -12,7 +12,7 @@ class BetaListTableSeeder extends Seeder
      */
     public function run() {
         $initialBetaList = array(
-            // "sean.metzgar@gmail.com",
+            "sean.metzgar@gmail.com",
             "rescus1221@gmail.com",
             "chris.vqz@gmail.com"
         );

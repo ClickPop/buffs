@@ -26,7 +26,7 @@ class AddResetTimestampToLeaderboardsTable extends Migration
     public function down()
     {
         Schema::table('leaderboards', function (Blueprint $table) {
-            $table->dropColumn('reset_timestamp');
+            $table->dropColumn(['reset_timestamp']);
         });
     }
 }

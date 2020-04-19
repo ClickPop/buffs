@@ -101,7 +101,7 @@ class LoginController extends Controller
                 $betaListUser->user()->associate($user);
                 $betaListUser->save();
             }
-
+            checkLeaderboard($user);
             return $user;
         } else {
             //Check if user with same email address exist
@@ -155,7 +155,7 @@ class LoginController extends Controller
                 'refreshToken' => $refreshToken,
                 'expires' => $expires,
             ]);
-
+            checkLeaderboard($user);
             return $user;
         }
     }

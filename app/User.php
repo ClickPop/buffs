@@ -90,4 +90,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(BetaList::class, 'created_by');
     }
+
+    // Logic based Accessores
+    public function getTwitchIDAttribute()
+    {
+        $rVal = null;
+        $twitch = \App\Platform::where('name', 'twitch')->first();
+        if ($twitch) {
+            $social_account = $this->oauths()->where('platform_id', $twitch->id)->first();
+            if ($social_account) {
+                $rVal = $social_account->platform_user_id;
+            }
+        }
+        return $rVal;
+    }
 }

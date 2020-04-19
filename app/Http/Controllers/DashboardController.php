@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use App\Leaderboard;
-use App\SocialAccount;
+use App\Leaderboard, App\BetaList, App\SocialAccount;
+
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
@@ -47,13 +47,13 @@ class DashboardController extends Controller
                'exceptions' => false,
             )
         ));
-        $twitch_userId =  SocialAccount::where('user_id', $user->id)->first()->platform_user_id;
+        $twitch_userId =  $user->twitch_id;
         try {
             $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);
             $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
-            return view('dashboard', ['chatbot' => json_decode($data), 'user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
+            return view('dashboard.index', ['chatbot' => json_decode($data), 'user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
         } catch (ExceptionRequestException $e) {
-            return view('dashboard', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
+            return view('dashboard.index', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
         }
     }
 
@@ -65,7 +65,7 @@ class DashboardController extends Controller
     //            'exceptions' => false,
     //          )
     //       ));
-    //     $twitch_userId =  DB::table('social_accounts')->where('id', $user->id)->first()->platform_user_id;
+    //     $twitch_userId =  $user->twitch_id;
     //     try {
     //         $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);
     //         $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
@@ -86,5 +86,34 @@ class DashboardController extends Controller
         }
         $leaderboard->save();
         return redirect()->route('dashboard');
+    }
+
+    public function adminIndex()
+    {
+        if (Auth::check() && Auth::user()->hasRole('admin')) {
+            return view('dashboard.admin');
+        } else {
+            return redirect()->route('dashboard');
+        }
+    }
+
+    public function adminChatbot()
+    {
+        if (Auth::check() && Auth::user()->hasRole('admin')) {
+            $chatbots = null;
+            return view('chatbot.admin');
+        } else {
+            return redirect()->route('dashboard');
+        }
+    }
+
+    public function adminBetaList()
+    {
+        if (Auth::check() && Auth::user()->hasRole('admin')) {
+            $betalist = BetaList::all();
+            return view('betalist.admin');
+        } else {
+            return redirect()->route('dashboard');
+        }
     }
 }

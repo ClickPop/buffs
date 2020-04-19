@@ -39,6 +39,10 @@ class CreateBetaListTable extends Migration
      */
     public function down()
     {
+        Schema::table('betalist', function (Blueprint $table) {
+            $table->dropForeign(['created_by']);
+            $table->dropForeign(['user_id']);
+        });
         Schema::dropIfExists('betalist');
 
     }

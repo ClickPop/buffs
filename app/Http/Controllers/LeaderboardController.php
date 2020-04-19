@@ -75,11 +75,7 @@ class LeaderboardController extends Controller
     {
         if (Auth::check()) {
             $user = Auth::user();
-            if ($user->leaderboards->count() === 0) {
-                $leaderboard = new Leaderboard;
-                $leaderboard->user()->associate($user);
-                $leaderboard->save();
-            }
+            checkLeaderboard($user);
             return redirect()->route('dashboard');
         } else {
             return abort(403);

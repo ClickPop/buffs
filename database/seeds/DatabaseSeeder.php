@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call(BetaListTableSeeder::class);
         $this->call(RoleTableSeeder::class);
         $this->call(PlatformTableSeeder::class);
-        // $this->call(UserTableSeeder::class);
+        $this->call(UserTableSeeder::class);
         
         if (App::Environment() !== 'production') {
             // $this->call(StreamSeeder::class);

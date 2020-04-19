@@ -42,6 +42,10 @@ class CreateLeaderboardReferralsTable extends Migration
      */
     public function down()
     {
+        Schema::table('leaderboard_referrals', function (Blueprint $table) {
+            $table->dropForeign(['leaderboard_id']);
+            $table->dropForeign(['referrer_id']);
+        });
         Schema::dropIfExists('leaderboard_referrals');
     }
 }
