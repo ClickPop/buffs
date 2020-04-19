@@ -37107,23 +37107,24 @@ $(document).ready(function () {
     e.preventDefault();
     $('#logout-form').submit();
   });
-  $('#bot-part-button').click(function (e) {
+  $('#bot-action-button').click(function (e) {
+    var _this = this;
+
     e.preventDefault();
-    $(e.target).attr('disabled', 'disabled').addClass('disabled');
-    fetch('/chatbot/part').then(function (res) {
-      return res.json();
-    }).then(function (data) {
-      $('#bot-join-button').removeClass('disabled').removeAttr('disabled');
-    });
-  });
-  $('#bot-join-button').click(function (e) {
-    e.preventDefault();
-    $(e.target).attr('disabled', 'disabled').addClass('disabled');
-    fetch('/chatbot/join').then(function (res) {
-      return res.json();
-    }).then(function (data) {
-      $('#bot-part-button').removeClass('disabled').removeAttr('disabled');
-    });
+
+    if ($(this).text() === 'Part') {
+      fetch('/chatbot/part').then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        $(_this).removeClass('btn-danger').addClass('btn-primary').text('Join');
+      });
+    } else if ($(this).text() === 'Join') {
+      fetch('/chatbot/join').then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        $(_this).removeClass('btn-primary').addClass('btn-danger').text('Part');
+      });
+    }
   });
   $('#leaderboard-reset').change(function (e) {
     e.preventDefault();
@@ -37278,8 +37279,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/vagrant/github/buffs/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/vagrant/github/buffs/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
