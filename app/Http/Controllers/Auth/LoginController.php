@@ -102,6 +102,7 @@ class LoginController extends Controller
                 $betaListUser->save();
             }
             checkLeaderboard($user);
+            checkChatbot($user);
             return $user;
         } else {
             //Check if user with same email address exist
@@ -156,6 +157,7 @@ class LoginController extends Controller
                 'expires' => $expires,
             ]);
             checkLeaderboard($user);
+            checkChatbot($user);
             return $user;
         }
     }
