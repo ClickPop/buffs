@@ -20,9 +20,7 @@
               The chatbot bot lets your viewers get their unique referral link by typing <strong>!buffs</strong>.
             </p>
             @if (isset($chatbot))
-            <div class="d-flex flex-column justify-content-center">
                 @include('dropins.components.chatbot', ['chatbot' => $chatbot])
-            </div>
             @else
                 @empty($chatbot)
                     <h4>Looks like you don't have a chatbot setup. Click the button to set one up!</h4>
