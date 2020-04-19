@@ -39,7 +39,7 @@
       </li>
       @endif
       <li>
-        <a href="#" class="p-3 d-block">
+        <a href="#" class="p-3 d-block logout-link">
           @svg('icons/arrow-bar-right')
           Logout
         </a>

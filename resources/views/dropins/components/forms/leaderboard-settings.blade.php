@@ -71,7 +71,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger">Reset</button>
+        <button id="leaderboard-reset" type="button" class="btn btn-danger">Reset</button>
       </div>
     </div>
   </div>

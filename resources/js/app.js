@@ -51,15 +51,15 @@ $(document).ready(function() {
     }
   });
 
-  $('#leaderboard-reset').change(function (e) {
+  $('#leaderboard-reset').click(function (e) {
     e.preventDefault();
-    if (this.checked) {
-      $('#leaderboard-reset-label').addClass('active');
-      $('#leaderboard-reset-confirm-alert').slideDown('fast');
-    } else {
-      $('#leaderboard-reset-label').removeClass('active');
-      $('#leaderboard-reset-confirm-alert').slideUp('fast');
-    }
+    fetch('/leaderboards/reset')
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          $('#resetReferrals').modal('hide');
+        }
+      })
   });
 
   if ($leaderboard.length > 0) {

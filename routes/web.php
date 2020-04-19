@@ -59,6 +59,7 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     Route::prefix('/leaderboards')->group(function() {
         Route::get('/', 'LeaderboardController@index')->name('leaderboards.index');
         Route::get('/quick-start', 'LeaderboardController@quickStart')->name('leaderboards.quickStart');
+        Route::get('/reset', 'DashboardController@resetLeaderboard')->name('leaderboards.reset');
     });
     Route::prefix('/chatbot')->group(function() {
         Route::get('/', 'DashboardController@chatbot')->name('dashboard-chatbot');
