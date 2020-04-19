@@ -53,7 +53,7 @@ class Leaderboard extends Model
             array_pop($referralCounts);
         }
          
-        if($preview === true && count($referralCounts) < 10) {
+        if($preview === true && count($referralCounts) === 0) {
             $wizards = [
                 'Gandalf',
                 'Merlin',
