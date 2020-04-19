@@ -81,11 +81,17 @@ class DashboardController extends Controller
         $leaderboard =  Leaderboard::find($user->leaderboards->first()->id);
         $leaderboard->theme = $req->all()['theme-selector'];
         $leaderboard->length = $req->all()['leaderboard-length-slider'];
-        if (isset($req->all()['leaderboard-reset']) && isset($req->all()['leaderboard-reset-confirm-checkbox'])) {
-            $leaderboard->reset_timestamp = Carbon::now()->toDateTimeString();
-        }
         $leaderboard->save();
         return redirect()->route('dashboard');
+    }
+
+    public function resetLeaderboard(Request $req)
+    {
+        $user = Auth::user();
+        $leaderboard =  Leaderboard::find($user->leaderboards->first()->id);
+        $leaderboard->reset_timestamp = Carbon::now()->toDateTimeString();
+        $leaderboard->save();
+        return response()->json(['status' => 'success', 'data' => ['reset-date' => $leaderboard->reset_timestamp]]);
     }
 
     public function adminIndex()

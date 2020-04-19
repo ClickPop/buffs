@@ -37128,16 +37128,15 @@ $(document).ready(function () {
       });
     }
   });
-  $('#leaderboard-reset').change(function (e) {
+  $('#leaderboard-reset').click(function (e) {
     e.preventDefault();
-
-    if (this.checked) {
-      $('#leaderboard-reset-label').addClass('active');
-      $('#leaderboard-reset-confirm-alert').slideDown('fast');
-    } else {
-      $('#leaderboard-reset-label').removeClass('active');
-      $('#leaderboard-reset-confirm-alert').slideUp('fast');
-    }
+    fetch('/leaderboards/reset').then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      if (data.status === 'success') {
+        $('#resetReferrals').modal('hide');
+      }
+    });
   });
 
   if ($leaderboard.length > 0) {
@@ -37281,8 +37280,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Chris\git\buffs\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Chris\git\buffs\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/vagrant/github/buffs/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/vagrant/github/buffs/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

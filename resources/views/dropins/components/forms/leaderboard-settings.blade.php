@@ -48,16 +48,31 @@
         </div>
 
         <div class="btn-group-toggle form-group">
-          <label id="leaderboard-reset-label" for="leaderboard-reset" class="btn btn-danger">
-            <input name="leaderboard-reset" id="leaderboard-reset" type="checkbox"/>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#resetReferrals">
             Reset referrals
-          </label>
-        </div>
-        <div id="leaderboard-reset-confirm-alert" class="alert alert-danger text-center" style="display: none;">
-          <label for="leaderboard-reset-confirm">Are you sure you want to reset the leaderboard?</label>
-          <input type="checkbox" name="leaderboard-reset-confirm-checkbox" id="leaderboard-reset-confirm-checkbox" />
+          </button>
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="modal fade" id="resetReferrals" tabindex="-1" role="dialog" aria-labelledby="resetReferrals" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Reset leaderboard</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to reset your referrals and start fresh?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="leaderboard-reset" type="button" class="btn btn-danger">Reset</button>
+      </div>
+    </div>
   </div>
 </div>
