@@ -37117,12 +37117,14 @@ $(document).ready(function () {
         return res.json();
       }).then(function (data) {
         $(_this).removeClass('btn-danger').addClass('btn-primary').text('Join');
+        $('#bot-action-statement').text('The bot isn\'t in your channel yet.');
       });
     } else if ($(this).text() === 'Join') {
       fetch('/chatbot/join').then(function (res) {
         return res.json();
       }).then(function (data) {
         $(_this).removeClass('btn-primary').addClass('btn-danger').text('Part');
+        $('#bot-action-statement').text('The bot is in your channel.');
       });
     }
   });
@@ -37279,8 +37281,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Chris\git\buffs\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Chris\git\buffs\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

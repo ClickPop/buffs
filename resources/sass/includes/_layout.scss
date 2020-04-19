@@ -1,0 +1,7 @@
+.app-wrapper {
+  min-height: 100vh;
+
+  @media (max-width: $md) {
+    flex-direction: column;
+  }
+}
