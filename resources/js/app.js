@@ -32,23 +32,21 @@ $(document).ready(function() {
     $('#logout-form').submit();
   });
 
-  $('#bot-part-button').click(function (e) { 
+  $('#bot-action-button').click(function (e) { 
     e.preventDefault();
-    $(e.target).attr('disabled', 'disabled').addClass('disabled');
-    fetch('/chatbot/part')
+    if ($(this).text() === 'Part') {
+      fetch('/chatbot/part')
       .then(res => res.json())
       .then(data => {
-        $('#bot-join-button').removeClass('disabled').removeAttr('disabled');
+        $(this).removeClass('btn-danger').addClass('btn-primary').text('Join');
       });
-  });
-  $('#bot-join-button').click(function (e) { 
-    e.preventDefault();
-    $(e.target).attr('disabled', 'disabled').addClass('disabled');
-    fetch('/chatbot/join')
-    .then(res => res.json())
-    .then(data => {
-      $('#bot-part-button').removeClass('disabled').removeAttr('disabled');
-    });
+    } else if ($(this).text() === 'Join') {
+      fetch('/chatbot/join')
+      .then(res => res.json())
+      .then(data => {
+        $(this).removeClass('btn-primary').addClass('btn-danger').text('Part');
+      });
+    }
   });
 
   $('#leaderboard-reset').change(function (e) { 
