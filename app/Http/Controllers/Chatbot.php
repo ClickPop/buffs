@@ -31,8 +31,7 @@ class Chatbot extends Controller
                'exceptions' => false,
              )
         ));
-        $twitch_userId =  SocialAccount::where('user_id', $user->id)->first()->platform_user_id;
-        return [$user, $client, $twitch_userId];
+        return [$user, $client, $user->twitch_id];
     }
 
     public function quickStart()
@@ -103,7 +102,7 @@ class Chatbot extends Controller
     {
         [$user, $client, $twitch_userId] = Chatbot::getData();
 
-        $twitch_userId =  DB::table('social_accounts')->where('id', $user->id)->first()->platform_user_id;
+        $twitch_userId =  $user->twitch_id;
         try {
             $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);
             $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);

@@ -1,6 +1,6 @@
 .leaderboard-wrapper {
     &.preview {
-        padding: 1rem 0;
+        padding: 0.5rem 0 !important;
 
         &::after {
             content: 'This is a preview, test data may have been inserted for your viewing pleasure!';
