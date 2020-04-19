@@ -60,12 +60,12 @@
                     <li>
                         <a href="{{ route('admin.betalist') }}">BetaList</a>
                     </li>
-                    <li>
+                    <!--<li>
                         <a href="{{route('leaderboards.index')}}">Leaderboards</a>
                     </li>
                     <li>
                         <a href="#">Referrals</a>
-                    </li>
+                    </li>-->
                 </ul>
             </li>
             @endif
