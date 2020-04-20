@@ -37109,24 +37109,27 @@ $(document).ready(function () {
   $('#bot-action-button').click(function (e) {
     e.preventDefault();
     $button = $(this);
+    $label = $('#bot-action-statement');
 
     if ($button.text() === 'Part') {
       waitingButton($button, 'Parting...');
+      $label.fadeTo('fast', 0);
       fetch('/chatbot/part').then(function (res) {
         return res.json();
       }).then(function (data) {
         $button.removeClass('btn-danger').addClass('btn-primary');
         revertButton($button, 'Join');
-        $('#bot-action-statement').text("The bot isn't in your channel yet.");
+        $label.fadeTo('fast', 1).text("The bot isn't in your channel yet.");
       });
     } else if ($button.text() === 'Join') {
       waitingButton($button, 'Joining...');
+      $label.fadeTo('fast', 0);
       fetch('/chatbot/join').then(function (res) {
         return res.json();
       }).then(function (data) {
         $button.removeClass('btn-primary').addClass('btn-danger');
         revertButton($button, 'Part');
-        $('#bot-action-statement').text('The bot is in your channel.');
+        $label.fadeTo('fast', 1).text('The bot is in your channel.');
       });
     }
   });
