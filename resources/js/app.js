@@ -5,7 +5,7 @@ function getSettingsObject() {
   let temp_length = $('#leaderboard-length-slider').val();
   let temp_settings = {
     'theme-selector': temp_theme,
-    'leaderboard-length-slider': temp_length
+    'leaderboard-length-slider': temp_length,
   };
 
   return temp_settings;
@@ -18,7 +18,10 @@ function waitingButton($this, text = 'Saving...') {
   $this.html(html);
 }
 function revertButton($this, original) {
-  $this.html(original).prop('disabled', false).removeProp('disabled');
+  $this
+    .html(original)
+    .prop('disabled', false)
+    .removeProp('disabled');
 }
 
 function updateTheme($leaderboard, theme) {
@@ -59,24 +62,23 @@ $(document).ready(function() {
 
   $('#bot-action-button').click(function(e) {
     e.preventDefault();
-    if ($(this).text() === 'Part') {
+    $button = $(this);
+    if ($button.text() === 'Part') {
+      waitingButton($button, 'Parting...');
       fetch('/chatbot/part')
         .then((res) => res.json())
         .then((data) => {
-          $(this)
-            .removeClass('btn-danger')
-            .addClass('btn-primary')
-            .text('Join');
+          $button.removeClass('btn-danger').addClass('btn-primary');
+          revertButton($button, 'Join');
           $('#bot-action-statement').text("The bot isn't in your channel yet.");
         });
-    } else if ($(this).text() === 'Join') {
+    } else if ($button.text() === 'Join') {
+      waitingButton($button, 'Joining...');
       fetch('/chatbot/join')
         .then((res) => res.json())
         .then((data) => {
-          $(this)
-            .removeClass('btn-primary')
-            .addClass('btn-danger')
-            .text('Part');
+          $button.removeClass('btn-primary').addClass('btn-danger');
+          revertButton($button, 'Part');
           $('#bot-action-statement').text('The bot is in your channel.');
         });
     }
@@ -115,8 +117,7 @@ $(document).ready(function() {
               leaderboard = data;
               revertButton($button, original_button_content);
               $('#resetReferrals').modal('hide');
-            }
-          );
+            });
         }
       });
   });
@@ -127,7 +128,7 @@ $(document).ready(function() {
       .getAttribute('content');
     let $button = $(this);
     let original_button_content = $button.html();
-    waitingButton($button, "Saving...");
+    waitingButton($button, 'Saving...');
     fetch('/', {
       method: 'POST',
       headers: {
@@ -166,7 +167,9 @@ $(document).ready(function() {
       let theme = $this.val();
       settings = getSettingsObject();
       if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
-        $('#settings-submit').prop('disabled', false).removeProp('disabled');
+        $('#settings-submit')
+          .prop('disabled', false)
+          .removeProp('disabled');
       } else {
         $('#settings-submit').prop('disabled', true);
       }
@@ -233,22 +236,24 @@ $(document).ready(function() {
         $alert.slideUp('fast');
       }, 4000);
     });
-    $('#leaderboard-length-slider').on('input', function(e) {
-      e.preventDefault();
-      $('#leaderboard-length').text(e.target.value);
-    }).on('change blur', function(e) {
-      settings = getSettingsObject();
-      if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
-        $('#settings-submit').removeAttr('disabled');
-      } else {
-        $('#settings-submit').attr('disabled', 'disabled');
-      }
-      $('.leaderboard__row').each((index, row) => {
-        $(row).hide();
+    $('#leaderboard-length-slider')
+      .on('input', function(e) {
+        e.preventDefault();
+        $('#leaderboard-length').text(e.target.value);
+      })
+      .on('change blur', function(e) {
+        settings = getSettingsObject();
+        if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
+          $('#settings-submit').removeAttr('disabled');
+        } else {
+          $('#settings-submit').attr('disabled', 'disabled');
+        }
+        $('.leaderboard__row').each((index, row) => {
+          $(row).hide();
+        });
+        for (let i = 0; i <= e.target.value; i++) {
+          $(`.leaderboard__row:eq(${i})`).show();
+        }
       });
-      for (let i = 0; i <= e.target.value; i++) {
-        $(`.leaderboard__row:eq(${i})`).show();
-      }
-    });
   }
 });
