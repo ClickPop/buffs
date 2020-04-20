@@ -62,25 +62,27 @@ $(document).ready(function() {
 
   $('#bot-action-button').click(function(e) {
     e.preventDefault();
-    if ($(this).text() === 'Part') {
+    $button = $(this);
+    $label = $('#bot-action-statement');
+    if ($button.text() === 'Part') {
+      waitingButton($button, 'Parting...');
+      $label.fadeTo('fast', 0);
       fetch('/chatbot/part')
         .then((res) => res.json())
         .then((data) => {
-          $(this)
-            .removeClass('btn-danger')
-            .addClass('btn-primary')
-            .text('Join');
-          $('#bot-action-statement').text("The bot isn't in your channel yet.");
+          $button.removeClass('btn-danger').addClass('btn-primary');
+          revertButton($button, 'Join');
+          $label.fadeTo('fast', 1).text("The bot isn't in your channel yet.");
         });
-    } else if ($(this).text() === 'Join') {
+    } else if ($button.text() === 'Join') {
+      waitingButton($button, 'Joining...');
+      $label.fadeTo('fast', 0);
       fetch('/chatbot/join')
         .then((res) => res.json())
         .then((data) => {
-          $(this)
-            .removeClass('btn-primary')
-            .addClass('btn-danger')
-            .text('Part');
-          $('#bot-action-statement').text('The bot is in your channel.');
+          $button.removeClass('btn-primary').addClass('btn-danger');
+          revertButton($button, 'Part');
+          $label.fadeTo('fast', 1).text('The bot is in your channel.');
         });
     }
   });
