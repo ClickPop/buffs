@@ -13,7 +13,7 @@
             Add a source in OBS or your tool of choice with the link below. The leaderboard will update in realtime when people refer your stream to their friends!
           </p>
 
-          <label for="embed-link">Leaderboard Address</label>
+          <label for="embed-link"><strong>Leaderboard Address</strong></label>
 
           <div class="input-group">
             <input id="embed-link" name="embed-link" class="form-control" type="text" disabled value="{{ $_SERVER['SERVER_NAME'] }}/embed/leaderboard/{{ Auth::user()->username }}"/>
@@ -26,12 +26,10 @@
           </div>
 
           @csrf
-          <div id="leaderboard-alert" class="alert alert-success text-center mt-3" style="display: none;"></div>
-
         </div>
 
         <div class="mb-4">
-          <label for="theme-selector">Theme</label>
+          <label for="theme-selector"><strong>Theme</strong></label>
           <select id="theme-selector" name="theme-selector" class="form-control">
             <option value="light" {{ $leaderboard->theme === 'light' ? 'selected' : '' }}>Light</option>
             <option value="dark" {{ $leaderboard->theme === 'dark' ? 'selected' : '' }}>Dark</option>
@@ -39,19 +37,18 @@
         </div>
 
         <div class="form-group mb-4">
-          <label for="leaderboard-length-slider">Number of rows on leaderboard: <span id="leaderboard-length">{{ $leaderboard->length }}</span></label>
+          <label for="leaderboard-length-slider"><strong>Number of rows on leaderboard:</strong> <span id="leaderboard-length">{{ $leaderboard->length }}</span></label>
           <input class="custom-range" type="range" name="leaderboard-length-slider" id="leaderboard-length-slider" min="3" max="10" value={{ $leaderboard->length }} />
         </div>
 
-        <div class="mb-4">
-          <button class="btn btn-primary" id='settings-submit' type="submit" value="Submit">Save</button>
-        </div>
-
-        <div class="btn-group-toggle form-group">
+        <div class="justify-content-between d-flex">
+          <button class="btn btn-primary" id='settings-submit' type="button" disabled>Save</button>
           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#resetReferrals">
             Reset referrals
           </button>
         </div>
+        
+        <div id="leaderboard-alert" class="alert alert-success text-center mt-4 mb-0" style="display: none;"></div>
       </div>
     </form>
   </div>
