@@ -37114,10 +37114,28 @@ $(document).ready(function () {
   });
   $('#leaderboard-reset').click(function (e) {
     e.preventDefault();
+    var referralsURL = "/referrals";
     fetch('/leaderboards/reset').then(function (res) {
       return res.json();
     }).then(function (data) {
       if (data.status === 'success') {
+        fetch(referralsURL).then(function (res) {
+          return res.json();
+        }).then(function (data) {
+          $('.leaderboard__row').each(function (index, row) {
+            if (index > 0) {
+              if (index <= data.leaderboard.length) {
+                $(row).hide();
+                $(row).find('div:eq(0)').text(data.referrals[index - 1].referrer);
+                $(row).find('div:eq(1)').text(data.referrals[index - 1].count);
+                $(row).show('fast');
+              } else {
+                $(row).hide();
+              }
+            }
+          });
+          leaderboard = data;
+        });
         $('#resetReferrals').modal('hide');
       }
     });
@@ -37160,18 +37178,20 @@ $(document).ready(function () {
 
     if ($leaderboard && location.pathname.includes('/embed/leaderboard/')) {
       var channel = location.pathname.replace('/embed/leaderboard/', '');
-      var leaderboard;
+
+      var _leaderboard;
+
       var referralsURL = "/referrals/".concat(channel).concat(isPreview ? '/preview' : '');
       fetch(referralsURL).then(function (res) {
         return res.json();
       }).then(function (data) {
-        leaderboard = data;
+        _leaderboard = data;
       });
       setInterval(function () {
         fetch(referralsURL).then(function (res) {
           return res.json();
         }).then(function (data) {
-          if (JSON.stringify(data) !== JSON.stringify(leaderboard)) {
+          if (JSON.stringify(data) !== JSON.stringify(_leaderboard)) {
             if (typeof data.leaderboard.theme === 'string' && data.leaderboard.theme.length > 0) {
               updateTheme($leaderboard, data.leaderboard.theme);
             }
@@ -37188,7 +37208,7 @@ $(document).ready(function () {
                 }
               }
             });
-            leaderboard = data;
+            _leaderboard = data;
           }
         });
       }, 5000);

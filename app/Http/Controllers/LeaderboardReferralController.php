@@ -8,6 +8,7 @@ use App\Stream;
 use App\Platform;
 use App\Leaderboard;
 use Illuminate\Http\Request;
+use Auth;
 
 class LeaderboardReferralController extends Controller
 {
@@ -16,12 +17,23 @@ class LeaderboardReferralController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($provider, $channel_name)
+    public function index()
     {
-        $stream_id = Stream::where('channel_name', $channel_name)->get()->first()->id;
-        $provider_id = Platform::where('name', $provider)->get()->first()->id;
-        if ($stream_id && $provider_id) {
-            return response()->json(LeaderboardReferral::where('stream_id', $stream_id)->get());
+        $preview = true;
+        $user = Auth::user();
+        if ($user) {
+            $leaderboard = $user->leaderboards;
+            $referrals = null;
+            if (isset($leaderboard) && $leaderboard->count() > 0) {
+                $leaderboard = $leaderboard->first();
+                $referrals = $leaderboard->referralCounts($preview);
+            } else {
+                $leaderboard = null;
+            }
+
+            return response()->json(['leaderboard' => ['theme' => $leaderboard->theme, 'length' => $leaderboard->length], 'referrals' => $referrals]);
+        } else {
+            return abort(404);
         }
     }
 
@@ -103,11 +115,14 @@ class LeaderboardReferralController extends Controller
         //
     }
 
-    public function referral(Request $request, $channel_name, $referrer) {
+    public function referral(Request $request, $channel_name, $referrer)
+    {
         if (isset($channel_name) && isset($referrer)) {
-            if(is_string($channel_name) && strlen($channel_name) > 0
-                && is_string($referrer) && strlen($referrer) > 0) {
-                
+            if (
+                is_string($channel_name) && strlen($channel_name) > 0
+                && is_string($referrer) && strlen($referrer) > 0
+            ) {
+
                 $channel_name = strtolower($channel_name);
                 $referrer = strtolower($referrer);
                 $ip_address = $request->ip();
@@ -128,8 +143,14 @@ class LeaderboardReferralController extends Controller
                         }
                         return redirect('https://twitch.tv/' . $channel_name);
                     }
-                } else { abort(403, "No gaming the system!"); }
-            } else { return abort(403, "Invalid url parameters."); }
-        } else { return abort(403, "Missing url parameters."); }
+                } else {
+                    abort(403, "No gaming the system!");
+                }
+            } else {
+                return abort(403, "Invalid url parameters.");
+            }
+        } else {
+            return abort(403, "Missing url parameters.");
+        }
     }
 }
