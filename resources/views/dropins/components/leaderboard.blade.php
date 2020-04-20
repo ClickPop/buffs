@@ -23,3 +23,6 @@
     </div>
     @endisset
 </div>
+<script type="text/javascript">
+    var channel = '<?php echo $user->username; ?>';
+</script>

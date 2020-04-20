@@ -5,7 +5,7 @@ function getSettingsObject() {
   let temp_length = $('#leaderboard-length-slider').val();
   let temp_settings = {
     'theme-selector': temp_theme,
-    'leaderboard-length-slider': temp_length
+    'leaderboard-length-slider': temp_length,
   };
 
   return temp_settings;
@@ -18,7 +18,10 @@ function waitingButton($this, text = 'Saving...') {
   $this.html(html);
 }
 function revertButton($this, original) {
-  $this.html(original).prop('disabled', false).removeProp('disabled');
+  $this
+    .html(original)
+    .prop('disabled', false)
+    .removeProp('disabled');
 }
 
 function updateTheme($leaderboard, theme) {
@@ -117,8 +120,7 @@ $(document).ready(function() {
                 revertButton($button, original_button_content);
                 $('#resetReferrals').modal('hide');
               }, 500);
-            }
-          );
+            });
         }
       });
   });
@@ -129,7 +131,7 @@ $(document).ready(function() {
       .getAttribute('content');
     let $button = $(this);
     let original_button_content = $button.html();
-    waitingButton($button, "Saving...");
+    waitingButton($button, 'Saving...');
     fetch('/', {
       method: 'POST',
       headers: {
@@ -170,18 +172,18 @@ $(document).ready(function() {
       let theme = $this.val();
       settings = getSettingsObject();
       if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
-        $('#settings-submit').prop('disabled', false).removeProp('disabled');
+        $('#settings-submit')
+          .prop('disabled', false)
+          .removeProp('disabled');
       } else {
         $('#settings-submit').prop('disabled', true);
       }
       updateTheme($leaderboard, theme);
     });
 
-    if ($leaderboard && location.pathname.includes('/embed/leaderboard/')) {
-      let channel = location.pathname.replace('/embed/leaderboard/', '');
+    if ($leaderboard && location.pathname) {
       let leaderboard;
-      let referralsURL = `/referrals/${channel}${isPreview ? '/preview' : ''}`;
-
+      let referralsURL = `/referrals/${channel}`;
       fetch(referralsURL)
         .then((res) => res.json())
         .then((data) => {
@@ -201,7 +203,7 @@ $(document).ready(function() {
 
               $('.leaderboard__row').each(function(index, row) {
                 if (index > 0) {
-                  if (index <= data.leaderboard.length) {
+                  if (index <= data.referrals.length) {
                     $(row).hide();
                     $(row)
                       .find('div:eq(0)')
@@ -237,22 +239,24 @@ $(document).ready(function() {
         $alert.slideUp('fast');
       }, 3000);
     });
-    $('#leaderboard-length-slider').on('input', function(e) {
-      e.preventDefault();
-      $('#leaderboard-length').text(e.target.value);
-    }).on('change blur', function(e) {
-      settings = getSettingsObject();
-      if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
-        $('#settings-submit').removeAttr('disabled');
-      } else {
-        $('#settings-submit').attr('disabled', 'disabled');
-      }
-      $('.leaderboard__row').each((index, row) => {
-        $(row).hide();
+    $('#leaderboard-length-slider')
+      .on('input', function(e) {
+        e.preventDefault();
+        $('#leaderboard-length').text(e.target.value);
+      })
+      .on('change blur', function(e) {
+        settings = getSettingsObject();
+        if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
+          $('#settings-submit').removeAttr('disabled');
+        } else {
+          $('#settings-submit').attr('disabled', 'disabled');
+        }
+        $('.leaderboard__row').each((index, row) => {
+          $(row).hide();
+        });
+        for (let i = 0; i <= e.target.value; i++) {
+          $(`.leaderboard__row:eq(${i})`).show();
+        }
       });
-      for (let i = 0; i <= e.target.value; i++) {
-        $(`.leaderboard__row:eq(${i})`).show();
-      }
-    });
   }
 });

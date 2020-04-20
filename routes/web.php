@@ -45,6 +45,7 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::get('/chatbot', 'DashboardController@chatbot')->name('dashboard-chatbot');
     Route::post('/', 'DashboardController@updateSettings')->name('updateSettings');
+    Route::get('/referrals/{channel_name}', 'LeaderboardController@referrals')->name('dashboardReferrals');
     // Route::prefix('/admin')->group(function() {
     //     Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('leaderboards.admin');
     //     Route::get('/referrals', 'LeaderboardReferralController@adminIndex')->name('leaderboardReferrals.admin');
