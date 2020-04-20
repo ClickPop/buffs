@@ -37177,8 +37177,10 @@ $(document).ready(function () {
             }
           });
           leaderboard = data;
-          revertButton($button, original_button_content);
-          $('#resetReferrals').modal('hide');
+          setTimeout(function () {
+            revertButton($button, original_button_content);
+            $('#resetReferrals').modal('hide');
+          }, 500);
         });
       }
     });
@@ -37200,8 +37202,10 @@ $(document).ready(function () {
       var $alert = $('#leaderboard-alert');
       initial_settings = settings;
       $alert.addClass('alert alert-success text-center').text('Settings Saved').slideDown('fast', function () {
-        revertButton($button, original_button_content);
-        $('#theme-selector').trigger('change');
+        setTimeout(function () {
+          revertButton($button, original_button_content);
+          $('#theme-selector').trigger('change');
+        }, 500);
         alert_timeout = setTimeout(function () {
           $alert.slideUp('fast');
         }, 3000);
@@ -37277,7 +37281,7 @@ $(document).ready(function () {
       $alert.addClass('alert alert-success text-center').text('Link copied to clipboard').slideDown('fast');
       alert_timeout = setTimeout(function () {
         $alert.slideUp('fast');
-      }, 4000);
+      }, 3000);
     });
     $('#leaderboard-length-slider').on('input', function (e) {
       e.preventDefault();
