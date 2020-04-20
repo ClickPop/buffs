@@ -3,15 +3,25 @@ require('./bootstrap');
 function updateTheme($leaderboard, theme) {
   let $wrapper = $leaderboard.parents('.leaderboard-wrapper');
   $leaderboard.hide();
-  $wrapper.removeClass (function (index, className) {
-    return (className.match (/\btheme-\S+/g) || []).join(' ');
-  }).addClass(`theme-${theme}`);
+  $wrapper
+    .removeClass(function(index, className) {
+      return (className.match(/\btheme-\S+/g) || []).join(' ');
+    })
+    .addClass(`theme-${theme}`);
   $leaderboard.show(1);
 }
 
 $(document).ready(function() {
   let alert_timeout;
   let $leaderboard = $('.leaderboard');
+  let initial_settings = {
+    'theme-selector': $('#theme-selector').val(),
+    'leaderboard-length-slider': $('#leaderboard-length-slider').val(),
+  };
+  let settings = {
+    'theme-selector': $('#theme-selector').val(),
+    'leaderboard-length-slider': $('#leaderboard-length-slider').val(),
+  };
 
   $('input.remember-me').on('change', function() {
     if ($(this).is(':checked')) {
@@ -32,43 +42,83 @@ $(document).ready(function() {
     $('#logout-form').submit();
   });
 
-  $('#bot-action-button').click(function (e) {
+  $('#bot-action-button').click(function(e) {
     e.preventDefault();
     if ($(this).text() === 'Part') {
       fetch('/chatbot/part')
-      .then(res => res.json())
-      .then(data => {
-        $(this).removeClass('btn-danger').addClass('btn-primary').text('Join');
-        $('#bot-action-statement').text('The bot isn\'t in your channel yet.');
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          $(this)
+            .removeClass('btn-danger')
+            .addClass('btn-primary')
+            .text('Join');
+          $('#bot-action-statement').text("The bot isn't in your channel yet.");
+        });
     } else if ($(this).text() === 'Join') {
       fetch('/chatbot/join')
-      .then(res => res.json())
-      .then(data => {
-        $(this).removeClass('btn-primary').addClass('btn-danger').text('Part');
-        $('#bot-action-statement').text('The bot is in your channel.');
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          $(this)
+            .removeClass('btn-primary')
+            .addClass('btn-danger')
+            .text('Part');
+          $('#bot-action-statement').text('The bot is in your channel.');
+        });
     }
   });
 
-  $('#leaderboard-reset').click(function (e) {
+  $('#leaderboard-reset').click(function(e) {
     e.preventDefault();
     fetch('/leaderboards/reset')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.status === 'success') {
           $('#resetReferrals').modal('hide');
         }
-      })
+      });
+  });
+
+  $('#settings-submit').click(function(e) {
+    let csrf_token = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+    fetch('/', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrf_token,
+      },
+      body: JSON.stringify(settings),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        let $alert = $('#leaderboard-alert');
+        $alert
+          .addClass('alert alert-success text-center')
+          .text('Settings Saved')
+          .slideDown('fast');
+        alert_timeout = setTimeout(() => {
+          $alert.slideUp('fast');
+        }, 4000);
+      });
   });
 
   if ($leaderboard.length > 0) {
-    let isPreview = $leaderboard.parents('.leaderboard-wrapper').hasClass('preview') ? true : false;
+    let isPreview = $leaderboard
+      .parents('.leaderboard-wrapper')
+      .hasClass('preview')
+      ? true
+      : false;
 
     $('#theme-selector').change(function(e) {
       e.preventDefault();
       let $this = $(this);
       let theme = $this.val();
+      settings['theme-selector'] = theme;
+      if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
+        $('#settings-submit').removeAttr('disabled');
+      } else {
+        $('#settings-submit').attr('disabled', 'disabled');
+      }
       updateTheme($leaderboard, theme);
     });
 
@@ -78,56 +128,73 @@ $(document).ready(function() {
       let referralsURL = `/referrals/${channel}${isPreview ? '/preview' : ''}`;
 
       fetch(referralsURL)
-      .then(res => res.json())
-      .then(data => {
-        leaderboard = data;
+        .then((res) => res.json())
+        .then((data) => {
+          leaderboard = data;
         });
       setInterval(() => {
         fetch(referralsURL)
-        .then(res => res.json())
-        .then(data => {
-          if (JSON.stringify(data) !== JSON.stringify(leaderboard)) {
-            if (typeof data.leaderboard.theme === "string" && data.leaderboard.theme.length > 0) {
-              updateTheme($leaderboard, data.leaderboard.theme);
-            }
-
-            $('.leaderboard__row').each(function (index, row) {
-              if (index > 0) {
-                if (index <= data.leaderboard.length) {
-                  $(row).hide()
-                  $(row).find('div:eq(0)').text(data.referrals[index-1].referrer);
-                  $(row).find('div:eq(1)').text(data.referrals[index-1].count);
-                  $(row).show('fast');
-                } else {
-                  $(row).hide();
-                }
+          .then((res) => res.json())
+          .then((data) => {
+            if (JSON.stringify(data) !== JSON.stringify(leaderboard)) {
+              if (
+                typeof data.leaderboard.theme === 'string' &&
+                data.leaderboard.theme.length > 0
+              ) {
+                updateTheme($leaderboard, data.leaderboard.theme);
               }
-            });
-            leaderboard = data;
-          }
-        })
+
+              $('.leaderboard__row').each(function(index, row) {
+                if (index > 0) {
+                  if (index <= data.leaderboard.length) {
+                    $(row).hide();
+                    $(row)
+                      .find('div:eq(0)')
+                      .text(data.referrals[index - 1].referrer);
+                    $(row)
+                      .find('div:eq(1)')
+                      .text(data.referrals[index - 1].count);
+                    $(row).show('fast');
+                  } else {
+                    $(row).hide();
+                  }
+                }
+              });
+              leaderboard = data;
+            }
+          });
       }, 5000);
     }
-    $('#embed-copy').click(function (e) {
+    $('#embed-copy').click(function(e) {
       e.preventDefault();
       $('#embed-link').removeAttr('disabled');
       $('#embed-link').select();
-      document.execCommand("copy");
+      document.execCommand('copy');
       $('#embed-link').attr('disabled', 'disabled');
       if ($('#embed-alert')) {
-
       }
       let $alert = $('#leaderboard-alert');
-      $alert.addClass("alert alert-success text-center").text('Link copied to clipboard').slideDown('fast');
-      alert_timeout = setTimeout(() => {$alert.slideUp('fast');}, 4000);
+      $alert
+        .addClass('alert alert-success text-center')
+        .text('Link copied to clipboard')
+        .slideDown('fast');
+      alert_timeout = setTimeout(() => {
+        $alert.slideUp('fast');
+      }, 4000);
     });
-    $('#leaderboard-length-slider').on('input', function (e) {
+    $('#leaderboard-length-slider').on('input', function(e) {
       e.preventDefault();
       $('#leaderboard-length').text(e.target.value);
     });
-    $('#leaderboard-length-slider').change(function (e) {
+    $('#leaderboard-length-slider').change(function(e) {
+      settings['leaderboard-length-slider'] = $(this).val();
+      if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
+        $('#settings-submit').removeAttr('disabled');
+      } else {
+        $('#settings-submit').attr('disabled', 'disabled');
+      }
       $('.leaderboard__row').each((index, row) => {
-           $(row).hide();
+        $(row).hide();
       });
       for (let i = 0; i <= e.target.value; i++) {
         $(`.leaderboard__row:eq(${i})`).show();

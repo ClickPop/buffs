@@ -44,24 +44,24 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
 
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::get('/chatbot', 'DashboardController@chatbot')->name('dashboard-chatbot');
-    Route::post('/', 'DashboardController@updateSettings')->name('change-theme');
+    Route::post('/', 'DashboardController@updateSettings')->name('updateSettings');
     // Route::prefix('/admin')->group(function() {
     //     Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('leaderboards.admin');
     //     Route::get('/referrals', 'LeaderboardReferralController@adminIndex')->name('leaderboardReferrals.admin');
     // });
 
-    Route::prefix('/admin')->group(function() {
+    Route::prefix('/admin')->group(function () {
         Route::get('/', 'DashboardController@adminIndex')->name('admin.dashboard');
         Route::get('/chatbot', 'DashboardController@adminChatbot')->name('admin.chatbots');
         Route::get('/betalist', 'DashboardController@adminBetaList')->name('admin.betalist');
         // Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('admin.leaderboards');
     });
-    Route::prefix('/leaderboards')->group(function() {
+    Route::prefix('/leaderboards')->group(function () {
         Route::get('/', 'LeaderboardController@index')->name('leaderboards.index');
         Route::get('/quick-start', 'LeaderboardController@quickStart')->name('leaderboards.quickStart');
         Route::get('/reset', 'DashboardController@resetLeaderboard')->name('leaderboards.reset');
     });
-    Route::prefix('/chatbot')->group(function() {
+    Route::prefix('/chatbot')->group(function () {
         Route::get('/', 'DashboardController@chatbot')->name('dashboard-chatbot');
         Route::get('/quick-start', 'Chatbot@quickStart')->name('chatbot.quickStart');
         Route::get('/join', 'Chatbot@join')->name('chatbot.join');
@@ -70,7 +70,7 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
         Route::get('/delete', 'Chatbot@delete')->name('chatbot.delete');
         Route::get('/status', 'Chatbot@status')->name('chatbot.status');
     });
-    Route::prefix('/referrals')->group(function() {
+    Route::prefix('/referrals')->group(function () {
         Route::get('/', 'LeaderboardReferralController@index')->name('leaderboardReferrals.index');
     });
 });

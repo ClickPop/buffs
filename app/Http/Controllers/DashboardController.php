@@ -41,10 +41,12 @@ class DashboardController extends Controller
         if (isset($leaderboard) && $leaderboard->count() > 0) {
             $leaderboard = $leaderboard->first();
             $referrals = $leaderboard->referralCounts(true);
-        } else { $leaderboard = null; }
+        } else {
+            $leaderboard = null;
+        }
         $client = new Client(['/'], array(
             'request.options' => array(
-               'exceptions' => false,
+                'exceptions' => false,
             )
         ));
         $twitch_userId =  $user->twitch_id;
@@ -79,10 +81,11 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $leaderboard =  Leaderboard::find($user->leaderboards->first()->id);
-        $leaderboard->theme = $req->all()['theme-selector'];
-        $leaderboard->length = $req->all()['leaderboard-length-slider'];
+        $data = json_decode($req->getContent(), true);
+        $leaderboard->theme = $data['theme-selector'];
+        $leaderboard->length = $data['leaderboard-length-slider'];
         $leaderboard->save();
-        return redirect()->route('dashboard');
+        return response()->json($data);
     }
 
     public function resetLeaderboard(Request $req)

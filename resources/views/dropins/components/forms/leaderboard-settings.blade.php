@@ -44,7 +44,7 @@
         </div>
 
         <div class="mb-4">
-          <button class="btn btn-primary" id='settings-submit' type="submit" value="Submit">Save</button>
+          <button class="btn btn-primary" id='settings-submit' type="button" disabled>Save</button>
         </div>
 
         <div class="btn-group-toggle form-group">

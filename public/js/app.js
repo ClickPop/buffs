@@ -1346,7 +1346,6 @@ module.exports = function isAbsoluteURL(url) {
 
 
 var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var isValidXss = __webpack_require__(/*! ./isValidXss */ "./node_modules/axios/lib/helpers/isValidXss.js");
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -1366,10 +1365,6 @@ module.exports = (
     */
       function resolveURL(url) {
         var href = url;
-
-        if (isValidXss(url)) {
-          throw new Error('URL contains XSS injection attempt');
-        }
 
         if (msie) {
         // IE needs attribute set twice to normalize properties
@@ -1416,25 +1411,6 @@ module.exports = (
       };
     })()
 );
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/isValidXss.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/isValidXss.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function isValidXss(requestURL) {
-  var xssRegex = /(\b)(on\w+)=|javascript|(<\s*)(\/*)script/gi;
-  return xssRegex.test(requestURL);
-};
-
 
 
 /***/ }),
@@ -37090,6 +37066,14 @@ function updateTheme($leaderboard, theme) {
 $(document).ready(function () {
   var alert_timeout;
   var $leaderboard = $('.leaderboard');
+  var initial_settings = {
+    'theme-selector': $('#theme-selector').val(),
+    'leaderboard-length-slider': $('#leaderboard-length-slider').val()
+  };
+  var settings = {
+    'theme-selector': $('#theme-selector').val(),
+    'leaderboard-length-slider': $('#leaderboard-length-slider').val()
+  };
   $('input.remember-me').on('change', function () {
     if ($(this).is(':checked')) {
       $('a.oauth-button').each(function () {
@@ -37117,7 +37101,7 @@ $(document).ready(function () {
         return res.json();
       }).then(function (data) {
         $(_this).removeClass('btn-danger').addClass('btn-primary').text('Join');
-        $('#bot-action-statement').text('The bot isn\'t in your channel yet.');
+        $('#bot-action-statement').text("The bot isn't in your channel yet.");
       });
     } else if ($(this).text() === 'Join') {
       fetch('/chatbot/join').then(function (res) {
@@ -37138,6 +37122,24 @@ $(document).ready(function () {
       }
     });
   });
+  $('#settings-submit').click(function (e) {
+    var csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    fetch('/', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrf_token
+      },
+      body: JSON.stringify(settings)
+    }).then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      var $alert = $('#leaderboard-alert');
+      $alert.addClass('alert alert-success text-center').text('Settings Saved').slideDown('fast');
+      alert_timeout = setTimeout(function () {
+        $alert.slideUp('fast');
+      }, 4000);
+    });
+  });
 
   if ($leaderboard.length > 0) {
     var isPreview = $leaderboard.parents('.leaderboard-wrapper').hasClass('preview') ? true : false;
@@ -37145,6 +37147,14 @@ $(document).ready(function () {
       e.preventDefault();
       var $this = $(this);
       var theme = $this.val();
+      settings['theme-selector'] = theme;
+
+      if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
+        $('#settings-submit').removeAttr('disabled');
+      } else {
+        $('#settings-submit').attr('disabled', 'disabled');
+      }
+
       updateTheme($leaderboard, theme);
     });
 
@@ -37162,7 +37172,7 @@ $(document).ready(function () {
           return res.json();
         }).then(function (data) {
           if (JSON.stringify(data) !== JSON.stringify(leaderboard)) {
-            if (typeof data.leaderboard.theme === "string" && data.leaderboard.theme.length > 0) {
+            if (typeof data.leaderboard.theme === 'string' && data.leaderboard.theme.length > 0) {
               updateTheme($leaderboard, data.leaderboard.theme);
             }
 
@@ -37188,13 +37198,13 @@ $(document).ready(function () {
       e.preventDefault();
       $('#embed-link').removeAttr('disabled');
       $('#embed-link').select();
-      document.execCommand("copy");
+      document.execCommand('copy');
       $('#embed-link').attr('disabled', 'disabled');
 
       if ($('#embed-alert')) {}
 
       var $alert = $('#leaderboard-alert');
-      $alert.addClass("alert alert-success text-center").text('Link copied to clipboard').slideDown('fast');
+      $alert.addClass('alert alert-success text-center').text('Link copied to clipboard').slideDown('fast');
       alert_timeout = setTimeout(function () {
         $alert.slideUp('fast');
       }, 4000);
@@ -37204,6 +37214,14 @@ $(document).ready(function () {
       $('#leaderboard-length').text(e.target.value);
     });
     $('#leaderboard-length-slider').change(function (e) {
+      settings['leaderboard-length-slider'] = $(this).val();
+
+      if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
+        $('#settings-submit').removeAttr('disabled');
+      } else {
+        $('#settings-submit').attr('disabled', 'disabled');
+      }
+
       $('.leaderboard__row').each(function (index, row) {
         $(row).hide();
       });
