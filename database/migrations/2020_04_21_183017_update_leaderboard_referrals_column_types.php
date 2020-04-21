@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoleUserTable extends Migration
+class UpdateLeaderboardReferralsColumnTypes extends Migration
 {
   /**
    * Run the migrations.
@@ -13,12 +13,9 @@ class CreateRoleUserTable extends Migration
    */
   public function up()
   {
-  Schema::create('role_user', function (Blueprint $table) {
-    $table->bigIncrements('id');
-    $table->unsignedBigInteger('role_id');
-    $table->unsignedBigInteger('user_id');
-    $table->timestamps();
-  });
+    Schema::table('leaderboard_referrals', function (Blueprint $table) {
+      $table->text('user_agent')->change();
+    });
   }
 
   /**
@@ -28,6 +25,8 @@ class CreateRoleUserTable extends Migration
    */
   public function down()
   {
-  Schema::dropIfExists('role_user');
+    Schema::table('leaderboard_referrals', function (Blueprint $table) {
+      $table->string('user_agent')->change();
+    });
   }
 }
