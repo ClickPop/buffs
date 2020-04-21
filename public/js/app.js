@@ -1346,7 +1346,6 @@ module.exports = function isAbsoluteURL(url) {
 
 
 var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var isValidXss = __webpack_require__(/*! ./isValidXss */ "./node_modules/axios/lib/helpers/isValidXss.js");
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -1366,10 +1365,6 @@ module.exports = (
     */
       function resolveURL(url) {
         var href = url;
-
-        if (isValidXss(url)) {
-          throw new Error('URL contains XSS injection attempt');
-        }
 
         if (msie) {
         // IE needs attribute set twice to normalize properties
@@ -1416,25 +1411,6 @@ module.exports = (
       };
     })()
 );
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/isValidXss.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/isValidXss.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function isValidXss(requestURL) {
-  var xssRegex = /(\b)(on\w+)=|javascript|(<\s*)(\/*)script/gi;
-  return xssRegex.test(requestURL);
-};
-
 
 
 /***/ }),
@@ -37131,23 +37107,29 @@ $(document).ready(function () {
     $('#logout-form').submit();
   });
   $('#bot-action-button').click(function (e) {
-    var _this = this;
-
     e.preventDefault();
+    $button = $(this);
+    $label = $('#bot-action-statement');
 
-    if ($(this).text() === 'Part') {
+    if ($button.text() === 'Part') {
+      waitingButton($button, 'Parting...');
+      $label.fadeTo('fast', 0);
       fetch('/chatbot/part').then(function (res) {
         return res.json();
       }).then(function (data) {
-        $(_this).removeClass('btn-danger').addClass('btn-primary').text('Join');
-        $('#bot-action-statement').text("The bot isn't in your channel yet.");
+        $button.removeClass('btn-danger').addClass('btn-primary');
+        revertButton($button, 'Join');
+        $label.fadeTo('fast', 1).text("The bot isn't in your channel yet.");
       });
-    } else if ($(this).text() === 'Join') {
+    } else if ($button.text() === 'Join') {
+      waitingButton($button, 'Joining...');
+      $label.fadeTo('fast', 0);
       fetch('/chatbot/join').then(function (res) {
         return res.json();
       }).then(function (data) {
-        $(_this).removeClass('btn-primary').addClass('btn-danger').text('Part');
-        $('#bot-action-statement').text('The bot is in your channel.');
+        $button.removeClass('btn-primary').addClass('btn-danger');
+        revertButton($button, 'Part');
+        $label.fadeTo('fast', 1).text('The bot is in your channel.');
       });
     }
   });
@@ -37189,7 +37171,7 @@ $(document).ready(function () {
     var csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var $button = $(this);
     var original_button_content = $button.html();
-    waitingButton($button, "Saving...");
+    waitingButton($button, 'Saving...');
     fetch('/', {
       method: 'POST',
       headers: {
@@ -37230,12 +37212,10 @@ $(document).ready(function () {
       updateTheme($leaderboard, theme);
     });
 
-    if ($leaderboard && location.pathname.includes('/embed/leaderboard/')) {
-      var channel = location.pathname.replace('/embed/leaderboard/', '');
-
+    if ($leaderboard && location.pathname) {
       var _leaderboard;
 
-      var referralsURL = "/referrals/".concat(channel).concat(isPreview ? '/preview' : '');
+      var referralsURL = "/referrals/".concat(channel);
       fetch(referralsURL).then(function (res) {
         return res.json();
       }).then(function (data) {
@@ -37252,7 +37232,7 @@ $(document).ready(function () {
 
             $('.leaderboard__row').each(function (index, row) {
               if (index > 0) {
-                if (index <= data.leaderboard.length) {
+                if (index <= data.referrals.length) {
                   $(row).hide();
                   $(row).find('div:eq(0)').text(data.referrals[index - 1].referrer);
                   $(row).find('div:eq(1)').text(data.referrals[index - 1].count);
@@ -37371,8 +37351,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/sean/Documents/Git/GitHub/ClickPop/buffs/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/sean/Documents/Git/GitHub/ClickPop/buffs/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/vagrant/github/buffs/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/vagrant/github/buffs/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

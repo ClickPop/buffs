@@ -17,7 +17,7 @@ class LeaderboardController extends Controller
     // {
     //     $this->middleware('auth', ['except' => 'index']);
     // }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -109,9 +109,11 @@ class LeaderboardController extends Controller
             if (isset($leaderboard) && $leaderboard->count() > 0) {
                 $leaderboard = $leaderboard->first();
                 $referrals = $leaderboard->referralCounts();
-            } else { $leaderboard = null; }
+            } else {
+                $leaderboard = null;
+            }
 
-            return view('embeds.leaderboard', ['leaderboard' => $leaderboard, 'referrals' => $referrals]);
+            return view('embeds.leaderboard', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
         } else {
             return abort(404);
         }
@@ -119,7 +121,6 @@ class LeaderboardController extends Controller
 
     public function referrals(Request $req, $channel_name)
     {
-        $preview = true;
         $user = User::where('username', $channel_name)->first();
 
         if ($user) {
@@ -127,8 +128,10 @@ class LeaderboardController extends Controller
             $referrals = null;
             if (isset($leaderboard) && $leaderboard->count() > 0) {
                 $leaderboard = $leaderboard->first();
-                $referrals = $leaderboard->referralCounts($preview);
-            } else { $leaderboard = null; }
+                $referrals = $leaderboard->referralCounts();
+            } else {
+                $leaderboard = null;
+            }
 
             return response()->json(['leaderboard' => ['theme' => $leaderboard->theme, 'length' => $leaderboard->length], 'referrals' => $referrals]);
         } else {
