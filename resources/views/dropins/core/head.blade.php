@@ -30,6 +30,20 @@
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#3d1e5e">
 
+    <!-- Open Graph / Twitter Info -->
+    <meta property="og:title" content="BUFFS" />
+    <meta property="og:description" content="Let the people who love your channel grow your channel." />
+    <meta property="og:url" content="https://buffs.app" />
+    <meta property="og:image" content="http://buffs.app/images/brand/og.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@BUFFSapp" />
+    <meta name="twitter:creator" content="@clickpop" />
+    <meta property="og:url" content="http://buffs.app" />
+    <meta property="og:title" content="BUFFS" />
+    <meta property="og:description" content="Let the people who love your channel grow your channel." />
+    <meta property="og:image" content="http://buffs.app/images/brand/og.png" />
+
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
