@@ -192,11 +192,10 @@ $(document).ready(function() {
         $('#settings-submit')
           .prop('disabled', false)
           .removeProp('disabled');
-          updateTheme($leaderboard, theme);
       } else {
         $('#settings-submit').prop('disabled', true);
       }
-      
+      updateTheme($leaderboard, theme);
     });
 
     if ($leaderboard && location.pathname.includes('/embed')) {
@@ -240,8 +239,6 @@ $(document).ready(function() {
                       .text(data.referrals[index - 1].count);
                     $(row).show('fast');
                   } else if (index < data.length) {
-                  } else if (route !== 'dashboard') {
-                    $(row).hide();
                   } else if (
                     route === 'dashboard' &&
                     data.referrals.length < data.leaderboard.length &&
@@ -249,6 +246,8 @@ $(document).ready(function() {
                   ) {
                     $(row).hide();
                     $(row).show('fast');
+                  } else if (route !== 'dashboard') {
+                    $(row).hide();
                   }
                 }
               });
@@ -296,7 +295,7 @@ $(document).ready(function() {
         e.preventDefault();
         $('#leaderboard-length').text(e.target.value);
       })
-      .on('change blur', function(e) {
+      .on('change', function(e) {
         settings = getSettingsObject();
         if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
           $('#settings-submit').removeAttr('disabled');
