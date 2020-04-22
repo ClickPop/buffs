@@ -11,9 +11,9 @@ use stdClass;
 class Leaderboard extends Model
 {
     use SoftDeletes;
-    
+
     // protected $fillable = [ 'stream_id', 'name' ];
-    protected $fillable = [ 'user_id', 'name' ];
+    protected $fillable = ['user_id', 'name'];
 
     public function user(): BelongsTo
     {
@@ -30,7 +30,8 @@ class Leaderboard extends Model
         return $this->hasMany(LeaderboardReferral::class);
     }
 
-    public function referralCounts($preview = false) {
+    public function referralCounts($preview = false)
+    {
         if (isset($this->reset_timestamp)) {
             $referrals = $this->referrals->where('created_at', '>=', $this->reset_timestamp)->groupBy('referrer')->map->count()->toArray();
         } else {
@@ -41,7 +42,7 @@ class Leaderboard extends Model
         if (count($referrals) > 0) {
             arsort($referrals);
             foreach ($referrals as $referrer => $count) {
-                $tempItem = (object)[
+                $tempItem = (object) [
                     "referrer" => $referrer,
                     "count" => $count
                 ];
@@ -52,39 +53,39 @@ class Leaderboard extends Model
         while (count($referralCounts) > 10) {
             array_pop($referralCounts);
         }
-         
-        if($preview === true && count($referralCounts) === 0) {
-            $wizards = [
-                'Gandalf',
-                'Merlin',
-                'Dumbledore',
-                'Hermione Granger',
-                'Sabrina',
-                'Prospero',
-                'Saruman',
-                'Voldemort',
-                'Elminster',
-                'Tim',
-                'Harry Dresden',
-                'Orwen',
-                'Glinda',
-                'Morgana Le Fay',
-                'Kiki'
-            ];
-            shuffle($wizards);
-            
-            $wizard_num = 0;
 
-            while(count($referralCounts) < 10) {
-                $tempItem = (object)[
-                    "referrer" => $wizards[$wizard_num],
-                    "count" => 1
-                ];
-                array_push($referralCounts, $tempItem);
-                $wizard_num++;
-            }
-        }
-        
+        // if($preview === true && count($referralCounts) === 0) {
+        //     $wizards = [
+        //         'Gandalf',
+        //         'Merlin',
+        //         'Dumbledore',
+        //         'Hermione Granger',
+        //         'Sabrina',
+        //         'Prospero',
+        //         'Saruman',
+        //         'Voldemort',
+        //         'Elminster',
+        //         'Tim',
+        //         'Harry Dresden',
+        //         'Orwen',
+        //         'Glinda',
+        //         'Morgana Le Fay',
+        //         'Kiki'
+        //     ];
+        //     shuffle($wizards);
+
+        //     $wizard_num = 0;
+
+        //     while(count($referralCounts) < 10) {
+        //         $tempItem = (object)[
+        //             "referrer" => $wizards[$wizard_num],
+        //             "count" => 1
+        //         ];
+        //         array_push($referralCounts, $tempItem);
+        //         $wizard_num++;
+        //     }
+        // }
+
         return $referralCounts;
     }
 }

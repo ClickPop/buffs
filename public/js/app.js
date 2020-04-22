@@ -37148,10 +37148,15 @@ $(document).ready(function () {
         }).then(function (data) {
           $('.leaderboard__row').each(function (index, row) {
             if (index > 0) {
-              if (index <= data.leaderboard.length) {
+              if (index <= data.leaderboard.length && data.referrals.length > 0) {
                 $(row).hide();
                 $(row).find('div:eq(0)').text(data.referrals[index - 1].referrer);
                 $(row).find('div:eq(1)').text(data.referrals[index - 1].count);
+                $(row).show('fast');
+              } else if (data.referrals.length === 0 && route === 'dashboard') {
+                $(row).hide();
+                $(row).find('div:eq(0)').text(wizards[index - 1].referrer);
+                $(row).find('div:eq(1)').text(wizards[index - 1].count);
                 $(row).show('fast');
               } else {
                 $(row).hide();
@@ -37212,7 +37217,9 @@ $(document).ready(function () {
       updateTheme($leaderboard, theme);
     });
 
-    if ($leaderboard && location.pathname) {
+    if ($leaderboard && location.pathname.includes('/embed')) {
+      wizards = JSON.parse(wizards);
+
       var _leaderboard;
 
       var referralsURL = "/referrals/".concat(channel);
@@ -37225,23 +37232,34 @@ $(document).ready(function () {
         fetch(referralsURL).then(function (res) {
           return res.json();
         }).then(function (data) {
-          if (JSON.stringify(data) !== JSON.stringify(_leaderboard)) {
-            if (typeof data.leaderboard.theme === 'string' && data.leaderboard.theme.length > 0) {
+          if (JSON.stringify(data.referrals) !== JSON.stringify(_leaderboard.referrals) || route !== 'dashboard' && JSON.stringify(data) !== JSON.stringify(_leaderboard)) {
+            if (typeof data.leaderboard.theme === 'string' && data.leaderboard.theme.length > 0 && data.leaderboard.theme !== $('#theme-selector').val()) {
               updateTheme($leaderboard, data.leaderboard.theme);
             }
 
             $('.leaderboard__row').each(function (index, row) {
               if (index > 0) {
-                if (index <= data.referrals.length) {
+                if (index < data.referrals.length && data.referrals.length > 0) {
                   $(row).hide();
                   $(row).find('div:eq(0)').text(data.referrals[index - 1].referrer);
                   $(row).find('div:eq(1)').text(data.referrals[index - 1].count);
                   $(row).show('fast');
-                } else {
+                } else if (index < data.length) {} else if (route !== 'dashboard') {
                   $(row).hide();
+                } else if (route === 'dashboard' && data.referrals.length < data.leaderboard.length && index >= data.referrals.length) {
+                  $(row).hide();
+                  $(row).show('fast');
                 }
               }
             });
+
+            if (_leaderboard.referrals.length === 0 && data.referrals.length > 0 && $('.leaderboard__row').length === 1) {
+              data.referrals.forEach(function (referral) {
+                var row = "\n                  <div class=\"leaderboard__row\">\n                    <div>".concat(referral.referrer, "</div>\n                    <div>").concat(referral.count, "</div>\n                  </div>\n                  ");
+                $('.leaderboard__container').append(row);
+              });
+            }
+
             _leaderboard = data;
           }
         });
