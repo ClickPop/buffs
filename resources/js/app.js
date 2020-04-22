@@ -192,10 +192,11 @@ $(document).ready(function() {
         $('#settings-submit')
           .prop('disabled', false)
           .removeProp('disabled');
+          updateTheme($leaderboard, theme);
       } else {
         $('#settings-submit').prop('disabled', true);
       }
-      updateTheme($leaderboard, theme);
+      
     });
 
     if ($leaderboard && location.pathname.includes('/embed')) {

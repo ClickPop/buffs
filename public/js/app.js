@@ -1346,6 +1346,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
+var isValidXss = __webpack_require__(/*! ./isValidXss */ "./node_modules/axios/lib/helpers/isValidXss.js");
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -1365,6 +1366,10 @@ module.exports = (
     */
       function resolveURL(url) {
         var href = url;
+
+        if (isValidXss(url)) {
+          throw new Error('URL contains XSS injection attempt');
+        }
 
         if (msie) {
         // IE needs attribute set twice to normalize properties
@@ -1411,6 +1416,25 @@ module.exports = (
       };
     })()
 );
+
+
+/***/ }),
+
+/***/ "./node_modules/axios/lib/helpers/isValidXss.js":
+/*!******************************************************!*\
+  !*** ./node_modules/axios/lib/helpers/isValidXss.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function isValidXss(requestURL) {
+  var xssRegex = /(\b)(on\w+)=|javascript|(<\s*)(\/*)script/gi;
+  return xssRegex.test(requestURL);
+};
+
 
 
 /***/ }),
@@ -37210,11 +37234,10 @@ $(document).ready(function () {
 
       if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
         $('#settings-submit').prop('disabled', false).removeProp('disabled');
+        updateTheme($leaderboard, theme);
       } else {
         $('#settings-submit').prop('disabled', true);
       }
-
-      updateTheme($leaderboard, theme);
     });
 
     if ($leaderboard && location.pathname.includes('/embed')) {
@@ -37369,8 +37392,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/vagrant/github/buffs/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/vagrant/github/buffs/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\seanm\Documents\GitHub\clickpop\buffs\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
