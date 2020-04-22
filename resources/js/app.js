@@ -36,6 +36,7 @@ function updateTheme($leaderboard, theme) {
 }
 
 $(document).ready(function() {
+  let leaderboard;
   let alert_timeout, button_timeout;
   let $leaderboard = $('.leaderboard');
   let initial_settings = getSettingsObject();
@@ -104,7 +105,7 @@ $(document).ready(function() {
               $('.leaderboard__row').each(function(index, row) {
                 if (index > 0) {
                   if (
-                    index <= data.leaderboard.length &&
+                    index <= data.referrals.length &&
                     data.referrals.length > 0
                   ) {
                     $(row).hide();
@@ -117,6 +118,7 @@ $(document).ready(function() {
                     $(row).show('fast');
                   } else if (
                     data.referrals.length === 0 &&
+                    index <= $('#leaderboard-length-slider').val() &&
                     route === 'dashboard'
                   ) {
                     $(row).hide();
@@ -198,9 +200,8 @@ $(document).ready(function() {
       updateTheme($leaderboard, theme);
     });
 
-    if ($leaderboard && location.pathname.includes('/embed')) {
+    if ($leaderboard) {
       wizards = JSON.parse(wizards);
-      let leaderboard;
       let referralsURL = `/referrals/${channel}`;
       fetch(referralsURL)
         .then((res) => res.json())
@@ -227,7 +228,8 @@ $(document).ready(function() {
               $('.leaderboard__row').each(function(index, row) {
                 if (index > 0) {
                   if (
-                    index < data.referrals.length &&
+                    index <= data.leaderboard.length &&
+                    index <= data.referrals.length &&
                     data.referrals.length > 0
                   ) {
                     $(row).hide();
@@ -238,11 +240,11 @@ $(document).ready(function() {
                       .find('div:eq(1)')
                       .text(data.referrals[index - 1].count);
                     $(row).show('fast');
-                  } else if (index < data.length) {
                   } else if (
                     route === 'dashboard' &&
                     data.referrals.length < data.leaderboard.length &&
-                    index >= data.referrals.length
+                    index > data.referrals.length &&
+                    index <= data.leaderboard.length
                   ) {
                     $(row).hide();
                     $(row).show('fast');
@@ -251,22 +253,6 @@ $(document).ready(function() {
                   }
                 }
               });
-
-              if (
-                leaderboard.referrals.length === 0 &&
-                data.referrals.length > 0 &&
-                $('.leaderboard__row').length === 1
-              ) {
-                data.referrals.forEach((referral) => {
-                  let row = `
-                  <div class="leaderboard__row">
-                    <div>${referral.referrer}</div>
-                    <div>${referral.count}</div>
-                  </div>
-                  `;
-                  $('.leaderboard__container').append(row);
-                });
-              }
 
               leaderboard = data;
             }

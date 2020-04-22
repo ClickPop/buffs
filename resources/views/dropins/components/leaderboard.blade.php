@@ -40,19 +40,22 @@
         <div>Views</div>
       </div>
       <!-- LOOP -->
-      @if (is_array($referrals) && count($referrals) > 0)
+      @if (is_array($referrals))
       @for ($i = 0; $i < 10; $i++)
-        <div class="leaderboard__row" style="display: {{ $i >= $leaderboard->length ? "none;" : "" }}">
+        <div class="leaderboard__row" style="display: {{ ($route === 'dashboard' && $i >= $leaderboard->length) || ($route !== 'dashboard' && ($i >= $leaderboard->length || $i >= count($referrals))) ? "none;" : "" }}">
           @if ($i < count($referrals))
             <div>{{ $referrals[$i]->referrer }}</div>
             <div>{{ $referrals[$i]->count }}</div>
           @elseif ($route === 'dashboard')
             <div>{{ $referralCounts[$i]->referrer }}</div>
             <div>{{ $referralCounts[$i]->count }}</div>
+          @else
+            <div></div>
+            <div></div>
           @endif
         </div>
       @endfor
-      @elseif(
+      {{-- @elseif(
       is_array($referrals) && 
       count($referrals) < 1 && 
       $route === 'dashboard'
@@ -62,7 +65,7 @@
             <div>{{ $referral->referrer }}</div>
             <div>{{ $referral->count }}</div>
           </div>
-        @endforeach
+        @endforeach --}}
       @endif
       <!-- END LOOP -->
     </div>
