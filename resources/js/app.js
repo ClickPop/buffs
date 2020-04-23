@@ -36,6 +36,7 @@ function updateTheme($leaderboard, theme) {
 }
 
 $(document).ready(function() {
+  let leaderboard;
   let alert_timeout, button_timeout;
   let $leaderboard = $('.leaderboard');
   let initial_settings = getSettingsObject();
@@ -103,7 +104,10 @@ $(document).ready(function() {
             .then((data) => {
               $('.leaderboard__row').each(function(index, row) {
                 if (index > 0) {
-                  if (index <= data.leaderboard.length) {
+                  if (
+                    index <= data.referrals.length &&
+                    data.referrals.length > 0
+                  ) {
                     $(row).hide();
                     $(row)
                       .find('div:eq(0)')
@@ -111,6 +115,19 @@ $(document).ready(function() {
                     $(row)
                       .find('div:eq(1)')
                       .text(data.referrals[index - 1].count);
+                    $(row).show('fast');
+                  } else if (
+                    data.referrals.length === 0 &&
+                    index <= $('#leaderboard-length-slider').val() &&
+                    route === 'dashboard'
+                  ) {
+                    $(row).hide();
+                    $(row)
+                      .find('div:eq(0)')
+                      .text(wizards[index - 1].referrer);
+                    $(row)
+                      .find('div:eq(1)')
+                      .text(wizards[index - 1].count);
                     $(row).show('fast');
                   } else {
                     $(row).hide();
@@ -183,8 +200,8 @@ $(document).ready(function() {
       updateTheme($leaderboard, theme);
     });
 
-    if ($leaderboard && location.pathname) {
-      let leaderboard;
+    if ($leaderboard) {
+      wizards = JSON.parse(wizards);
       let referralsURL = `/referrals/${channel}`;
       fetch(referralsURL)
         .then((res) => res.json())
@@ -195,17 +212,26 @@ $(document).ready(function() {
         fetch(referralsURL)
           .then((res) => res.json())
           .then((data) => {
-            if (JSON.stringify(data) !== JSON.stringify(leaderboard)) {
+            if (
+              JSON.stringify(data.referrals) !==
+                JSON.stringify(leaderboard.referrals) ||
+              (route !== 'dashboard' &&
+                JSON.stringify(data) !== JSON.stringify(leaderboard))
+            ) {
               if (
                 typeof data.leaderboard.theme === 'string' &&
-                data.leaderboard.theme.length > 0
+                data.leaderboard.theme.length > 0 &&
+                data.leaderboard.theme !== $('#theme-selector').val()
               ) {
                 updateTheme($leaderboard, data.leaderboard.theme);
               }
-
               $('.leaderboard__row').each(function(index, row) {
                 if (index > 0) {
-                  if (index <= data.referrals.length) {
+                  if (
+                    index <= data.leaderboard.length &&
+                    index <= data.referrals.length &&
+                    data.referrals.length > 0
+                  ) {
                     $(row).hide();
                     $(row)
                       .find('div:eq(0)')
@@ -214,11 +240,20 @@ $(document).ready(function() {
                       .find('div:eq(1)')
                       .text(data.referrals[index - 1].count);
                     $(row).show('fast');
-                  } else {
+                  } else if (
+                    route === 'dashboard' &&
+                    data.referrals.length < data.leaderboard.length &&
+                    index > data.referrals.length &&
+                    index <= data.leaderboard.length
+                  ) {
+                    $(row).hide();
+                    $(row).show('fast');
+                  } else if (route !== 'dashboard') {
                     $(row).hide();
                   }
                 }
               });
+
               leaderboard = data;
             }
           });
@@ -246,7 +281,7 @@ $(document).ready(function() {
         e.preventDefault();
         $('#leaderboard-length').text(e.target.value);
       })
-      .on('change blur', function(e) {
+      .on('change', function(e) {
         settings = getSettingsObject();
         if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
           $('#settings-submit').removeAttr('disabled');
