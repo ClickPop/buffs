@@ -1,8 +1,8 @@
 @extends('layouts.static.dark.no-header')
 
 @section('content')
-<div class="container home-wrapper">
-    <div class="row vertically-center wizard-after">
+<div class="container">
+    <div class="row align-items-center wizard-after login-wrapper">
         <div class="col-12 col-lg-6 my-lg-5 mt-5">
             @include('dropins.components.logo-link')
 
