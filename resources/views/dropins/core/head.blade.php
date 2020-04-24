@@ -40,9 +40,9 @@
   <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/favicon/favicon-32x32.png') }}">
   <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('/favicon/favicon-96x96.png') }}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/favicon/favicon-16x16.png') }}">
-  <link rel="manifest" href="{{ asset('images/favicon/site.webmanifest') }}">
+  <link rel="manifest" href="{{ asset('/favicon/site.webmanifest') }}">
   <meta name="msapplication-TileColor" content="#3d1e5e">
-  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="msapplication-TileImage" content="/favicon/ms-icon-144x144.png">
   <meta name="theme-color" content="#3d1e5e">
   
   <!-- Open Graph / Twitter Info -->
