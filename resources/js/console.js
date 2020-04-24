@@ -25,7 +25,7 @@ console.meme = (opts) => {
   let padding = Math.floor(opts.size / 2);
   
   //craft url
-  let url = `${serverUrl}${opts.meme}/${opts.size}/${encodeURIComponent(opts.top)}/${encodeURIComponent(bottom)}`;
+  let url = `${serverUrl}${opts.meme}/${opts.size}/${encodeURIComponent(opts.top)}/${encodeURIComponent(opts.bottom)}`;
 
   //css buffer
   let css = [
