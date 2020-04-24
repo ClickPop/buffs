@@ -3,7 +3,8 @@
 use App\Leaderboard;
 use GuzzleHttp\Client;
 
-function checkLeaderboard(App\User $user) {
+function checkLeaderboard(App\User $user)
+{
   if ($user) {
     if ($user->leaderboards->count() === 0) {
       $leaderboard = new Leaderboard;
@@ -13,18 +14,21 @@ function checkLeaderboard(App\User $user) {
   }
 }
 
-function checkChatbot(App\User $user) {
+function checkChatbot(App\User $user)
+{
   if ($user) {
-    $twitch_userId = $user->twitch_id;
-    $client = new Client(['/'], array(
-      'request.options' => array(
-        'exceptions' => false,
-      )
-    ));
+    $user = Auth::user();
+    $hashids = new Hashids(env('API_KEY_SALT'), 32);
+    $api_key = $hashids->encode($user->twitch_id);
+    $client = new Client([
+      'headers' => [
+        'Authorization' => $api_key
+      ]
+    ]);
     try {
-      $chatbot = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);      
+      $chatbot = $client->get("https://buffsbot.herokuapp.com/status/$user->twitch_id");
     } catch (\Throwable $th) {
-      $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId]]);
+      $client->post('https://buffsbot.herokuapp.com/create', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $user->twitch_id]]);
     }
   }
 }

@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\RequestException as ExceptionRequestException;
-
+use Illuminate\Support\Facades\Hash;
+use Hashids\Hashids;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
 
@@ -27,9 +28,11 @@ class Chatbot extends Controller
   private function getData()
   {
     $user = Auth::user();
+    $hashids = new Hashids(env('API_KEY_SALT'), 32);
+    $api_key = $hashids->encode($user->twitch_id);
     $client = new Client([
       'headers' => [
-        'Authorization' => $user->refreshToken
+        'Authorization' => $api_key
       ]
     ]);
     return [$user, $client, $user->twitch_id];
@@ -43,7 +46,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return redirect()->route('dashboard');
     } catch (ExceptionRequestException $e) {
-      return response()->json(['error' => $e]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -56,7 +59,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(['error' => $e]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -69,7 +72,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(['error' => $e]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -82,7 +85,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(['error' => $e]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -95,7 +98,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(['error' => $e]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -109,7 +112,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(['error' => $e]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -123,8 +126,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      dd($e);
-      return response()->json(['error' => $e]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 }
