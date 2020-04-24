@@ -44,14 +44,17 @@ class DashboardController extends Controller
         } else {
             $leaderboard = null;
         }
-        $client = new Client(['/'], array(
-            'request.options' => array(
-                'exceptions' => false,
-            )
-        ));
+        $client = new Client(['/'], [
+            'headers' => [
+                'Authorization' => $user->refreshToken
+            ],
+            'request.options' => [
+                'exceptions' => false
+            ]
+        ]);
         $twitch_userId =  $user->twitch_id;
         try {
-            $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);
+            $response = $client->get("https://buffsbot.herokuapp.com/status/$twitch_userId");
             $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
             return view('dashboard.index', ['chatbot' => json_decode($data), 'user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
         } catch (ExceptionRequestException $e) {

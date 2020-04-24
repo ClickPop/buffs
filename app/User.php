@@ -104,4 +104,17 @@ class User extends Authenticatable
         }
         return $rVal;
     }
+
+    public function getRefreshTokenAttribute()
+    {
+        $rVal = null;
+        $twitch = \App\Platform::where('name', 'twitch')->first();
+        if ($twitch) {
+            $social_account = $this->oauths()->where('platform_id', $twitch->id)->first();
+            if ($social_account) {
+                $rVal = $social_account->refreshToken;
+            }
+        }
+        return $rVal;
+    }
 }

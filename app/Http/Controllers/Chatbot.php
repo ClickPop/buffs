@@ -27,11 +27,11 @@ class Chatbot extends Controller
   private function getData()
   {
     $user = Auth::user();
-    $client = new Client(['/'], array(
-      'request.options' => array(
-        'exceptions' => false,
-      )
-    ));
+    $client = new Client([
+      'headers' => [
+        'Authorization' => $user->refreshToken
+      ]
+    ]);
     return [$user, $client, $user->twitch_id];
   }
 
@@ -43,7 +43,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return redirect()->route('dashboard');
     } catch (ExceptionRequestException $e) {
-      return response()->json([$error => $e]);
+      return response()->json(['error' => $e]);
     }
   }
 
@@ -56,7 +56,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json([$error => $e]);
+      return response()->json(['error' => $e]);
     }
   }
 
@@ -69,7 +69,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json([$error => $e]);
+      return response()->json(['error' => $e]);
     }
   }
 
@@ -82,7 +82,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json([$error => $e]);
+      return response()->json(['error' => $e]);
     }
   }
 
@@ -95,7 +95,7 @@ class Chatbot extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json([$error => $e]);
+      return response()->json(['error' => $e]);
     }
   }
 
@@ -105,11 +105,11 @@ class Chatbot extends Controller
 
     $twitch_userId =  $user->twitch_id;
     try {
-      $response = $client->get("https://buffsbot.herokuapp.com/$twitch_userId");
+      $response = $client->get("https://buffsbot.herokuapp.com/status/$twitch_userId");
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json([$error => $e]);
+      return response()->json(['error' => $e]);
     }
   }
 
@@ -119,11 +119,12 @@ class Chatbot extends Controller
 
     $twitch_userId =  $user->twitch_id;
     try {
-      $response = $client->get("https://buffsbot.herokuapp.com/");
+      $response = $client->get("https://buffsbot.herokuapp.com/status");
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json([$error => $e]);
+      dd($e);
+      return response()->json(['error' => $e]);
     }
   }
 }
