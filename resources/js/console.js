@@ -1,33 +1,50 @@
 
-// console.meme = (meme, top, bottom, size) => {
-//   let serverUrl = 'http://lit-atoll-9603.herokuapp.com/api/v1/';
+console.meme = (opts) => {
+  let defaults = {
+    'meme': 'grumpy-cat',
+    'top': ' ',
+    'bottom': ' ',
+    'size': 200
+  }
 
-//   if (typeof size === 'undefined'){
-//     size = 200;
-//   }
-//   //craft url
-//   let url = serverUrl+meme+'/'+size+'/'+encodeURIComponent(top)+'/'+encodeURIComponent(bottom);
+  if (typeof opts === "object") {
+    opts = {...defaults, ...opts};
+    
+    // sanitize strings
+    opts.meme = (typeof opts.meme === 'string' && opts.meme.length) ? opts.meme : defaults.meme;
+    opts.top = (typeof opts.top === 'string' && opts.top.length) ? opts.top : defaults.top;
+    opts.bottom = (typeof opts.bottom === 'string' && opts.bottom.length) ? opts.bottom : defaults.bottom;
+    // sanitize size
+    opts.size = parseInt(opts.size);
+    opts.size = (typeof opts.size === 'number' && opts.size > 0) ? opts.size : defaults.size;
+  } else {
+    opts = defaults;
+  }
 
-//   //css buffer
-//   let css = [
-//     `background-image: url('${url}')`,
-//     'background-repeat: no-repeat',
-//     'background-position: 50% 50%'
-//   ]
-//   //fix size
-//   size = Math.floor(size/2);
-//   css += 'padding: '+size+'px '+size+'px; background-size: 100%;';
+  let serverUrl = 'http://lit-atoll-9603.herokuapp.com/api/v1/';
+  let padding = Math.floor(opts.size / 2);
+  
+  //craft url
+  let url = `${serverUrl}${opts.meme}/${opts.size}/${encodeURIComponent(opts.top)}/${encodeURIComponent(bottom)}`;
 
-//   let bottomPadding = '';
+  //css buffer
+  let css = [
+    `background-image: url('${url}')`,
+    'background-repeat: no-repeat',
+    'background-position: 50% 50%'
+  ]
+  //fix size
+  css.push(`padding: ${padding}px`, `background-size: 100%`);
 
-//   let how_many = Math.ceil(size / 14)+2; //2 more spaces just because
+  let bottomPadding = '';
+  let paddingCounter = Math.ceil(opts.size / 14)+2; //2 more spaces just because
 
-//   while(how_many--){
-//     bottomPadding += '\n';
-//   }
+  while(paddingCounter--){
+    bottomPadding += '\n';
+  }
 
-//   console.info('%c %c'+bottomPadding, css.join(';'), 'background: none;');
-// };
+  console.info(`%c %c${bottomPadding}`, css.join(';'), 'background: none;');
+};
 
 console.noGA = () => {
   let css = [
@@ -59,20 +76,18 @@ console.intro = (env = null) => {
     (typeof env === 'string' && env.length > 0) ? 
       env : 'production';
 
+  console.group("Welcome to BUFFS!");
   switch (env) {
-    case "production":
+    case "staging":
     case "development":
     case "local":
-      console.group("Welcome to BUFFS!");
       console.buffs();
       console.noGA();
-      console.groupEnd();
       break;
     case "production":
     default:
-      console.group("Welcome to BUFFS!");
       console.buffs();
-      console.groupEnd();
       break;
   }
+  console.groupEnd();
 }
