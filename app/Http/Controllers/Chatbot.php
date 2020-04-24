@@ -39,11 +39,11 @@ class Chatbot extends Controller
   {
     [$user, $client, $twitch_userId] = Chatbot::getData();
     try {
-      $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId]]);
+      $response = $client->post('https://buffsbot.herokuapp.com/create', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId]]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return redirect()->route('dashboard');
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json([$error => $e]);
     }
   }
 
@@ -52,11 +52,11 @@ class Chatbot extends Controller
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
     try {
-      $response = $client->put('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'join']]);
+      $response = $client->put('https://buffsbot.herokuapp.com/action', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'join']]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json([$error => $e]);
     }
   }
 
@@ -65,11 +65,11 @@ class Chatbot extends Controller
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
     try {
-      $response = $client->put('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'part']]);
+      $response = $client->put('https://buffsbot.herokuapp.com/action', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'part']]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json([$error => $e]);
     }
   }
 
@@ -78,11 +78,11 @@ class Chatbot extends Controller
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
     try {
-      $response = $client->put('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'updateUsername']]);
+      $response = $client->put('https://buffsbot.herokuapp.com/action', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'updateUsername']]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json([$error => $e]);
     }
   }
 
@@ -91,11 +91,11 @@ class Chatbot extends Controller
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
     try {
-      $response = $client->delete('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_userId' => $twitch_userId]]);
+      $response = $client->delete('https://buffsbot.herokuapp.com/delete', ['json' => ['twitch_userId' => $twitch_userId]]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json([$error => $e]);
     }
   }
 
@@ -105,11 +105,25 @@ class Chatbot extends Controller
 
     $twitch_userId =  $user->twitch_id;
     try {
-      $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);
+      $response = $client->get("https://buffsbot.herokuapp.com/$twitch_userId");
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json([$error => $e]);
+    }
+  }
+
+  public function adminStatus()
+  {
+    [$user, $client, $twitch_userId] = Chatbot::getData();
+
+    $twitch_userId =  $user->twitch_id;
+    try {
+      $response = $client->get("https://buffsbot.herokuapp.com/");
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      return response()->json(json_decode($data));
+    } catch (ExceptionRequestException $e) {
+      return response()->json([$error => $e]);
     }
   }
 }
