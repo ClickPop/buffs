@@ -2,6 +2,7 @@
 
 use App\Leaderboard;
 use GuzzleHttp\Client;
+use Hashids\Hashids;
 
 function checkLeaderboard(App\User $user)
 {
@@ -17,7 +18,6 @@ function checkLeaderboard(App\User $user)
 function checkChatbot(App\User $user)
 {
   if ($user) {
-    $user = Auth::user();
     $hashids = new Hashids(env('API_KEY_SALT'), 32);
     $api_key = $hashids->encode($user->twitch_id);
     $client = new Client([
@@ -26,7 +26,7 @@ function checkChatbot(App\User $user)
       ]
     ]);
     try {
-      $chatbot = $client->get("https://buffsbot.herokuapp.com/status/$user->twitch_id");
+      $chatbot = $client->get("https://buffsbot.herokuapp.com/api/status/");
     } catch (\Throwable $th) {
       $client->post('https://buffsbot.herokuapp.com/create', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $user->twitch_id]]);
     }
