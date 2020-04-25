@@ -70,6 +70,7 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
         Route::get('/updateUsername', 'Chatbot@updateUsername')->name('chatbot.updateUsername');
         Route::get('/delete', 'Chatbot@delete')->name('chatbot.delete');
         Route::get('/status', 'Chatbot@status')->name('chatbot.status');
+        Route::get('/adminstatus', 'Chatbot@adminStatus')->name('chatbot.adminStatus');
     });
     Route::prefix('/referrals')->group(function () {
         Route::get('/', 'LeaderboardReferralController@index')->name('leaderboardReferrals.index');

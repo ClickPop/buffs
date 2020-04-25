@@ -71,9 +71,22 @@ $(document).ready(function() {
       fetch('/chatbot/part')
         .then((res) => res.json())
         .then((data) => {
-          $button.removeClass('btn-danger').addClass('btn-primary');
-          revertButton($button, 'Join');
-          $label.fadeTo('fast', 1).text("The bot isn't in your channel yet.");
+          if (data.status_code === 200 && data.message.data.joined === false) {
+            $button.removeClass('btn-danger').addClass('btn-primary');
+            revertButton($button, 'Join');
+            $label
+              .fadeTo('fast', 1)
+              .text("The bot isn't in your channel yet.")
+              .css('color', 'rgb(11, 13, 19)');
+          }
+        })
+        .catch((err) => {
+          $label
+            .fadeTo('fast', 1)
+            .text('An error occurred, please try again.')
+            .css('color', 'rgb(194, 0, 0)');
+          revertButton($button, 'Part');
+          console.error(err);
         });
     } else if ($button.text() === 'Join') {
       waitingButton($button, 'Joining...');
@@ -81,9 +94,22 @@ $(document).ready(function() {
       fetch('/chatbot/join')
         .then((res) => res.json())
         .then((data) => {
-          $button.removeClass('btn-primary').addClass('btn-danger');
-          revertButton($button, 'Part');
-          $label.fadeTo('fast', 1).text('The bot is in your channel.');
+          if (data.status_code === 200 && data.message.data.joined === true) {
+            $button.removeClass('btn-primary').addClass('btn-danger');
+            revertButton($button, 'Part');
+            $label
+              .fadeTo('fast', 1)
+              .text('The bot is in your channel.')
+              .css('color', 'rgb(11, 13, 19)');
+          }
+        })
+        .catch((err) => {
+          $label
+            .fadeTo('fast', 1)
+            .text('An error occurred, please try again.')
+            .css('color', 'rgb(194, 0, 0)');
+          revertButton($button, 'Join');
+          console.error(err);
         });
     }
   });

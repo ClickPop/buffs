@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\RequestException as ExceptionRequestException;
-
+use Illuminate\Support\Facades\Hash;
+use Hashids\Hashids;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
 
@@ -27,11 +28,13 @@ class Chatbot extends Controller
   private function getData()
   {
     $user = Auth::user();
-    $client = new Client(['/'], array(
-      'request.options' => array(
-        'exceptions' => false,
-      )
-    ));
+    $hashids = new Hashids(env('API_KEY_SALT'), 32);
+    $api_key = $hashids->encode($user->twitch_id);
+    $client = new Client([
+      'headers' => [
+        'Authorization' => $api_key
+      ]
+    ]);
     return [$user, $client, $user->twitch_id];
   }
 
@@ -39,11 +42,11 @@ class Chatbot extends Controller
   {
     [$user, $client, $twitch_userId] = Chatbot::getData();
     try {
-      $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId]]);
+      $response = $client->post('https://buffsbot.herokuapp.com/api/create', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId]]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return redirect()->route('dashboard');
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -52,11 +55,11 @@ class Chatbot extends Controller
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
     try {
-      $response = $client->put('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'join']]);
+      $response = $client->put('https://buffsbot.herokuapp.com/api/action', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'join']]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -65,11 +68,11 @@ class Chatbot extends Controller
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
     try {
-      $response = $client->put('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'part']]);
+      $response = $client->put('https://buffsbot.herokuapp.com/api/action', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'part']]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -78,11 +81,11 @@ class Chatbot extends Controller
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
     try {
-      $response = $client->put('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'updateUsername']]);
+      $response = $client->put('https://buffsbot.herokuapp.com/api/action', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'updateUsername']]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -91,11 +94,11 @@ class Chatbot extends Controller
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
     try {
-      $response = $client->delete('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/', ['json' => ['twitch_userId' => $twitch_userId]]);
+      $response = $client->delete('https://buffsbot.herokuapp.com/api/delete', ['json' => ['twitch_userId' => $twitch_userId]]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 
@@ -105,11 +108,25 @@ class Chatbot extends Controller
 
     $twitch_userId =  $user->twitch_id;
     try {
-      $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);
+      $response = $client->get("https://buffsbot.herokuapp.com/api/status/");
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return view('dashboard.index', [$error => true]);
+      return response()->json(json_decode($e->getResponse()->getBody()));
+    }
+  }
+
+  public function adminStatus()
+  {
+    [$user, $client, $twitch_userId] = Chatbot::getData();
+
+    $twitch_userId =  $user->twitch_id;
+    try {
+      $response = $client->get("https://buffsbot.herokuapp.com/api/admin/status");
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      return response()->json(json_decode($data));
+    } catch (ExceptionRequestException $e) {
+      return response()->json(json_decode($e->getResponse()->getBody()));
     }
   }
 }
