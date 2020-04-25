@@ -4,7 +4,6 @@
 <div class="container-fluid dashboard-wrapper">
     <div class="row">
         <div class="col-12 mb-4">
-            <h2 class="mb-3">My Leaderboard</h2>
             <!-- if no leaderboard, show something else -->
             @empty($leaderboard)
             <p>Ready to get started growing your audience? Just click below to create your leaderboard.</p>
