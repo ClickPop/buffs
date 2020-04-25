@@ -323,3 +323,9 @@ $(document).ready(function() {
       });
   }
 });
+
+// Stop modal video when modal closes
+$('#obsTutorial').on('hidden.bs.modal', function () {
+  console.log("hidden");
+  $("#obsTutorial iframe").attr("src", $("#obsTutorial iframe").attr("src"));
+});
