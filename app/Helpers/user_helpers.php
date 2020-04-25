@@ -28,7 +28,7 @@ function checkChatbot(App\User $user)
     try {
       $chatbot = $client->get("https://buffsbot.herokuapp.com/api/status/");
     } catch (\Throwable $th) {
-      $client->post('https://buffsbot.herokuapp.com/create', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $user->twitch_id]]);
+      $client->post('https://buffsbot.herokuapp.com/api/create', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $user->twitch_id]]);
     }
   }
 }
