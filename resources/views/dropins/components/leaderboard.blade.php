@@ -45,7 +45,7 @@
       <!-- LOOP -->
       @if (is_array($referrals))
       @for ($i = 0; $i < 10; $i++)
-        <div class="leaderboard__row" style="{{ ($route === 'dashboard' && $i >= $leaderboard->length) || ($route !== 'dashboard' && ($i >= $leaderboard->length || $i >= count($referrals))) ? "display: none;" : "" }}">
+        <div class="leaderboard__row" style="{{ $i >= $leaderboard->length || ($i >= count($referrals) && count($referrals) > 0) ? "display: none;" : "" }}">
           @if ($i < count($referrals))
             <div>{{ $referrals[$i]->referrer }}</div>
             <div>{{ $referrals[$i]->count }}</div>
