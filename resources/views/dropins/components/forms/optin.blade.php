@@ -19,7 +19,7 @@
 			<div class="input-group">
 				<input class="form-control" id="awf_field-105027452" type="text" name="email" value="" aria-label="Your email" aria-describedby="button-addon2" placeholder="Your email">
 				<div class="input-group-append">
-					<input class="btn btn-primary" name="submit" type="submit" value="Submit" tabindex="502">
+					<input class="btn btn-primary" name="submit" type="submit" value="Request an Invite" tabindex="502">
 				</div>
 			</div>
 			<div class="af-element tag" style="display:none;">
