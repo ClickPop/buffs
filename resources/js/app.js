@@ -196,6 +196,30 @@ $(document).ready(function() {
             setTimeout(() => {
               revertButton($button, original_button_content);
               $('#theme-selector').trigger('change');
+              $('.leaderboard__row').each(function(index, row) {
+                if (index > 0) {
+                  if (
+                    index <= initial_settings['leaderboard-length-slider'] &&
+                    index <= leaderboard.referrals.length &&
+                    leaderboard.referrals.length > 0
+                  ) {
+                    $(row).hide();
+                    $(row)
+                      .find('div:eq(0)')
+                      .text(leaderboard.referrals[index - 1].referrer);
+                    $(row)
+                      .find('div:eq(1)')
+                      .text(leaderboard.referrals[index - 1].count);
+                    $(row).show('fast');
+                  } else if (index <= initial_settings['leaderboard-length-slider'] &&
+                  leaderboard.referrals.length === 0) {
+                    $(row).hide();
+                    $(row).show('fast');
+                  } else {
+                    $(row).hide();
+                  }
+                }
+              });
             }, 500);
             alert_timeout = setTimeout(() => {
               $alert.slideUp('fast');
