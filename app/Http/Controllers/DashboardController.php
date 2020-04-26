@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use App\Leaderboard, App\BetaList, App\SocialAccount;
+use App\Leaderboard, App\BetaList, App\SocialAccount, App\User;
 
 use Illuminate\Http\Request;
 
@@ -131,7 +131,7 @@ class DashboardController extends Controller
         'Authorization' => $api_key
       ]
     ]);
-    $twitch_userId =  $user->twitch_id;
+
     try {
       $response = $client->get("https://buffsbot.herokuapp.com/api/admin/status/");
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
@@ -140,7 +140,9 @@ class DashboardController extends Controller
       $chatbots = null;
     }
 
-    return view('chatbot.admin', ['chatbots' => $chatbots]);
+    $user_bots = createUserBots($chatbots);
+
+    return view('chatbot.admin', ['user_bots' => $user_bots]);
   }
 
   public function adminBetaList()
