@@ -19,113 +19,137 @@ use function GuzzleHttp\json_encode;
 
 class DashboardController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
+
+  /**
+   * Show the application dashboard.
+   *
+   * @return \Illuminate\Contracts\Support\Renderable
+   */
+  public function index()
+  {
+    $user = Auth::user();
+    $leaderboard = $user->leaderboards;
+    $referrals = null;
+    if (isset($leaderboard) && $leaderboard->count() > 0) {
+      $leaderboard = $leaderboard->first();
+      $referrals = $leaderboard->referralCounts(true);
+    } else {
+      $leaderboard = null;
+    }
+    $hashids = new Hashids(env('API_KEY_SALT'), 32);
+    $api_key = $hashids->encode($user->twitch_id);
+    $client = new Client([
+      'headers' => [
+        'Authorization' => $api_key
+      ]
+    ]);
+    $twitch_userId =  $user->twitch_id;
+    try {
+      $response = $client->get("https://buffsbot.herokuapp.com/api/status/");
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      return view('dashboard.index', ['chatbot' => json_decode($data), 'user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
+    } catch (ExceptionRequestException $e) {
+      return view('dashboard.index', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
+    }
+  }
+
+  public function updateSettings(Request $req)
+  {
+    $user = Auth::user();
+    $leaderboard =  Leaderboard::find($user->leaderboards->first()->id);
+    $data = json_decode($req->getContent(), true);
+    $leaderboard->theme = $data['theme-selector'];
+    $leaderboard->length = $data['leaderboard-length-slider'];
+    $leaderboard->save();
+    return response()->json($data);
+  }
+
+  public function resetLeaderboard(Request $req)
+  {
+    $user = Auth::user();
+    $leaderboard =  Leaderboard::find($user->leaderboards->first()->id);
+    $leaderboard->reset_timestamp = Carbon::now()->toDateTimeString();
+    $leaderboard->save();
+    return response()->json(['status' => 'success', 'data' => ['reset-date' => $leaderboard->reset_timestamp]]);
+  }
+
+  public function adminIndex()
+  {
+    $user = Auth::user();
+    if (!Auth::check() && !$user->hasRole('admin')) {
+      return redirect()->route('dashboard');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
-    {
-        $user = Auth::user();
-        $leaderboard = $user->leaderboards;
-        $referrals = null;
-        if (isset($leaderboard) && $leaderboard->count() > 0) {
-            $leaderboard = $leaderboard->first();
-            $referrals = $leaderboard->referralCounts(true);
+    $hashids = new Hashids(env('API_KEY_SALT'), 32);
+    $api_key = $hashids->encode($user->twitch_id);
+    $client = new Client([
+      'headers' => [
+        'Authorization' => $api_key
+      ]
+    ]);
+    $twitch_userId =  $user->twitch_id;
+    try {
+      $response = $client->get("https://buffsbot.herokuapp.com/api/admin/status/");
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      $chatbots = json_decode($data)->message->data->bots;
+      $totalChatbots = count($chatbots);
+      $joinedChatbots = [];
+      $partedChatbots = [];
+      foreach ($chatbots as $bot) {
+        if ($bot->joined) {
+          array_push($joinedChatbots, $bot);
         } else {
-            $leaderboard = null;
+          array_push($partedChatbots, $bot);
         }
-        $hashids = new Hashids(env('API_KEY_SALT'), 32);
-        $api_key = $hashids->encode($user->twitch_id);
-        $client = new Client([
-            'headers' => [
-                'Authorization' => $api_key
-            ]
-        ]);
-        $twitch_userId =  $user->twitch_id;
-        try {
-            $response = $client->get("https://buffsbot.herokuapp.com/api/status/");
-            $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
-            return view('dashboard.index', ['chatbot' => json_decode($data), 'user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
-        } catch (ExceptionRequestException $e) {
-            return view('dashboard.index', ['user' => $user, 'leaderboard' => $leaderboard, 'referrals' => $referrals]);
-        }
+      }
+    } catch (\Throwable $th) {
+      $chatbots = null;
     }
 
-    // public function chatbot(Request $req)
-    // {
-    //     $user = Auth::user();
-    //     $client = new Client(['/'], array(
-    //         'request.options' => array(
-    //            'exceptions' => false,
-    //          )
-    //       ));
-    //     $twitch_userId =  $user->twitch_id;
-    //     try {
-    //         $response = $client->post('http://ec2-3-90-25-66.compute-1.amazonaws.com:5000/status', ['json' => ['twitch_userId' => $twitch_userId]]);
-    //         $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
-    //         return view('dashboardChatbot', ['chatbot' => json_decode($data)]);
-    //     } catch (ExceptionRequestException $e) {
-    //         return view('dashboardChatbot');
-    //     }
-    // }
+    return view('dashboard.admin', ['total' => $totalChatbots, 'joined' => count($joinedChatbots), 'parted' => count($partedChatbots)]);
+  }
 
-    public function updateSettings(Request $req)
-    {
-        $user = Auth::user();
-        $leaderboard =  Leaderboard::find($user->leaderboards->first()->id);
-        $data = json_decode($req->getContent(), true);
-        $leaderboard->theme = $data['theme-selector'];
-        $leaderboard->length = $data['leaderboard-length-slider'];
-        $leaderboard->save();
-        return response()->json($data);
+  public function adminChatbot()
+  {
+    $user = Auth::user();
+    if (!Auth::check() && $user->hasRole('admin')) {
+      return redirect()->route('dashboard');
+    }
+    $hashids = new Hashids(env('API_KEY_SALT'), 32);
+    $api_key = $hashids->encode($user->twitch_id);
+    $client = new Client([
+      'headers' => [
+        'Authorization' => $api_key
+      ]
+    ]);
+    $twitch_userId =  $user->twitch_id;
+    try {
+      $response = $client->get("https://buffsbot.herokuapp.com/api/admin/status/");
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      $chatbots = json_decode($data)->message->data->bots;
+    } catch (\Throwable $th) {
+      $chatbots = null;
     }
 
-    public function resetLeaderboard(Request $req)
-    {
-        $user = Auth::user();
-        $leaderboard =  Leaderboard::find($user->leaderboards->first()->id);
-        $leaderboard->reset_timestamp = Carbon::now()->toDateTimeString();
-        $leaderboard->save();
-        return response()->json(['status' => 'success', 'data' => ['reset-date' => $leaderboard->reset_timestamp]]);
+    return view('chatbot.admin', ['chatbots' => $chatbots]);
+  }
+
+  public function adminBetaList()
+  {
+    if (!Auth::check() && !Auth::user()->hasRole('admin')) {
+      return redirect()->route('dashboard');
     }
 
-    public function adminIndex()
-    {
-        if (Auth::check() && Auth::user()->hasRole('admin')) {
-            return view('dashboard.admin');
-        } else {
-            return redirect()->route('dashboard');
-        }
-    }
-
-    public function adminChatbot()
-    {
-        if (Auth::check() && Auth::user()->hasRole('admin')) {
-            $chatbots = null;
-            return view('chatbot.admin');
-        } else {
-            return redirect()->route('dashboard');
-        }
-    }
-
-    public function adminBetaList()
-    {
-        if (Auth::check() && Auth::user()->hasRole('admin')) {
-            $betalist = BetaList::all();
-            return view('betalist.admin');
-        } else {
-            return redirect()->route('dashboard');
-        }
-    }
+    $betalist = BetaList::all();
+    return view('betalist.admin');
+  }
 }

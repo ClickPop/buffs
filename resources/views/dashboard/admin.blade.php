@@ -14,7 +14,9 @@
                     <h5 class="my-0">Chatbots</h5>
                 </div>
                 <div class="card-body">
-
+                    <p class="card-text">Total Chatbots: {{ $total }}</p>
+                    <p class="card-text">Joined Chatbots: {{ $joined }}</p>
+                    <p class="card-text">Parted Chatbots: {{ $parted }}</p>
                 </div>
                 <div class="card-footer text-right">
                     <a href="{{ route('admin.chatbots') }}" class="btn btn-secondary">View More</a>
