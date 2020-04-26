@@ -266,15 +266,7 @@ $(document).ready(function() {
                       .find('div:eq(1)')
                       .text(data.referrals[index - 1].count);
                     $(row).show('fast');
-                  } else if (
-                    route === 'dashboard' &&
-                    data.referrals.length < data.leaderboard.length &&
-                    index > data.referrals.length &&
-                    index <= data.leaderboard.length
-                  ) {
-                    $(row).hide();
-                    $(row).show('fast');
-                  } else if (route !== 'dashboard') {
+                  } else {
                     $(row).hide();
                   }
                 }
