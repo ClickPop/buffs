@@ -89,16 +89,31 @@ class DashboardController extends Controller
       return redirect()->route('dashboard');
     }
 
+    $aweber_client = new Client();
+
+    $access_token = $aweber_client->post('https://auth.aweber.com/oauth2/token', [
+      'form_params' => [
+        'grant_type' => 'refresh_token',
+        'refresh_token' => env('AWEBER_REFRESH_TOKEN')
+      ],
+      'auth' => [
+        env('AWEBER_CLIENT_ID'),
+        env('AWEBER_CLIENT_SECRET')
+      ]
+    ]);
+
+    $access_token = json_decode($access_token->getBody())->access_token;
+
     $hashids = new Hashids(env('API_KEY_SALT'), 32);
     $api_key = $hashids->encode($user->twitch_id);
-    $client = new Client([
+    $buffsbot_client = new Client([
       'headers' => [
         'Authorization' => $api_key
       ]
     ]);
     $twitch_userId =  $user->twitch_id;
     try {
-      $response = $client->get("https://buffsbot.herokuapp.com/api/admin/status/");
+      $response = $buffsbot_client->get("https://buffsbot.herokuapp.com/api/admin/status/");
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       $chatbots = json_decode($data)->message->data->bots;
       $totalChatbots = count($chatbots);
@@ -115,7 +130,64 @@ class DashboardController extends Controller
       $chatbots = null;
     }
 
-    return view('dashboard.admin', ['total' => $totalChatbots, 'joined' => count($joinedChatbots), 'parted' => count($partedChatbots)]);
+    $account = env('AWEBER_ACCOUNT');
+    $list = env('AWEBER_LIST');
+
+    try {
+      $data = $aweber_client->get("https://api.aweber.com/1.0/accounts/$account/lists/$list/subscribers", [
+        'headers' => [
+          "Authorization" => "Bearer $access_token"
+        ]
+      ]);
+
+      $entries = json_decode($data->getBody())->entries;
+      $beta_list = [];
+      $approved = [];
+      $pending = [];
+      $denied = [];
+      foreach ($entries as $entry) {
+        if (in_array('beta-interest', $entry->tags)) {
+          $user = BetaList::where('email', $entry->email)->get()->first();
+
+          if (!$user) {
+            $user = BetaList::create([
+              'email' => $entry->email
+            ]);
+          }
+
+          switch ($user->current_status) {
+            case 'approved':
+              array_push($approved, $user);
+              break;
+            case 'pending':
+              array_push($pending, $user);
+              break;
+            case 'denied':
+              array_push($denied, $user);
+              break;
+          }
+
+          if ($entry->unsubscribed_at) {
+            $user->current_status = 'denied';
+          }
+
+          array_push($beta_list, $user);
+        }
+      }
+    } catch (\Throwable $th) {
+      dd($th);
+    }
+
+    return view('dashboard.admin', [
+      'API_KEY' => $api_key,
+      'total' => $totalChatbots,
+      'joined' => count($joinedChatbots),
+      'parted' => count($partedChatbots),
+      'betalist' => count($beta_list),
+      'approved' => count($approved),
+      'pending' => count($pending),
+      'denied' => count($denied)
+    ]);
   }
 
   public function adminChatbot()
@@ -151,7 +223,70 @@ class DashboardController extends Controller
       return redirect()->route('dashboard');
     }
 
-    $betalist = BetaList::all();
-    return view('betalist.admin');
+    $aweber_client = new Client();
+
+    $access_token = $aweber_client->post('https://auth.aweber.com/oauth2/token', [
+      'form_params' => [
+        'grant_type' => 'refresh_token',
+        'refresh_token' => env('AWEBER_REFRESH_TOKEN')
+      ],
+      'auth' => [
+        env('AWEBER_CLIENT_ID'),
+        env('AWEBER_CLIENT_SECRET')
+      ]
+    ]);
+
+    $access_token = json_decode($access_token->getBody())->access_token;
+
+    $account = env('AWEBER_ACCOUNT');
+    $list = env('AWEBER_LIST');
+
+    try {
+      $data = $aweber_client->get("https://api.aweber.com/1.0/accounts/$account/lists/$list/subscribers", [
+        'headers' => [
+          "Authorization" => "Bearer $access_token"
+        ]
+      ]);
+
+      $entries = json_decode($data->getBody())->entries;
+      $beta_list = [];
+      $approved = [];
+      $pending = [];
+      $denied = [];
+      foreach ($entries as $entry) {
+        if (in_array('beta-interest', $entry->tags)) {
+          $user = BetaList::where('email', $entry->email)->get()->first();
+
+          if (!$user) {
+            $user = BetaList::create([
+              'email' => $entry->email
+            ]);
+          }
+
+          switch ($user->current_status) {
+            case 'approved':
+              array_push($approved, $user);
+              break;
+            case 'pending':
+              array_push($pending, $user);
+              break;
+            case 'denied':
+              array_push($denied, $user);
+              break;
+          }
+
+          if ($entry->unsubscribed_at) {
+            $user->current_status = 'denied';
+          }
+
+          array_push($beta_list, $user);
+        }
+      }
+    } catch (\Throwable $th) {
+      dd($th);
+    }
+
+    // $betalist = BetaList::all();
+    return view('betalist.admin', ['betalist' => $beta_list]);
   }
 }

@@ -42,6 +42,19 @@ $(document).ready(function() {
   let initial_settings = getSettingsObject();
   let settings = initial_settings;
 
+  $('#api_key_copy').click(function(e) {
+    e.preventDefault();
+    $('#api_key').removeAttr('disabled');
+    $('#api_key').select();
+    document.execCommand('copy');
+    $('#api_key').attr('disabled', 'disabled');
+    let $alert = $('#api_key_copy_alert');
+    $alert.slideDown('fast');
+    alert_timeout = setTimeout(() => {
+      $alert.slideUp('fast');
+    }, 3000);
+  });
+
   $('input.remember-me').on('change', function() {
     if ($(this).is(':checked')) {
       $('a.oauth-button').each(function() {
@@ -211,8 +224,10 @@ $(document).ready(function() {
                       .find('div:eq(1)')
                       .text(leaderboard.referrals[index - 1].count);
                     $(row).show('fast');
-                  } else if (index <= initial_settings['leaderboard-length-slider'] &&
-                  leaderboard.referrals.length === 0) {
+                  } else if (
+                    index <= initial_settings['leaderboard-length-slider'] &&
+                    leaderboard.referrals.length === 0
+                  ) {
                     $(row).hide();
                     $(row).show('fast');
                   } else {
@@ -340,12 +355,10 @@ $(document).ready(function() {
   }
 
   // Stop modal video when modal closes
-  $('#obsTutorial').on('hidden.bs.modal', function () {
-    console.log("hidden");
-    $("#obsTutorial iframe").attr("src", $("#obsTutorial iframe").attr("src"));
+  $('#obsTutorial').on('hidden.bs.modal', function() {
+    console.log('hidden');
+    $('#obsTutorial iframe').attr('src', $('#obsTutorial iframe').attr('src'));
   });
 
   $('#chatbot-table').DataTable();
 });
-
-
