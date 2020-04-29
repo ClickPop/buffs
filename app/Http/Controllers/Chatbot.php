@@ -106,7 +106,6 @@ class Chatbot extends Controller
   {
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
-    $twitch_userId =  $user->twitch_id;
     try {
       $response = $client->get("https://buffsbot.herokuapp.com/api/status/");
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
@@ -116,13 +115,102 @@ class Chatbot extends Controller
     }
   }
 
-  public function adminStatus()
+  public function adminStatusAll()
   {
     [$user, $client, $twitch_userId] = Chatbot::getData();
 
-    $twitch_userId =  $user->twitch_id;
     try {
       $response = $client->get("https://buffsbot.herokuapp.com/api/admin/status");
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      return response()->json(json_decode($data));
+    } catch (ExceptionRequestException $e) {
+      return response()->json(json_decode($e->getResponse()->getBody()));
+    }
+  }
+
+  public function adminStatus($twitch_id)
+  {
+    [$user, $client, $twitch_userId] = Chatbot::getData();
+
+    try {
+      $response = $client->get("https://buffsbot.herokuapp.com/api/admin/status/$twitch_id");
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      return response()->json(json_decode($data));
+    } catch (ExceptionRequestException $e) {
+      return response()->json(json_decode($e->getResponse()->getBody()));
+    }
+  }
+
+  public function adminCreate(Request $req)
+  {
+    [$user, $client, $twitch_userId] = Chatbot::getData();
+    $twitch_id = json_decode($req->getContent())->twitch_userId;
+    $twitch_username = json_decode($req->getContent())->twitch_username;
+
+    try {
+      $response = $client->post('https://buffsbot.herokuapp.com/api/create', ['json' => ['twitch_username' => $twitch_username, 'twitch_userId' => $twitch_id]]);
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      return redirect()->route('dashboard');
+    } catch (ExceptionRequestException $e) {
+      return response()->json(json_decode($e->getResponse()->getBody()));
+    }
+  }
+
+
+  public function adminJoin(Request $req)
+  {
+    [$user, $client, $twitch_userId] = Chatbot::getData();
+
+    $twitch_id = json_decode($req->getContent())->twitch_userId;
+
+    try {
+      $response = $client->put('https://buffsbot.herokuapp.com/api/action', ['json' => ['twitch_userId' => $twitch_id, 'action' => 'join']]);
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      return response()->json(json_decode($data));
+    } catch (ExceptionRequestException $e) {
+      return response()->json(json_decode($e->getResponse()->getBody()));
+    }
+  }
+
+  public function adminPart(Request $req)
+  {
+    [$user, $client, $twitch_userId] = Chatbot::getData();
+
+    $twitch_id = json_decode($req->getContent())->twitch_userId;
+
+    try {
+      $response = $client->put('https://buffsbot.herokuapp.com/api/action', ['json' => ['twitch_userId' => $twitch_id, 'action' => 'part']]);
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      return response()->json(json_decode($data));
+    } catch (ExceptionRequestException $e) {
+      return response()->json(json_decode($e->getResponse()->getBody()));
+    }
+  }
+
+  public function adminUpdateUsername(Request $req)
+  {
+    [$user, $client, $twitch_userId] = Chatbot::getData();
+
+    $twitch_id = json_decode($req->getContent())->twitch_userId;
+    $newUsername = json_decode($req->getContent())->newUsername;
+
+    try {
+      $response = $client->put('https://buffsbot.herokuapp.com/api/action', ['json' => ['twitch_username' => $newUsername, 'twitch_userId' => $twitch_id, 'action' => 'updateUsername']]);
+      $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
+      return response()->json(json_decode($data));
+    } catch (ExceptionRequestException $e) {
+      return response()->json(json_decode($e->getResponse()->getBody()));
+    }
+  }
+
+  public function adminDelete(Request $req)
+  {
+    [$user, $client, $twitch_userId] = Chatbot::getData();
+
+    $twitch_id = json_decode($req->getContent())->twitch_userId;
+
+    try {
+      $response = $client->delete('https://buffsbot.herokuapp.com/api/delete', ['json' => ['twitch_userId' => $twitch_id]]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {

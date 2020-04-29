@@ -20,7 +20,15 @@
         <tr id={{ $user->id }} class="betalist row_{{ $loop->index + 1 }}">
           <td>{{ $user->email }}</td>
           <td>{{ $user->username }}</td>
-          <td>{{ $user->current_status }}</td>
+          <td>
+            @if ($user->current_status === 'approved')
+            <span class="badge badge-success">Approved</span>
+            @elseif ($user->current_status === 'denied')
+            <span class="badge badge-danger">Denied</span>
+            @else
+            <span class="badge badge-warning">Pending</span>
+            @endif
+          </td>
           <td>
             <button class="betalist_approve btn btn-success btn-sm my-1"
               style="display: {{ $user->current_status !== 'approved' ? '' : 'none' }};">Approve</button>

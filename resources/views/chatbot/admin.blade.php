@@ -21,7 +21,17 @@
                   <td>{{ $user_bot->email }}</td>
                   <td>{{ $user_bot->username }}</td>
                   <td>{!! adminUserBotStatus($user_bot) !!}</td>
-                  <td>[...]</td>
+                  <td>
+                    @if (isset($user_bot->bot))
+                      <button class="admin_bot join btn btn-primary my-1"
+                        {{ $user_bot->bot->joined ? 'disabled' : '' }}>Join</button>
+                      <button class="admin_bot part btn btn-danger my-1"
+                        {{ $user_bot->bot->joined ? '' : 'disabled' }}>Part</button>
+                    @else
+                      <button class="admin_bot join btn btn-primary my-1" disabled>Join</button>
+                      <button class="admin_bot part btn btn-danger my-1" disabled>Part</button>
+                    @endif
+                  </td>
                 </tr>
               @endforeach
               </tbody>
@@ -44,7 +54,17 @@
                   <td>{{ $unknown_bot->twitch_userId }}</td>
                   <td>{{ $unknown_bot->twitch_username }}</td>
                   <td>{!! adminUserBotStatus($unknown_bot, false) !!}</td>
-                  <td>[...]</td>
+                  <td>
+                    @if (isset($unknown_bot->joined))
+                      <button class="admin_bot join btn btn-primary my-1"
+                        {{ $unknown_bot->joined ? 'disabled' : '' }}>Join</button>
+                      <button class="admin_bot part btn btn-danger my-1"
+                        {{ $unknown_bot->joined ? '' : 'disabled' }}>Part</button>
+                    @else
+                      <button class="admin_bot join btn btn-primary my-1" disabled>Join</button>
+                      <button class="admin_bot part btn btn-danger my-1" disabled>Part</button>
+                    @endif
+                  </td>
                 </tr>
               @endforeach
               </tbody>
