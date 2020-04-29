@@ -17,7 +17,7 @@
             </thead>
             <tbody>
               @foreach ($betalist as $user)
-              <tr id={{ $user->id }} class="betalist row_{{ $loop->index + 1 }}">
+              <tr data-twitch-id="{{ $user->id }}" class="betalist row_{{ $loop->index + 1 }}">
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->username }}</td>
                 <td>

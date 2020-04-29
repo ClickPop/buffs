@@ -92,7 +92,10 @@ $(document).ready(function() {
         $this
           .parents('.betalist')
           .find('td:eq(2)')
-          .text('approved');
+          .find('span')
+          .removeClass('badge-danger')
+          .addClass('badge-success')
+          .text('Approved');
       });
   });
 
@@ -110,7 +113,7 @@ $(document).ready(function() {
       .parents('.betalist')
       .find('td:eq(1)')
       .text();
-    let id = $this.parents('.betalist').attr('id');
+    let id = $this.parents('.betalist').data('twitch-id');
     fetch(`betalist/addorupdate`, {
       method: 'POST',
       headers: {
@@ -132,7 +135,10 @@ $(document).ready(function() {
         $this
           .parents('.betalist')
           .find('td:eq(2)')
-          .text('denied');
+          .find('span')
+          .removeClass('badge-success')
+          .addClass('badge-danger')
+          .text('Denied');
       });
   });
 
@@ -149,16 +155,15 @@ $(document).ready(function() {
           'X-CSRF-TOKEN': csrf_token,
         },
         body: JSON.stringify({
-          twitch_userId: $this.parents('tr').attr('twitch_id'),
+          twitch_userId: $this.parents('tr').data('twitch-id'),
         }),
       })
         .then((res) => res.json())
         .then((data) => {
-          $this.prop('disabled', true);
           $this
-            .siblings('.part')
-            .prop('disabled', false)
-            .removeProp('disabled');
+            .removeClass('join btn-primary')
+            .addClass('part btn-danger')
+            .text('Part');
           $this
             .parents('tr')
             .find('td:eq(2)')
@@ -174,16 +179,15 @@ $(document).ready(function() {
           'X-CSRF-TOKEN': csrf_token,
         },
         body: JSON.stringify({
-          twitch_userId: $this.parents('tr').attr('twitch_id'),
+          twitch_userId: $this.parents('tr').data('twitch-id'),
         }),
       })
         .then((res) => res.json())
         .then((data) => {
-          $this.prop('disabled', true);
           $this
-            .siblings('.join')
-            .prop('disabled', false)
-            .removeProp('disabled');
+            .removeClass('part btn-danger')
+            .addClass('join btn-primary')
+            .text('Join');
           $this
             .parents('tr')
             .find('td:eq(2)')
