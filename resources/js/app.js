@@ -69,7 +69,7 @@ $(document).ready(function() {
       .parents('.betalist')
       .find('td:eq(1)')
       .text();
-    fetch(`/betalist/addorupdate`, {
+    fetch(`betalist/addorupdate`, {
       method: 'POST',
       headers: {
         'X-CSRF-TOKEN': csrf_token,
@@ -109,7 +109,7 @@ $(document).ready(function() {
       .find('td:eq(1)')
       .text();
     let id = $this.parents('.betalist').attr('id');
-    fetch(`/betalist/addorupdate`, {
+    fetch(`betalist/addorupdate`, {
       method: 'POST',
       headers: {
         'X-CSRF-TOKEN': csrf_token,
@@ -132,6 +132,65 @@ $(document).ready(function() {
           .find('td:eq(2)')
           .text('denied');
       });
+  });
+
+  $('.admin_bot').click(function(e) {
+    e.preventDefault();
+    let csrf_token = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+    $this = $(this);
+    if ($this.hasClass('join')) {
+      fetch('/chatbot/admin/join', {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrf_token,
+        },
+        body: JSON.stringify({
+          twitch_userId: $this.parents('tr').attr('id'),
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          $this.prop('disabled', true);
+          $this
+            .siblings('.part')
+            .prop('disabled', false)
+            .removeProp('disabled');
+          $this
+            .parents('tr')
+            .find('td:eq(2)')
+            .find('span')
+            .removeClass('badge-warning')
+            .addClass('badge-success')
+            .text('Joined');
+        });
+    } else {
+      fetch('/chatbot/admin/part', {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrf_token,
+        },
+        body: JSON.stringify({
+          twitch_userId: $this.parents('tr').attr('id'),
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          $this.prop('disabled', true);
+          $this
+            .siblings('.join')
+            .prop('disabled', false)
+            .removeProp('disabled');
+          $this
+            .parents('tr')
+            .find('td:eq(2)')
+            .find('span')
+            .removeClass('badge-success')
+            .addClass('badge-warning')
+            .text('Parted');
+        });
+    }
   });
 
   $('input.remember-me').on('change', function() {

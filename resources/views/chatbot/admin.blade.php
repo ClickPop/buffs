@@ -18,11 +18,23 @@
         </thead>
         <tbody>
           @foreach ($user_bots as $user_bot)
-          <tr>
+          <tr id={{ $user_bot->twitch_id }}>
             <td>{{ $user_bot->email }}</td>
             <td>{{ $user_bot->username }}</td>
             <td>{!! adminUserBotStatus($user_bot) !!}</td>
-            <td>[...]</td>
+            <td>
+              <div>
+                @if (isset($user_bot->bot))
+                <button class="admin_bot join btn btn-primary my-1"
+                  {{ $user_bot->bot->joined ? 'disabled' : '' }}>Join</button>
+                <button class="admin_bot part btn btn-danger my-1"
+                  {{ $user_bot->bot->joined ? '' : 'disabled' }}>Part</button>
+                @else
+                <button class="admin_bot join btn btn-primary my-1" disabled>Join</button>
+                <button class="admin_bot part btn btn-danger my-1" disabled>Part</button>
+                @endif
+              </div>
+            </td>
           </tr>
           @endforeach
         </tbody>

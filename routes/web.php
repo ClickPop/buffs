@@ -54,6 +54,9 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     Route::get('/', 'DashboardController@adminIndex')->name('admin.dashboard');
     Route::get('/chatbot', 'DashboardController@adminChatbot')->name('admin.chatbots');
     Route::get('/betalist', 'DashboardController@adminBetaList')->name('admin.betalist');
+    Route::prefix('/betalist')->group(function () {
+      Route::post('/addorupdate', 'DashboardController@addOrUpdateSubscriber')->name('betalist.addOrUpdate');
+    });
     // Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('admin.leaderboards');
   });
   Route::prefix('/leaderboards')->group(function () {
@@ -68,9 +71,15 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     Route::get('/updateUsername', 'Chatbot@updateUsername')->name('chatbot.updateUsername');
     Route::get('/delete', 'Chatbot@delete')->name('chatbot.delete');
     Route::get('/status', 'Chatbot@status')->name('chatbot.status');
-  });
-  Route::prefix('/betalist')->group(function () {
-    Route::post('/addorupdate', 'DashboardController@addOrUpdateSubscriber')->name('betalist.addOrUpdate');
+    Route::prefix('/admin')->group(function () {
+      Route::post('/create', 'Chatbot@adminCreate')->name('chatbotAdmin.create');
+      Route::post('/join', 'Chatbot@adminJoin')->name('chatbotAdmin.join');
+      Route::post('/part', 'Chatbot@adminPart')->name('chatbotAdmin.part');
+      Route::post('/updateUsername', 'Chatbot@adminUpdateUsername')->name('chatbotAdmin.updateUsername');
+      Route::post('/delete', 'Chatbot@adminDelete')->name('chatbotAdmin.delete');
+      Route::get('/status', 'Chatbot@adminStatusAll')->name('chatbotAdmin.statusAll');
+      Route::get('/status/{twitch_id}', 'Chatbot@adminStatus')->name('chatbotAdmin.status');
+    });
   });
   Route::prefix('/referrals')->group(function () {
     Route::get('/', 'LeaderboardReferralController@index')->name('leaderboardReferrals.index');
