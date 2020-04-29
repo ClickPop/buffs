@@ -17,19 +17,15 @@
       </thead>
       <tbody>
         @foreach ($betalist as $user)
-        <tr>
+        <tr id={{ $user->id }} class="betalist row_{{ $loop->index + 1 }}">
           <td>{{ $user->email }}</td>
-          <td>username</td>
+          <td>{{ $user->username }}</td>
           <td>{{ $user->current_status }}</td>
           <td>
-            @if ($user->current_status === 'pending')
-            <button class="btn btn-success btn-sm my-1">Approve</button>
-            <button class="btn btn-danger btn-sm my-1">Deny</button>
-            @elseif($user->current_status === 'denied')
-            <button class="btn btn-success btn-sm my-1">Approve</button>
-            @else
-            <button class="btn btn-danger btn-sm my-1">Deny</button>
-            @endif
+            <button class="betalist_approve btn btn-success btn-sm my-1"
+              style="display: {{ $user->current_status !== 'approved' ? '' : 'none' }};">Approve</button>
+            <button class="betalist_deny btn btn-danger btn-sm my-1"
+              style="display: {{ $user->current_status !== 'denied' ? '' : 'none' }};">Deny</button>
           </td>
         </tr>
   </div>

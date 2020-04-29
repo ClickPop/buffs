@@ -69,6 +69,9 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     Route::get('/delete', 'Chatbot@delete')->name('chatbot.delete');
     Route::get('/status', 'Chatbot@status')->name('chatbot.status');
   });
+  Route::prefix('/betalist')->group(function () {
+    Route::post('/addorupdate', 'DashboardController@addOrUpdateSubscriber')->name('betalist.addOrUpdate');
+  });
   Route::prefix('/referrals')->group(function () {
     Route::get('/', 'LeaderboardReferralController@index')->name('leaderboardReferrals.index');
   });

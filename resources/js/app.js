@@ -55,6 +55,85 @@ $(document).ready(function() {
     }, 3000);
   });
 
+  $('.betalist_approve').click(function(e) {
+    e.preventDefault();
+    let csrf_token = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+    $this = $(this);
+    let email = $this
+      .parents('.betalist')
+      .find('td:eq(0)')
+      .text();
+    let username = $this
+      .parents('.betalist')
+      .find('td:eq(1)')
+      .text();
+    fetch(`/betalist/addorupdate`, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrf_token,
+      },
+      body: JSON.stringify({
+        action: 'approve',
+        email,
+        username,
+        tags: ['beta_enrolled'],
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        $this.hide('fast');
+        if ($this.siblings('.betalist_deny').css('display') === 'none') {
+          $this.siblings('.betalist_deny').show('fast');
+        }
+        $this
+          .parents('.betalist')
+          .find('td:eq(2)')
+          .text('approved');
+      });
+  });
+
+  $('.betalist_deny').click(function(e) {
+    e.preventDefault();
+    let csrf_token = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+    $this = $(this);
+    let email = $this
+      .parents('.betalist')
+      .find('td:eq(0)')
+      .text();
+    let username = $this
+      .parents('.betalist')
+      .find('td:eq(1)')
+      .text();
+    let id = $this.parents('.betalist').attr('id');
+    fetch(`/betalist/addorupdate`, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrf_token,
+      },
+      body: JSON.stringify({
+        action: 'deny',
+        email,
+        username,
+        id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        $this.hide('fast');
+        if ($this.siblings('.betalist_approve').css('display') === 'none') {
+          $this.siblings('.betalist_approve').show('fast');
+        }
+        $this
+          .parents('.betalist')
+          .find('td:eq(2)')
+          .text('denied');
+      });
+  });
+
   $('input.remember-me').on('change', function() {
     if ($(this).is(':checked')) {
       $('a.oauth-button').each(function() {
