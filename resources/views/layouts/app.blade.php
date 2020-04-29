@@ -1,6 +1,6 @@
 @include('dropins.core.head')
 
-<div class="app-wrapper d-flex admin-chatbot">
+<div class="app-wrapper d-flex">
   <nav class="nav">
     <div class="nav__header">
       <h3>

@@ -1,5 +1,6 @@
 require('./bootstrap');
 require('./admin/chatbot');
+require('./admin/betalist');
 
 function getSettingsObject() {
   let temp_theme = $('#theme-selector').val();
@@ -497,6 +498,4 @@ $(document).ready(function() {
   $('#obsTutorial').on('hidden.bs.modal', function() {
     $('#obsTutorial iframe').attr('src', $('#obsTutorial iframe').attr('src'));
   });
-
-  $('#betalist-table').DataTable();
 });

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-  <div class="container-fluid dashboard-wrapper">
+  <div class="container-fluid dashboard-wrapper admin-chatbot">
     <div class="row">
       <div class="col-12 mb-4">
         <div class="row">
