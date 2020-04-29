@@ -13,7 +13,7 @@ use Hashids\Hashids;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
 
-class Chatbot extends Controller
+class ChatbotController extends Controller
 {
   /**
    * Create a new controller instance.
@@ -40,7 +40,7 @@ class Chatbot extends Controller
 
   public function quickStart()
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
     try {
       $response = $client->post('https://buffsbot.herokuapp.com/api/create', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId]]);
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
@@ -52,7 +52,7 @@ class Chatbot extends Controller
 
   public function join()
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     try {
       $response = $client->put('https://buffsbot.herokuapp.com/api/action', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'join']]);
@@ -65,7 +65,7 @@ class Chatbot extends Controller
 
   public function part()
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     try {
       $response = $client->put('https://buffsbot.herokuapp.com/api/action', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'part']]);
@@ -78,7 +78,7 @@ class Chatbot extends Controller
 
   public function updateUsername()
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     try {
       $response = $client->put('https://buffsbot.herokuapp.com/api/action', ['json' => ['twitch_username' => $user->username, 'twitch_userId' => $twitch_userId, 'action' => 'updateUsername']]);
@@ -91,7 +91,7 @@ class Chatbot extends Controller
 
   public function delete()
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     try {
       $response = $client->delete('https://buffsbot.herokuapp.com/api/delete', ['json' => ['twitch_userId' => $twitch_userId]]);
@@ -104,7 +104,7 @@ class Chatbot extends Controller
 
   public function status()
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     try {
       $response = $client->get("https://buffsbot.herokuapp.com/api/status/");
@@ -117,7 +117,7 @@ class Chatbot extends Controller
 
   public function adminStatusAll()
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     try {
       $response = $client->get("https://buffsbot.herokuapp.com/api/admin/status");
@@ -130,7 +130,7 @@ class Chatbot extends Controller
 
   public function adminStatus($twitch_id)
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     try {
       $response = $client->get("https://buffsbot.herokuapp.com/api/admin/status/$twitch_id");
@@ -143,7 +143,7 @@ class Chatbot extends Controller
 
   public function adminCreate(Request $req)
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
     $twitch_id = json_decode($req->getContent())->twitch_userId;
     $twitch_username = json_decode($req->getContent())->twitch_username;
 
@@ -159,7 +159,7 @@ class Chatbot extends Controller
 
   public function adminJoin(Request $req)
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     $twitch_id = json_decode($req->getContent())->twitch_userId;
 
@@ -174,7 +174,7 @@ class Chatbot extends Controller
 
   public function adminPart(Request $req)
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     $twitch_id = json_decode($req->getContent())->twitch_userId;
 
@@ -189,7 +189,7 @@ class Chatbot extends Controller
 
   public function adminUpdateUsername(Request $req)
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     $twitch_id = json_decode($req->getContent())->twitch_userId;
     $newUsername = json_decode($req->getContent())->newUsername;
@@ -205,7 +205,7 @@ class Chatbot extends Controller
 
   public function adminDelete(Request $req)
   {
-    [$user, $client, $twitch_userId] = Chatbot::getData();
+    [$user, $client, $twitch_userId] = ChatbotController::getData();
 
     $twitch_id = json_decode($req->getContent())->twitch_userId;
 
