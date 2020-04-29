@@ -499,4 +499,5 @@ $(document).ready(function() {
   });
 
   $('#chatbot-table').DataTable();
+  $('#betalist-table').DataTable();
 });
