@@ -149,7 +149,7 @@ $(document).ready(function() {
           'X-CSRF-TOKEN': csrf_token,
         },
         body: JSON.stringify({
-          twitch_userId: $this.parents('tr').attr('id'),
+          twitch_userId: $this.parents('tr').attr('twitch_id'),
         }),
       })
         .then((res) => res.json())
@@ -174,7 +174,7 @@ $(document).ready(function() {
           'X-CSRF-TOKEN': csrf_token,
         },
         body: JSON.stringify({
-          twitch_userId: $this.parents('tr').attr('id'),
+          twitch_userId: $this.parents('tr').attr('twitch_id'),
         }),
       })
         .then((res) => res.json())
