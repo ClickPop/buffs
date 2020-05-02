@@ -48,7 +48,7 @@
 
   </nav>
 
-  <main role="main" class="app-content py-5 px-4">
+  <main role="main" class="app-content flex-grow-1 py-5 px-4">
     @yield('content')
   </main>
 </div>

@@ -1,4 +1,6 @@
 require('./bootstrap');
+require('./admin/chatbot');
+require('./admin/betalist');
 
 function getSettingsObject() {
   let temp_theme = $('#theme-selector').val();
@@ -41,6 +43,161 @@ $(document).ready(function() {
   let $leaderboard = $('.leaderboard');
   let initial_settings = getSettingsObject();
   let settings = initial_settings;
+
+  $('#api_key_copy').click(function(e) {
+    e.preventDefault();
+    $('#api_key').removeAttr('disabled');
+    $('#api_key').select();
+    document.execCommand('copy');
+    $('#api_key').attr('disabled', 'disabled');
+    let $alert = $('#api_key_copy_alert');
+    $alert.slideDown('fast');
+    alert_timeout = setTimeout(() => {
+      $alert.slideUp('fast');
+    }, 3000);
+  });
+
+  $('.betalist_approve').click(function(e) {
+    e.preventDefault();
+    let csrf_token = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+    $this = $(this);
+    let email = $this
+      .parents('.betalist')
+      .find('td:eq(0)')
+      .text();
+    let username = $this
+      .parents('.betalist')
+      .find('td:eq(1)')
+      .text();
+    fetch(`betalist/addorupdate`, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrf_token,
+      },
+      body: JSON.stringify({
+        action: 'approve',
+        email,
+        username,
+        tags: ['beta_enrolled'],
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        $this.hide('fast');
+        if ($this.siblings('.betalist_deny').css('display') === 'none') {
+          $this.siblings('.betalist_deny').show('fast');
+        }
+        $this
+          .parents('.betalist')
+          .find('td:eq(2)')
+          .find('span')
+          .removeClass('badge-danger')
+          .addClass('badge-success')
+          .text('Approved');
+      });
+  });
+
+  $('.betalist_deny').click(function(e) {
+    e.preventDefault();
+    let csrf_token = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+    $this = $(this);
+    let email = $this
+      .parents('.betalist')
+      .find('td:eq(0)')
+      .text();
+    let username = $this
+      .parents('.betalist')
+      .find('td:eq(1)')
+      .text();
+    let id = $this.parents('.betalist').data('twitch-id');
+    fetch(`betalist/addorupdate`, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrf_token,
+      },
+      body: JSON.stringify({
+        action: 'deny',
+        email,
+        username,
+        id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        $this.hide('fast');
+        if ($this.siblings('.betalist_approve').css('display') === 'none') {
+          $this.siblings('.betalist_approve').show('fast');
+        }
+        $this
+          .parents('.betalist')
+          .find('td:eq(2)')
+          .find('span')
+          .removeClass('badge-success')
+          .addClass('badge-danger')
+          .text('Denied');
+      });
+  });
+
+  $('.admin_bot').click(function(e) {
+    e.preventDefault();
+    let csrf_token = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+    $this = $(this);
+    if ($this.hasClass('join')) {
+      fetch('/chatbot/admin/join', {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrf_token,
+        },
+        body: JSON.stringify({
+          twitch_userId: $this.parents('tr').data('twitch-id'),
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          $this
+            .removeClass('join btn-primary')
+            .addClass('part btn-danger')
+            .text('Part');
+          $this
+            .parents('tr')
+            .find('td:eq(2)')
+            .find('span')
+            .removeClass('badge-warning')
+            .addClass('badge-success')
+            .text('Joined');
+        });
+    } else {
+      fetch('/chatbot/admin/part', {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrf_token,
+        },
+        body: JSON.stringify({
+          twitch_userId: $this.parents('tr').data('twitch-id'),
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          $this
+            .removeClass('part btn-danger')
+            .addClass('join btn-primary')
+            .text('Join');
+          $this
+            .parents('tr')
+            .find('td:eq(2)')
+            .find('span')
+            .removeClass('badge-success')
+            .addClass('badge-warning')
+            .text('Parted');
+        });
+    }
+  });
 
   $('input.remember-me').on('change', function() {
     if ($(this).is(':checked')) {
@@ -211,8 +368,10 @@ $(document).ready(function() {
                       .find('div:eq(1)')
                       .text(leaderboard.referrals[index - 1].count);
                     $(row).show('fast');
-                  } else if (index <= initial_settings['leaderboard-length-slider'] &&
-                  leaderboard.referrals.length === 0) {
+                  } else if (
+                    index <= initial_settings['leaderboard-length-slider'] &&
+                    leaderboard.referrals.length === 0
+                  ) {
                     $(row).hide();
                     $(row).show('fast');
                   } else {
@@ -338,10 +497,9 @@ $(document).ready(function() {
         }
       });
   }
-});
 
-// Stop modal video when modal closes
-$('#obsTutorial').on('hidden.bs.modal', function () {
-  console.log("hidden");
-  $("#obsTutorial iframe").attr("src", $("#obsTutorial iframe").attr("src"));
+  // Stop modal video when modal closes
+  $('#obsTutorial').on('hidden.bs.modal', function() {
+    $('#obsTutorial iframe').attr('src', $('#obsTutorial iframe').attr('src'));
+  });
 });

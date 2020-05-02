@@ -54,6 +54,9 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     Route::get('/', 'DashboardController@adminIndex')->name('admin.dashboard');
     Route::get('/chatbot', 'DashboardController@adminChatbot')->name('admin.chatbots');
     Route::get('/betalist', 'DashboardController@adminBetaList')->name('admin.betalist');
+    Route::prefix('/betalist')->group(function () {
+      Route::post('/addorupdate', 'DashboardController@addOrUpdateSubscriber')->name('betalist.addOrUpdate');
+    });
     // Route::get('/leaderboards', 'LeaderboardController@adminIndex')->name('admin.leaderboards');
   });
   Route::prefix('/leaderboards')->group(function () {
@@ -62,12 +65,21 @@ Route::domain(env('APP_SUBDOMAIN'), 'cauldron.buffs.app')->group(function () {
     Route::get('/reset', 'DashboardController@resetLeaderboard')->name('leaderboards.reset');
   });
   Route::prefix('/chatbot')->group(function () {
-    Route::get('/quick-start', 'Chatbot@quickStart')->name('chatbot.quickStart');
-    Route::get('/join', 'Chatbot@join')->name('chatbot.join');
-    Route::get('/part', 'Chatbot@part')->name('chatbot.part');
-    Route::get('/updateUsername', 'Chatbot@updateUsername')->name('chatbot.updateUsername');
-    Route::get('/delete', 'Chatbot@delete')->name('chatbot.delete');
-    Route::get('/status', 'Chatbot@status')->name('chatbot.status');
+    Route::get('/quick-start', 'ChatbotController@quickStart')->name('chatbot.quickStart');
+    Route::get('/join', 'ChatbotController@join')->name('chatbot.join');
+    Route::get('/part', 'ChatbotController@part')->name('chatbot.part');
+    Route::get('/updateUsername', 'ChatbotController@updateUsername')->name('chatbot.updateUsername');
+    Route::get('/delete', 'ChatbotController@delete')->name('chatbot.delete');
+    Route::get('/status', 'ChatbotController@status')->name('chatbot.status');
+    Route::prefix('/admin')->group(function () {
+    Route::post('/create', 'ChatbotController@adminCreate')->name('chatbotAdmin.create');
+    Route::post('/join', 'ChatbotController@adminJoin')->name('chatbotAdmin.join');
+    Route::post('/part', 'ChatbotController@adminPart')->name('chatbotAdmin.part');
+    Route::post('/updateUsername', 'ChatbotController@adminUpdateUsername')->name('chatbotAdmin.updateUsername');
+    Route::post('/delete', 'ChatbotController@adminDelete')->name('chatbotAdmin.delete');
+    Route::get('/status', 'ChatbotController@adminStatusAll')->name('chatbotAdmin.statusAll');
+    Route::get('/status/{twitch_id}', 'ChatbotController@adminStatus')->name('chatbotAdmin.status');
+    });
   });
   Route::prefix('/referrals')->group(function () {
     Route::get('/', 'LeaderboardReferralController@index')->name('leaderboardReferrals.index');

@@ -22,5 +22,8 @@
         "sass-loader": "^7.1.0",
         "strip-sourcemap-loader": "0.0.1",
         "vue-template-compiler": "2.6.11"
+    },
+    "dependencies": {
+        "datatables.net-bs4": "^1.10.20"
     }
 }

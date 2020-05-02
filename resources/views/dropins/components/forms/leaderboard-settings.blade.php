@@ -1,12 +1,11 @@
-<div class="form-group">
-  <div class="row">
-    <div class="col-12 col-xl-6 mb-3">
-      <h2 class="mb-3">My Leaderboard</h2>
-      @include('dropins.components.leaderboard', ['preview' => true])
-    </div>
+<div class="row">
+  <div class="col-12 col-xl-6 mb-3">
+    <h2 class="mb-3">My Leaderboard</h2>
+    @include('dropins.components.leaderboard', ['preview' => true])
+  </div>
 
-    <form method="POST" class="col-12 col-xl-6">
-
+  <div class="col-12 col-xl-6">
+    <form>
       <div id='settings' class="card p-4 my-3">
         <h3>Leaderboard Settings</h3>
         <div id="embed-info" class="form-group xl-4">
