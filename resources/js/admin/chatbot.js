@@ -4,4 +4,15 @@ $(document).ready(() => {
     $('.assigned-chatbots-table').DataTable();
     $('.unassigned-chatbots-table').DataTable();
   }
+
+  $('.admin_bot').click(function(e) {
+    e.preventDefault();
+    $this = $(this);
+    console.log($this.html());
+    if ($this.hasClass('join')) {
+      helpers.adminBotAction($this, 'join');
+    } else {
+      helpers.adminBotAction($this, 'part');
+    }
+  });
 });

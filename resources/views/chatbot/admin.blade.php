@@ -17,7 +17,7 @@
             </thead>
             <tbody>
               @foreach ($user_bots->assigned as $user_bot)
-              <tr data-twitch-id={{ $user_bot->twitch_id }}>
+              <tr data-twitch-id="{{ $user_bot->twitch_id }}">
                 <td>{{ $user_bot->email }}</td>
                 <td>{{ $user_bot->username }}</td>
                 <td>{!! adminUserBotStatus($user_bot) !!}</td>
@@ -45,7 +45,7 @@
             </thead>
             <tbody>
               @foreach ($user_bots->unassigned as $unknown_bot)
-              <tr data-twitch-id={{ $unknown_bot->twitch_userId }}>
+              <tr data-twitch-id="{{ $unknown_bot->twitch_userId }}">
                 <td>{{ $unknown_bot->twitch_userId }}</td>
                 <td>{{ $unknown_bot->twitch_username }}</td>
                 <td>{!! adminUserBotStatus($unknown_bot, false) !!}</td>

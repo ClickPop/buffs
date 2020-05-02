@@ -2,7 +2,101 @@ require('./bootstrap');
 require('./admin/chatbot');
 require('./admin/betalist');
 
-window.helpers = {
+module.exports = window.helpers = {
+  copy: ($copy_data) => {
+    $copy_data.removeAttr('disabled');
+    $copy_data.select();
+    document.execCommand('copy');
+    $copy_data.attr('disabled', 'disabled');
+  },
+  displayAlert: ($alert, type, text, duration = 3, func = () => {}) => {
+    if (!$alert.hasClass(`alert-${type}`)) {
+      $alert.removeClass().addClass(`alert alert-${type} text-center`);
+    }
+    $alert.text(text).slideDown('fast', func);
+    alertTimeout = setTimeout(() => {
+      $alert.slideUp('fast');
+    }, duration * 1000);
+  },
+  betalistAction: ($row, action) => {
+    let email = $row
+      .parents('.betalist')
+      .find('td:eq(0)')
+      .text();
+    let username = $row
+      .parents('.betalist')
+      .find('td:eq(1)')
+      .text();
+    let id = $row.parents('.betalist').data('twitch-id');
+    fetch(`betalist/addorupdate`, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+      },
+      body: JSON.stringify({
+        action,
+        email,
+        username,
+        id,
+        tags: action === 'approve' ? ['beta_enrolled'] : '',
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        $row.hide('fast');
+        if (action === 'approve') {
+          if ($row.siblings('.betalist_deny').css('display') === 'none') {
+            $row.siblings('.betalist_deny').show('fast');
+          }
+          helpers.changeBadge($row, 'success', 'Approved');
+        } else {
+          if ($row.siblings('.betalist_approve').css('display') === 'none') {
+            $row.siblings('.betalist_approve').show('fast');
+          }
+          helpers.changeBadge($row, 'danger', 'Denied');
+        }
+      });
+  },
+  adminBotAction: ($row, action) => {
+    join = action === 'join';
+    buttonClass = `
+    btn btn-${join ? 'danger part' : 'primary join'}
+    `;
+    buttonText = join ? 'Part' : 'Join';
+    badgeType = join ? 'success' : 'warning';
+    badgeText = join ? 'Joined' : 'Parted';
+    fetch(`/chatbot/admin/${action}`, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+      },
+      body: JSON.stringify({
+        twitch_username: $row
+          .parents('tr')
+          .find('td:eq(1)')
+          .text()
+          .toLowerCase(),
+        twitch_userId: $row.parents('tr').data('twitch-id'),
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        $row
+          .removeClass()
+          .addClass(buttonClass)
+          .text(buttonText);
+        helpers.changeBadge($row, badgeType, badgeText);
+      });
+  },
+  changeBadge: ($row, badge, text) => {
+    $row
+      .parents('tr')
+      .find('td:eq(2)')
+      .find('span')
+      .removeClass()
+      .addClass(`badge badge-${badge}`)
+      .text(text);
+  },
   getSettingsObject: () => {
     let tempTheme = $('#theme-selector').val();
     let tempLength = $('#leaderboard-length-slider').val();
@@ -28,7 +122,8 @@ window.helpers = {
   },
   updateTheme: ($leaderboard, theme) => {
     $leaderboard.hide();
-    $leaderboard.parents('.leaderboard-wrapper')
+    $leaderboard
+      .parents('.leaderboard-wrapper')
       .removeClass(function(index, className) {
         return (className.match(/\btheme-\S+/g) || []).join(' ');
       })
@@ -39,7 +134,7 @@ window.helpers = {
     return document
       .querySelector('meta[name="csrf-token"]')
       .getAttribute('content');
-  }
+  },
 };
 window.csrfToken = helpers.getCsrfToken();
 
@@ -49,153 +144,6 @@ $(document).ready(function() {
   let $leaderboard = $('.leaderboard');
   let initialSettings = helpers.getSettingsObject();
   let currentSettings = initialSettings;
-
-  $('#api_key_copy').click(function(e) {
-    e.preventDefault();
-    $('#api_key').removeAttr('disabled');
-    $('#api_key').select();
-    document.execCommand('copy');
-    $('#api_key').attr('disabled', 'disabled');
-    let $alert = $('#api_key_copy_alert');
-    $alert.slideDown('fast');
-    alertTimeout = setTimeout(() => {
-      $alert.slideUp('fast');
-    }, 3000);
-  });
-
-  $('.betalist_approve').click(function(e) {
-    e.preventDefault();
-    
-    $this = $(this);
-    let email = $this
-      .parents('.betalist')
-      .find('td:eq(0)')
-      .text();
-    let username = $this
-      .parents('.betalist')
-      .find('td:eq(1)')
-      .text();
-    fetch(`betalist/addorupdate`, {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': csrfToken,
-      },
-      body: JSON.stringify({
-        action: 'approve',
-        email,
-        username,
-        tags: ['beta_enrolled'],
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        $this.hide('fast');
-        if ($this.siblings('.betalist_deny').css('display') === 'none') {
-          $this.siblings('.betalist_deny').show('fast');
-        }
-        $this
-          .parents('.betalist')
-          .find('td:eq(2)')
-          .find('span')
-          .removeClass('badge-danger')
-          .addClass('badge-success')
-          .text('Approved');
-      });
-  });
-
-  $('.betalist_deny').click(function(e) {
-    e.preventDefault();
-    $this = $(this);
-    let email = $this
-      .parents('.betalist')
-      .find('td:eq(0)')
-      .text();
-    let username = $this
-      .parents('.betalist')
-      .find('td:eq(1)')
-      .text();
-    let id = $this.parents('.betalist').data('twitch-id');
-    fetch(`betalist/addorupdate`, {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': csrfToken,
-      },
-      body: JSON.stringify({
-        action: 'deny',
-        email,
-        username,
-        id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        $this.hide('fast');
-        if ($this.siblings('.betalist_approve').css('display') === 'none') {
-          $this.siblings('.betalist_approve').show('fast');
-        }
-        $this
-          .parents('.betalist')
-          .find('td:eq(2)')
-          .find('span')
-          .removeClass('badge-success')
-          .addClass('badge-danger')
-          .text('Denied');
-      });
-  });
-
-  $('.admin_bot').click(function(e) {
-    e.preventDefault();
-    $this = $(this);
-    if ($this.hasClass('join')) {
-      fetch('/chatbot/admin/join', {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': csrfToken,
-        },
-        body: JSON.stringify({
-          twitch_userId: $this.parents('tr').data('twitch-id'),
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          $this
-            .removeClass('join btn-primary')
-            .addClass('part btn-danger')
-            .text('Part');
-          $this
-            .parents('tr')
-            .find('td:eq(2)')
-            .find('span')
-            .removeClass('badge-warning')
-            .addClass('badge-success')
-            .text('Joined');
-        });
-    } else {
-      fetch('/chatbot/admin/part', {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': csrfToken,
-        },
-        body: JSON.stringify({
-          twitch_userId: $this.parents('tr').data('twitch-id'),
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          $this
-            .removeClass('part btn-danger')
-            .addClass('join btn-primary')
-            .text('Join');
-          $this
-            .parents('tr')
-            .find('td:eq(2)')
-            .find('span')
-            .removeClass('badge-success')
-            .addClass('badge-warning')
-            .text('Parted');
-        });
-    }
-  });
 
   $('input.remember-me').on('change', function() {
     if ($(this).is(':checked')) {
@@ -240,7 +188,7 @@ $(document).ready(function() {
             .fadeTo('fast', 1)
             .text('An error occurred, please try again.')
             .css('color', 'rgb(194, 0, 0)');
-            helpers.revertButton($button, 'Part');
+          helpers.revertButton($button, 'Part');
           console.error(err);
         });
     } else if ($button.text() === 'Join') {
@@ -326,7 +274,6 @@ $(document).ready(function() {
   });
 
   $('#settings-submit').click(function(e) {
-    
     let $button = $(this);
     let original_button_content = $button.html();
     helpers.waitingButton($button, 'Saving...');
@@ -339,13 +286,13 @@ $(document).ready(function() {
     })
       .then((res) => res.json())
       .then((data) => {
-        let $alert = $('#leaderboard-alert');
-
         initialSettings = currentSettings;
-        $alert
-          .addClass('alert alert-success text-center')
-          .text('Settings Saved')
-          .slideDown('fast', function() {
+        helpers.displayAlert(
+          $('#leaderboard-alert'),
+          'success',
+          'Settings saved',
+          3,
+          function() {
             setTimeout(() => {
               helpers.revertButton($button, original_button_content);
               $('#theme-selector').trigger('change');
@@ -376,10 +323,8 @@ $(document).ready(function() {
                 }
               });
             }, 500);
-            alertTimeout = setTimeout(() => {
-              $alert.slideUp('fast');
-            }, 3000);
-          });
+          }
+        );
       });
   });
 
@@ -458,20 +403,13 @@ $(document).ready(function() {
     }
     $('#embed-copy').click(function(e) {
       e.preventDefault();
-      $('#embed-link').removeAttr('disabled');
-      $('#embed-link').select();
-      document.execCommand('copy');
-      $('#embed-link').attr('disabled', 'disabled');
-      if ($('#embed-alert')) {
-      }
-      let $alert = $('#leaderboard-alert');
-      $alert
-        .addClass('alert alert-success text-center')
-        .text('Link copied to clipboard')
-        .slideDown('fast');
-      alertTimeout = setTimeout(() => {
-        $alert.slideUp('fast');
-      }, 3000);
+      helpers.copy($('#embed-link'));
+      helpers.displayAlert(
+        $('#leaderboard-alert'),
+        'success',
+        'Link copied to clipboard',
+        3
+      );
     });
     $('#leaderboard-length-slider')
       .on('input', function(e) {
@@ -480,7 +418,9 @@ $(document).ready(function() {
       })
       .on('change', function(e) {
         currentSettings = helpers.getSettingsObject();
-        if (JSON.stringify(currentSettings) !== JSON.stringify(initialSettings)) {
+        if (
+          JSON.stringify(currentSettings) !== JSON.stringify(initialSettings)
+        ) {
           $('#settings-submit').removeAttr('disabled');
         } else {
           $('#settings-submit').attr('disabled', 'disabled');
