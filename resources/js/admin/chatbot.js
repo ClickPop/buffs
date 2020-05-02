@@ -12,9 +12,9 @@ $(document).ready(() => {
     $this = $(this);
     console.log($this.html());
     if ($this.hasClass('join')) {
-      helpers.adminBotAction($this, 'join');
+      helpers.adminBotAction($this, 'join', true);
     } else {
-      helpers.adminBotAction($this, 'part');
+      helpers.adminBotAction($this, 'part', true);
     }
   });
 });

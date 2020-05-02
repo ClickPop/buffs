@@ -1,6 +1,8 @@
 require('./bootstrap');
 require('./admin/chatbot');
 require('./admin/betalist');
+require('./dashboard');
+require('./leaderboard');
 
 module.exports = window.helpers = {
   copy: ($copy_data) => {
@@ -18,16 +20,16 @@ module.exports = window.helpers = {
       $alert.slideUp('fast');
     }, duration * 1000);
   },
-  betalistAction: ($row, action) => {
-    let email = $row
+  betalistAction: ($button, action) => {
+    let email = $button
       .parents('.betalist')
       .find('td:eq(0)')
       .text();
-    let username = $row
+    let username = $button
       .parents('.betalist')
       .find('td:eq(1)')
       .text();
-    let id = $row.parents('.betalist').data('twitch-id');
+    let id = $button.parents('.betalist').data('twitch-id');
     fetch(`betalist/addorupdate`, {
       method: 'POST',
       headers: {
@@ -43,50 +45,107 @@ module.exports = window.helpers = {
     })
       .then((res) => res.json())
       .then((data) => {
-        $row.hide('fast');
+        $button.hide('fast');
         if (action === 'approve') {
-          if ($row.siblings('.betalist_deny').css('display') === 'none') {
-            $row.siblings('.betalist_deny').show('fast');
+          if ($button.siblings('.betalist_deny').css('display') === 'none') {
+            $button.siblings('.betalist_deny').show('fast');
           }
-          helpers.changeBadge($row, 'success', 'Approved');
+          helpers.changeBadge($button, 'success', 'Approved');
         } else {
-          if ($row.siblings('.betalist_approve').css('display') === 'none') {
-            $row.siblings('.betalist_approve').show('fast');
+          if ($button.siblings('.betalist_approve').css('display') === 'none') {
+            $button.siblings('.betalist_approve').show('fast');
           }
-          helpers.changeBadge($row, 'danger', 'Denied');
+          helpers.changeBadge($button, 'danger', 'Denied');
         }
       });
   },
-  adminBotAction: ($row, action) => {
+  adminBotAction: ($button, action, admin) => {
     join = action === 'join';
-    buttonClass = `
+    let buttonClass = `
     btn btn-${join ? 'danger part' : 'primary join'}
     `;
-    buttonText = join ? 'Part' : 'Join';
-    badgeType = join ? 'success' : 'warning';
-    badgeText = join ? 'Joined' : 'Parted';
-    fetch(`/chatbot/admin/${action}`, {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': csrfToken,
-      },
-      body: JSON.stringify({
-        twitch_username: $row
+    let buttonText = join ? 'Part' : 'Join';
+    let badgeType = join ? 'success' : 'warning';
+    let badgeText = join ? 'Joined' : 'Parted';
+    let url = `/chatbot/${admin ? `admin/${action}` : action}`;
+    let body = {};
+    body.twitch_username = admin
+      ? $button
           .parents('tr')
           .find('td:eq(1)')
           .text()
-          .toLowerCase(),
-        twitch_userId: $row.parents('tr').data('twitch-id'),
-      }),
-    })
+          .toLowerCase()
+      : undefined;
+    body.twitch_userId = admin
+      ? $button.parents('tr').data('twitch-id')
+      : undefined;
+    fetchInfo = {
+      method: admin ? 'POST' : 'GET',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+      },
+    };
+    join
+      ? helpers.waitingButton($button, 'Joining...')
+      : helpers.waitingButton($button, 'Parting...');
+    if (!admin) {
+      var $label = $('#bot-action-statement');
+      $label.fadeTo('fast', 0);
+      var labelText =
+        action === 'join'
+          ? 'The bot is in your channel'
+          : "The bot isn't in your channel yet";
+    }
+
+    fetchInfo.body = admin ? JSON.stringify(body) : undefined;
+    fetch(url, fetchInfo)
       .then((res) => res.json())
       .then((data) => {
-        $row
-          .removeClass()
-          .addClass(buttonClass)
-          .text(buttonText);
-        helpers.changeBadge($row, badgeType, badgeText);
+        if (data.status_code === 200) {
+          $button.removeClass().addClass(buttonClass);
+          helpers.revertButton($button, buttonText);
+          if (!admin) {
+            helpers.changeLabel($label, labelText, false);
+          } else {
+            helpers.changeBadge($button, badgeType, badgeText);
+          }
+        } else {
+          helpers.revertButton($button, !join ? 'Part' : 'Join');
+          if (!admin) {
+            helpers.changeLabel(
+              $label,
+              'An error occured, please try again later',
+              true
+            );
+          } else {
+            helpers.changeBadge(
+              $button,
+              'danger',
+              'Error, please check console'
+            );
+          }
+        }
+      })
+      .catch((err) => {
+        helpers.revertButton($button, !join ? 'Part' : 'Join');
+        if (!admin) {
+          helpers.changeLabel(
+            $label,
+            'An error occured, please try again later',
+            true
+          );
+        } else {
+          helpers.changeBadge($button, 'danger', 'Error, please check console');
+        }
+        console.error(err);
       });
+  },
+  changeLabel: ($label, text, error) => {
+    let color = error ? 'rgb(194, 0, 0)' : 'rgb(11, 13, 19)';
+    $label
+      .fadeTo('fast', 1)
+      .text(text)
+      .css('color', color);
   },
   changeBadge: ($row, badge, text) => {
     $row
@@ -162,59 +221,6 @@ $(document).ready(function() {
   $('.logout-link').on('click', function(e) {
     e.preventDefault();
     $('#logout-form').submit();
-  });
-
-  $('#bot-action-button').click(function(e) {
-    e.preventDefault();
-    $button = $(this);
-    $label = $('#bot-action-statement');
-    if ($button.text() === 'Part') {
-      helpers.waitingButton($button, 'Parting...');
-      $label.fadeTo('fast', 0);
-      fetch('/chatbot/part')
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status_code === 200 && data.message.data.joined === false) {
-            $button.removeClass('btn-danger').addClass('btn-primary');
-            helpers.revertButton($button, 'Join');
-            $label
-              .fadeTo('fast', 1)
-              .text("The bot isn't in your channel yet.")
-              .css('color', 'rgb(11, 13, 19)');
-          }
-        })
-        .catch((err) => {
-          $label
-            .fadeTo('fast', 1)
-            .text('An error occurred, please try again.')
-            .css('color', 'rgb(194, 0, 0)');
-          helpers.revertButton($button, 'Part');
-          console.error(err);
-        });
-    } else if ($button.text() === 'Join') {
-      helpers.waitingButton($button, 'Joining...');
-      $label.fadeTo('fast', 0);
-      fetch('/chatbot/join')
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status_code === 200 && data.message.data.joined === true) {
-            $button.removeClass('btn-primary').addClass('btn-danger');
-            helpers.revertButton($button, 'Part');
-            $label
-              .fadeTo('fast', 1)
-              .text('The bot is in your channel.')
-              .css('color', 'rgb(11, 13, 19)');
-          }
-        })
-        .catch((err) => {
-          $label
-            .fadeTo('fast', 1)
-            .text('An error occurred, please try again.')
-            .css('color', 'rgb(194, 0, 0)');
-          helpers.revertButton($button, 'Join');
-          console.error(err);
-        });
-    }
   });
 
   $('#leaderboard-reset').click(function(e) {

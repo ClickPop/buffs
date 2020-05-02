@@ -24,7 +24,7 @@
                 <td>
                   @if (isset($user_bot->bot))
                   <button
-                    class="admin_bot btn {{ $user_bot->bot->joined ? 'part btn-danger' : 'join btn-primary' }} my-1">{{ $user_bot->bot->joined ? 'Part' : 'Join' }}</button>
+                    class="admin_bot btn {{ $user_bot->bot->joined ? 'btn-danger part' : 'btn-primary join' }} my-1">{{ $user_bot->bot->joined ? 'Part' : 'Join' }}</button>
                   @endif
                 </td>
               </tr>
@@ -52,7 +52,7 @@
                 <td>
                   @if (isset($unknown_bot->joined))
                   <button
-                    class="admin_bot btn {{ $unknown_bot->joined ? 'part btn-danger' : 'join btn-primary' }} my-1">{{ $unknown_bot->joined ? 'Part' : 'Join' }}</button>
+                    class="admin_bot btn {{ $unknown_bot->joined ? 'btn-danger part' : 'btn-primary join' }} my-1">{{ $unknown_bot->joined ? 'Part' : 'Join' }}</button>
                   @endif
                 </td>
               </tr>

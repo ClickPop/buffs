@@ -46,7 +46,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return redirect()->route('dashboard');
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -59,7 +59,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -72,7 +72,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -85,7 +85,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -98,7 +98,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -111,7 +111,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -124,7 +124,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -137,7 +137,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -152,7 +152,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return redirect()->route('dashboard');
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -169,7 +169,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -185,7 +185,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -202,7 +202,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 
@@ -217,7 +217,7 @@ class ChatbotController extends Controller
       $data = json_encode(['status_code' => $response->getStatusCode(), 'message' => json_decode($response->getBody())]);
       return response()->json(json_decode($data));
     } catch (ExceptionRequestException $e) {
-      return response()->json(json_decode($e->getResponse()->getBody()));
+      return response()->json(json_decode($e->getResponse()->getBody()), $e->getResponse()->getStatusCode());
     }
   }
 }
