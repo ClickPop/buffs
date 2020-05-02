@@ -2,47 +2,53 @@ require('./bootstrap');
 require('./admin/chatbot');
 require('./admin/betalist');
 
-function getSettingsObject() {
-  let temp_theme = $('#theme-selector').val();
-  let temp_length = $('#leaderboard-length-slider').val();
-  let temp_settings = {
-    'theme-selector': temp_theme,
-    'leaderboard-length-slider': temp_length,
-  };
+window.helpers = {
+  getSettingsObject: () => {
+    let tempTheme = $('#theme-selector').val();
+    let tempLength = $('#leaderboard-length-slider').val();
+    let tempSettings = {
+      'theme-selector': tempTheme,
+      'leaderboard-length-slider': tempLength,
+    };
 
-  return temp_settings;
-}
-
-function waitingButton($this, text = 'Saving...') {
-  let html = `<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-  ${text}`;
-  $this.prop('disabled', true);
-  $this.html(html);
-}
-function revertButton($this, original) {
-  $this
-    .html(original)
-    .prop('disabled', false)
-    .removeProp('disabled');
-}
-
-function updateTheme($leaderboard, theme) {
-  let $wrapper = $leaderboard.parents('.leaderboard-wrapper');
-  $leaderboard.hide();
-  $wrapper
-    .removeClass(function(index, className) {
-      return (className.match(/\btheme-\S+/g) || []).join(' ');
-    })
-    .addClass(`theme-${theme}`);
-  $leaderboard.show(1);
-}
+    return tempSettings;
+  },
+  waitingButton: ($this, text = 'Saving...') => {
+    $this.prop('disabled', true);
+    $this.html(`<span class="spinner-grow spinner-grow-sm" 
+      role="status"
+      aria-hidden="true"></span>
+      ${text}`);
+  },
+  revertButton: ($this, original) => {
+    $this
+      .html(original)
+      .prop('disabled', false)
+      .removeProp('disabled');
+  },
+  updateTheme: ($leaderboard, theme) => {
+    $leaderboard.hide();
+    $leaderboard.parents('.leaderboard-wrapper')
+      .removeClass(function(index, className) {
+        return (className.match(/\btheme-\S+/g) || []).join(' ');
+      })
+      .addClass(`theme-${theme}`);
+    $leaderboard.show(1);
+  },
+  getCsrfToken: () => {
+    return document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+  }
+};
+window.csrfToken = helpers.getCsrfToken();
 
 $(document).ready(function() {
   let leaderboard;
-  let alert_timeout, button_timeout;
+  let alertTimeout;
   let $leaderboard = $('.leaderboard');
-  let initial_settings = getSettingsObject();
-  let settings = initial_settings;
+  let initialSettings = helpers.getSettingsObject();
+  let currentSettings = initialSettings;
 
   $('#api_key_copy').click(function(e) {
     e.preventDefault();
@@ -52,16 +58,14 @@ $(document).ready(function() {
     $('#api_key').attr('disabled', 'disabled');
     let $alert = $('#api_key_copy_alert');
     $alert.slideDown('fast');
-    alert_timeout = setTimeout(() => {
+    alertTimeout = setTimeout(() => {
       $alert.slideUp('fast');
     }, 3000);
   });
 
   $('.betalist_approve').click(function(e) {
     e.preventDefault();
-    let csrf_token = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute('content');
+    
     $this = $(this);
     let email = $this
       .parents('.betalist')
@@ -74,7 +78,7 @@ $(document).ready(function() {
     fetch(`betalist/addorupdate`, {
       method: 'POST',
       headers: {
-        'X-CSRF-TOKEN': csrf_token,
+        'X-CSRF-TOKEN': csrfToken,
       },
       body: JSON.stringify({
         action: 'approve',
@@ -101,9 +105,6 @@ $(document).ready(function() {
 
   $('.betalist_deny').click(function(e) {
     e.preventDefault();
-    let csrf_token = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute('content');
     $this = $(this);
     let email = $this
       .parents('.betalist')
@@ -117,7 +118,7 @@ $(document).ready(function() {
     fetch(`betalist/addorupdate`, {
       method: 'POST',
       headers: {
-        'X-CSRF-TOKEN': csrf_token,
+        'X-CSRF-TOKEN': csrfToken,
       },
       body: JSON.stringify({
         action: 'deny',
@@ -144,15 +145,12 @@ $(document).ready(function() {
 
   $('.admin_bot').click(function(e) {
     e.preventDefault();
-    let csrf_token = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute('content');
     $this = $(this);
     if ($this.hasClass('join')) {
       fetch('/chatbot/admin/join', {
         method: 'POST',
         headers: {
-          'X-CSRF-TOKEN': csrf_token,
+          'X-CSRF-TOKEN': csrfToken,
         },
         body: JSON.stringify({
           twitch_userId: $this.parents('tr').data('twitch-id'),
@@ -176,7 +174,7 @@ $(document).ready(function() {
       fetch('/chatbot/admin/part', {
         method: 'POST',
         headers: {
-          'X-CSRF-TOKEN': csrf_token,
+          'X-CSRF-TOKEN': csrfToken,
         },
         body: JSON.stringify({
           twitch_userId: $this.parents('tr').data('twitch-id'),
@@ -223,14 +221,14 @@ $(document).ready(function() {
     $button = $(this);
     $label = $('#bot-action-statement');
     if ($button.text() === 'Part') {
-      waitingButton($button, 'Parting...');
+      helpers.waitingButton($button, 'Parting...');
       $label.fadeTo('fast', 0);
       fetch('/chatbot/part')
         .then((res) => res.json())
         .then((data) => {
           if (data.status_code === 200 && data.message.data.joined === false) {
             $button.removeClass('btn-danger').addClass('btn-primary');
-            revertButton($button, 'Join');
+            helpers.revertButton($button, 'Join');
             $label
               .fadeTo('fast', 1)
               .text("The bot isn't in your channel yet.")
@@ -242,18 +240,18 @@ $(document).ready(function() {
             .fadeTo('fast', 1)
             .text('An error occurred, please try again.')
             .css('color', 'rgb(194, 0, 0)');
-          revertButton($button, 'Part');
+            helpers.revertButton($button, 'Part');
           console.error(err);
         });
     } else if ($button.text() === 'Join') {
-      waitingButton($button, 'Joining...');
+      helpers.waitingButton($button, 'Joining...');
       $label.fadeTo('fast', 0);
       fetch('/chatbot/join')
         .then((res) => res.json())
         .then((data) => {
           if (data.status_code === 200 && data.message.data.joined === true) {
             $button.removeClass('btn-primary').addClass('btn-danger');
-            revertButton($button, 'Part');
+            helpers.revertButton($button, 'Part');
             $label
               .fadeTo('fast', 1)
               .text('The bot is in your channel.')
@@ -265,7 +263,7 @@ $(document).ready(function() {
             .fadeTo('fast', 1)
             .text('An error occurred, please try again.')
             .css('color', 'rgb(194, 0, 0)');
-          revertButton($button, 'Join');
+          helpers.revertButton($button, 'Join');
           console.error(err);
         });
     }
@@ -277,7 +275,7 @@ $(document).ready(function() {
     let original_button_content = $button.html();
     let referralsURL = `/referrals`;
 
-    waitingButton($button, 'Resetting...');
+    helpers.waitingButton($button, 'Resetting...');
     fetch('/leaderboards/reset')
       .then((res) => res.json())
       .then((data) => {
@@ -319,7 +317,7 @@ $(document).ready(function() {
               });
               leaderboard = data;
               setTimeout(() => {
-                revertButton($button, original_button_content);
+                helpers.revertButton($button, original_button_content);
                 $('#resetReferrals').modal('hide');
               }, 500);
             });
@@ -328,35 +326,33 @@ $(document).ready(function() {
   });
 
   $('#settings-submit').click(function(e) {
-    let csrf_token = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute('content');
+    
     let $button = $(this);
     let original_button_content = $button.html();
-    waitingButton($button, 'Saving...');
+    helpers.waitingButton($button, 'Saving...');
     fetch('/', {
       method: 'POST',
       headers: {
-        'X-CSRF-TOKEN': csrf_token,
+        'X-CSRF-TOKEN': csrfToken,
       },
-      body: JSON.stringify(settings),
+      body: JSON.stringify(currentSettings),
     })
       .then((res) => res.json())
       .then((data) => {
         let $alert = $('#leaderboard-alert');
 
-        initial_settings = settings;
+        initialSettings = currentSettings;
         $alert
           .addClass('alert alert-success text-center')
           .text('Settings Saved')
           .slideDown('fast', function() {
             setTimeout(() => {
-              revertButton($button, original_button_content);
+              helpers.revertButton($button, original_button_content);
               $('#theme-selector').trigger('change');
               $('.leaderboard__row').each(function(index, row) {
                 if (index > 0) {
                   if (
-                    index <= initial_settings['leaderboard-length-slider'] &&
+                    index <= initialSettings['leaderboard-length-slider'] &&
                     index <= leaderboard.referrals.length &&
                     leaderboard.referrals.length > 0
                   ) {
@@ -369,7 +365,7 @@ $(document).ready(function() {
                       .text(leaderboard.referrals[index - 1].count);
                     $(row).show('fast');
                   } else if (
-                    index <= initial_settings['leaderboard-length-slider'] &&
+                    index <= initialSettings['leaderboard-length-slider'] &&
                     leaderboard.referrals.length === 0
                   ) {
                     $(row).hide();
@@ -380,7 +376,7 @@ $(document).ready(function() {
                 }
               });
             }, 500);
-            alert_timeout = setTimeout(() => {
+            alertTimeout = setTimeout(() => {
               $alert.slideUp('fast');
             }, 3000);
           });
@@ -398,15 +394,15 @@ $(document).ready(function() {
       e.preventDefault();
       let $this = $(this);
       let theme = $this.val();
-      settings = getSettingsObject();
-      if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
+      currentSettings = helpers.getSettingsObject();
+      if (JSON.stringify(currentSettings) !== JSON.stringify(initialSettings)) {
         $('#settings-submit')
           .prop('disabled', false)
           .removeProp('disabled');
       } else {
         $('#settings-submit').prop('disabled', true);
       }
-      updateTheme($leaderboard, theme);
+      helpers.updateTheme($leaderboard, theme);
     });
 
     if ($leaderboard) {
@@ -432,7 +428,7 @@ $(document).ready(function() {
                 data.leaderboard.theme.length > 0 &&
                 data.leaderboard.theme !== $('#theme-selector').val()
               ) {
-                updateTheme($leaderboard, data.leaderboard.theme);
+                helpers.updateTheme($leaderboard, data.leaderboard.theme);
               }
               $('.leaderboard__row').each(function(index, row) {
                 if (index > 0) {
@@ -473,7 +469,7 @@ $(document).ready(function() {
         .addClass('alert alert-success text-center')
         .text('Link copied to clipboard')
         .slideDown('fast');
-      alert_timeout = setTimeout(() => {
+      alertTimeout = setTimeout(() => {
         $alert.slideUp('fast');
       }, 3000);
     });
@@ -483,8 +479,8 @@ $(document).ready(function() {
         $('#leaderboard-length').text(e.target.value);
       })
       .on('change', function(e) {
-        settings = getSettingsObject();
-        if (JSON.stringify(settings) !== JSON.stringify(initial_settings)) {
+        currentSettings = helpers.getSettingsObject();
+        if (JSON.stringify(currentSettings) !== JSON.stringify(initialSettings)) {
           $('#settings-submit').removeAttr('disabled');
         } else {
           $('#settings-submit').attr('disabled', 'disabled');
