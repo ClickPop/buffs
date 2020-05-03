@@ -1,4 +1,4 @@
-require('../app');
+require('../helpers');
 
 $(document).ready(() => {
   if ($('.dashboard-wrapper').hasClass('admin-betalist')) {

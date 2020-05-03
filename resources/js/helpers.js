@@ -1,0 +1,204 @@
+let alertTimeout;
+let leaderboard;
+module.exports = window.helpers = {
+  copy: ($copy_data) => {
+    $copy_data.removeAttr('disabled');
+    $copy_data.select();
+    document.execCommand('copy');
+    $copy_data.attr('disabled', 'disabled');
+  },
+  displayAlert: ($alert, type, text, duration = 3, func = () => {}) => {
+    if (!$alert.hasClass(`alert-${type}`)) {
+      $alert.removeClass().addClass(`alert alert-${type} text-center`);
+    }
+    $alert.text(text).slideDown('fast', func);
+    alertTimeout = setTimeout(() => {
+      $alert.slideUp('fast');
+    }, duration * 1000);
+  },
+  betalistAction: ($button, action) => {
+    let buttonText = $button.text();
+    let email = $button
+      .parents('.betalist')
+      .find('td:eq(0)')
+      .text();
+    let username = $button
+      .parents('.betalist')
+      .find('td:eq(1)')
+      .text();
+    let id = $button.parents('.betalist').data('twitch-id');
+    helpers.waitingButton($button, 'Processing..');
+    fetch(`betalist/addorupdate`, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+      },
+      body: JSON.stringify({
+        action,
+        email,
+        username,
+        id,
+        tags: action === 'approve' ? ['beta_enrolled'] : '',
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        $button.hide('fast');
+        helpers.revertButton($button, buttonText);
+        if (action === 'approve') {
+          if ($button.siblings('.betalist_deny').css('display') === 'none') {
+            $button.siblings('.betalist_deny').show('fast');
+          }
+          helpers.changeBadge($button, 'success', 'Approved');
+        } else {
+          if ($button.siblings('.betalist_approve').css('display') === 'none') {
+            $button.siblings('.betalist_approve').show('fast');
+          }
+          helpers.changeBadge($button, 'danger', 'Denied');
+        }
+      });
+  },
+  botAction: ($button, action, admin) => {
+    join = action === 'join';
+    let buttonClass = `
+    btn btn-${join ? 'danger part' : 'primary join'}
+    `;
+    let buttonText = join ? 'Part' : 'Join';
+    let badgeType = join ? 'success' : 'warning';
+    let badgeText = join ? 'Joined' : 'Parted';
+    let isAdmin = admin ? `admin/${action}` : action;
+    let url = `/chatbot/${isAdmin}`;
+    let body = {};
+    body.twitch_username = admin
+      ? $button
+          .parents('tr')
+          .find('td:eq(1)')
+          .text()
+          .toLowerCase()
+      : undefined;
+    body.twitch_userId = admin
+      ? $button.parents('tr').data('twitch-id')
+      : undefined;
+    fetchInfo = {
+      method: admin ? 'POST' : 'GET',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+      },
+    };
+    join
+      ? helpers.waitingButton($button, 'Joining...')
+      : helpers.waitingButton($button, 'Parting...');
+    if (!admin) {
+      var $label = $('#bot-action-statement');
+      $label.fadeTo('fast', 0);
+      var labelText =
+        action === 'join'
+          ? 'The bot is in your channel'
+          : "The bot isn't in your channel yet";
+    }
+
+    fetchInfo.body = admin ? JSON.stringify(body) : undefined;
+    fetch(url, fetchInfo)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status_code === 200) {
+          $button.removeClass().addClass(buttonClass);
+          helpers.revertButton($button, buttonText);
+          if (!admin) {
+            helpers.changeLabel($label, labelText, false);
+          } else {
+            helpers.changeBadge($button, badgeType, badgeText);
+          }
+        } else {
+          helpers.revertButton($button, !join ? 'Part' : 'Join');
+          if (!admin) {
+            helpers.changeLabel(
+              $label,
+              'An error occured, please try again later',
+              true
+            );
+          } else {
+            helpers.changeBadge(
+              $button,
+              'danger',
+              'Error, please check console'
+            );
+          }
+        }
+      })
+      .catch((err) => {
+        helpers.revertButton($button, !join ? 'Part' : 'Join');
+        if (!admin) {
+          helpers.changeLabel(
+            $label,
+            'An error occured, please try again later',
+            true
+          );
+        } else {
+          helpers.changeBadge($button, 'danger', 'Error, please check console');
+        }
+        console.error(err);
+      });
+  },
+
+  changeLabel: ($label, text, error) => {
+    let color = error ? 'rgb(194, 0, 0)' : 'rgb(11, 13, 19)';
+    $label
+      .fadeTo('fast', 1)
+      .text(text)
+      .css('color', color);
+  },
+  changeBadge: ($row, badge, text) => {
+    $row
+      .parents('tr')
+      .find('td:eq(2)')
+      .find('span')
+      .removeClass()
+      .addClass(`badge badge-${badge}`)
+      .text(text);
+  },
+  getSettingsObject: () => {
+    let tempTheme = $('#theme-selector').val();
+    let tempLength = $('#leaderboard-length-slider').val();
+    let tempSettings = {
+      'theme-selector': tempTheme,
+      'leaderboard-length-slider': tempLength,
+    };
+
+    return tempSettings;
+  },
+  waitingButton: ($this, text = 'Saving...') => {
+    $this.prop('disabled', true);
+    $this.html(`<span class="spinner-grow spinner-grow-sm" 
+      role="status"
+      aria-hidden="true"></span>
+      ${text}`);
+  },
+  revertButton: ($this, original) => {
+    $this
+      .html(original)
+      .prop('disabled', false)
+      .removeProp('disabled');
+  },
+  updateTheme: ($leaderboard, theme) => {
+    $leaderboard.hide();
+    $leaderboard
+      .parents('.leaderboard-wrapper')
+      .removeClass(function(index, className) {
+        return (className.match(/\btheme-\S+/g) || []).join(' ');
+      })
+      .addClass(`theme-${theme}`);
+    $leaderboard.show(1);
+  },
+  getCsrfToken: () => {
+    return document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+  },
+  getLeaderboardData: () => {
+    return leaderboard;
+  },
+  setLeaderboardData: (data) => {
+    leaderboard = data;
+  },
+};

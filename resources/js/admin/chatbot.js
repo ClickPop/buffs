@@ -1,4 +1,4 @@
-require('../app');
+require('../helpers');
 
 $(document).ready(() => {
   if ($('.dashboard-wrapper').hasClass('admin-chatbot')) {
@@ -10,11 +10,10 @@ $(document).ready(() => {
   $('.admin_bot').click(function(e) {
     e.preventDefault();
     $this = $(this);
-    console.log($this.html());
     if ($this.hasClass('join')) {
-      helpers.adminBotAction($this, 'join', true);
+      helpers.botAction($this, 'join', true);
     } else {
-      helpers.adminBotAction($this, 'part', true);
+      helpers.botAction($this, 'part', true);
     }
   });
 });
