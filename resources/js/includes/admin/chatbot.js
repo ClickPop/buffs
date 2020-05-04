@@ -1,4 +1,4 @@
-require('../helpers');
+require('../app-helpers');
 
 $(document).ready(() => {
   if ($('.dashboard-wrapper').hasClass('admin-chatbot')) {

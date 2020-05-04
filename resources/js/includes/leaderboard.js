@@ -1,33 +1,31 @@
-$(document).ready(function() {
+$(document).ready(() => {
   let $leaderboard = $('.leaderboard');
-  if ($leaderboard) {
-    wizards = JSON.parse(wizards);
+  if ($leaderboard.length) {
     let referralsURL = `/referrals/${channel}`;
     fetch(referralsURL)
       .then((res) => res.json())
       .then((data) => {
-        helpers.setLeaderboardData(data);
+        app.setLeaderboardData(data);
       });
     setInterval(() => {
-      let leaderboard = helpers.getLeaderboardData();
       fetch(referralsURL)
         .then((res) => res.json())
         .then((data) => {
           if (
             JSON.stringify(data.referrals) !==
-              JSON.stringify(helpers.getLeaderboardData().referrals) ||
+              JSON.stringify(app.leaderboard.referrals) ||
             (route !== 'dashboard' &&
               JSON.stringify(data) !==
-                JSON.stringify(helpers.getLeaderboardData()))
+                JSON.stringify(app.leaderboard))
           ) {
             if (
               typeof data.leaderboard.theme === 'string' &&
               data.leaderboard.theme.length > 0 &&
               data.leaderboard.theme !== $('#theme-selector').val()
             ) {
-              helpers.updateTheme($leaderboard, data.leaderboard.theme);
+              app.updateTheme($leaderboard, data.leaderboard.theme);
             }
-            $('.leaderboard__row').each(function(index, row) {
+            $('.leaderboard__row').each((index, row) => {
               if (index > 0) {
                 if (
                   index <= data.leaderboard.length &&
@@ -48,7 +46,7 @@ $(document).ready(function() {
               }
             });
 
-            helpers.setLeaderboardData(data);
+            app.setLeaderboardData(data);
           }
         });
     }, 5000);

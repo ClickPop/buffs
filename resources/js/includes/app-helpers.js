@@ -1,6 +1,6 @@
-let alertTimeout;
-let leaderboard;
-module.exports = window.helpers = {
+window.app = {
+  leaderboard: null,
+  alertTimeout: null,
   copy: ($copy_data) => {
     $copy_data.removeAttr('disabled');
     $copy_data.select();
@@ -12,7 +12,7 @@ module.exports = window.helpers = {
       $alert.removeClass().addClass(`alert alert-${type} text-center`);
     }
     $alert.text(text).slideDown('fast', func);
-    alertTimeout = setTimeout(() => {
+    app.alertTimeout = setTimeout(() => {
       $alert.slideUp('fast');
     }, duration * 1000);
   },
@@ -27,7 +27,7 @@ module.exports = window.helpers = {
       .find('td:eq(1)')
       .text();
     let id = $button.parents('.betalist').data('twitch-id');
-    helpers.waitingButton($button, 'Processing..');
+    app.waitingButton($button, 'Processing..');
     fetch(`betalist/addorupdate`, {
       method: 'POST',
       headers: {
@@ -44,17 +44,17 @@ module.exports = window.helpers = {
       .then((res) => res.json())
       .then((data) => {
         $button.hide('fast');
-        helpers.revertButton($button, buttonText);
+        app.revertButton($button, buttonText);
         if (action === 'approve') {
           if ($button.siblings('.betalist_deny').css('display') === 'none') {
             $button.siblings('.betalist_deny').show('fast');
           }
-          helpers.changeBadge($button, 'success', 'Approved');
+          app.changeBadge($button, 'success', 'Approved');
         } else {
           if ($button.siblings('.betalist_approve').css('display') === 'none') {
             $button.siblings('.betalist_approve').show('fast');
           }
-          helpers.changeBadge($button, 'danger', 'Denied');
+          app.changeBadge($button, 'danger', 'Denied');
         }
       });
   },
@@ -86,8 +86,8 @@ module.exports = window.helpers = {
       },
     };
     join
-      ? helpers.waitingButton($button, 'Joining...')
-      : helpers.waitingButton($button, 'Parting...');
+      ? app.waitingButton($button, 'Joining...')
+      : app.waitingButton($button, 'Parting...');
     if (!admin) {
       var $label = $('#bot-action-statement');
       $label.fadeTo('fast', 0);
@@ -103,22 +103,22 @@ module.exports = window.helpers = {
       .then((data) => {
         if (data.status_code === 200) {
           $button.removeClass().addClass(buttonClass);
-          helpers.revertButton($button, buttonText);
+          app.revertButton($button, buttonText);
           if (!admin) {
-            helpers.changeLabel($label, labelText, false);
+            app.changeLabel($label, labelText, false);
           } else {
-            helpers.changeBadge($button, badgeType, badgeText);
+            app.changeBadge($button, badgeType, badgeText);
           }
         } else {
-          helpers.revertButton($button, !join ? 'Part' : 'Join');
+          app.revertButton($button, !join ? 'Part' : 'Join');
           if (!admin) {
-            helpers.changeLabel(
+            app.changeLabel(
               $label,
               'An error occured, please try again later',
               true
             );
           } else {
-            helpers.changeBadge(
+            app.changeBadge(
               $button,
               'danger',
               'Error, please check console'
@@ -127,15 +127,15 @@ module.exports = window.helpers = {
         }
       })
       .catch((err) => {
-        helpers.revertButton($button, !join ? 'Part' : 'Join');
+        app.revertButton($button, !join ? 'Part' : 'Join');
         if (!admin) {
-          helpers.changeLabel(
+          app.changeLabel(
             $label,
             'An error occured, please try again later',
             true
           );
         } else {
-          helpers.changeBadge($button, 'danger', 'Error, please check console');
+          app.changeBadge($button, 'danger', 'Error, please check console');
         }
         console.error(err);
       });
@@ -184,7 +184,7 @@ module.exports = window.helpers = {
     $leaderboard.hide();
     $leaderboard
       .parents('.leaderboard-wrapper')
-      .removeClass(function(index, className) {
+      .removeClass((index, className) => {
         return (className.match(/\btheme-\S+/g) || []).join(' ');
       })
       .addClass(`theme-${theme}`);
@@ -195,10 +195,7 @@ module.exports = window.helpers = {
       .querySelector('meta[name="csrf-token"]')
       .getAttribute('content');
   },
-  getLeaderboardData: () => {
-    return leaderboard;
-  },
   setLeaderboardData: (data) => {
-    leaderboard = data;
+    app.leaderboard = data;
   },
 };

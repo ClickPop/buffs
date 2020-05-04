@@ -5,7 +5,7 @@ console.meme = (opts) => {
     'top': ' ',
     'bottom': ' ',
     'size': 200
-  }
+  };
 
   if (typeof opts === "object") {
     opts = {...defaults, ...opts};
@@ -32,7 +32,7 @@ console.meme = (opts) => {
     `background-image: url('${url}')`,
     'background-repeat: no-repeat',
     'background-position: 50% 50%'
-  ]
+  ];
   //fix size
   css.push(`padding: ${padding}px`, `background-size: 100%`);
 
@@ -54,7 +54,7 @@ console.noGA = () => {
   ];
 
   console.info("%c🧙 Google Tag Manager not loaded in non-production environments.", css.join(';'));
-}
+};
 
 console.buffs = () => {
   let server = window.location.origin;
@@ -68,7 +68,7 @@ console.buffs = () => {
   ];
 
   console.info('%c ', css.join(';'));
-}
+};
 
 console.intro = (env = null) => {
   env = (env === null) ? 
@@ -90,4 +90,4 @@ console.intro = (env = null) => {
       break;
   }
   console.groupEnd();
-}
+};
