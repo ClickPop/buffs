@@ -19,16 +19,6 @@
     'Kiki'
   ];
   shuffle($wizards);
-  
-  $wizard_num = 0;
-  while(count($wizardReferrals) < 10) {
-    $tempItem = (object)[
-      "referrer" => $wizards[$wizard_num],
-      "count" => 1
-    ];
-    array_push($wizardReferrals, $tempItem);
-      $wizard_num++;
-  }
 
   if (isset($preview) && $preview === true) {
     $previewClass = "preview";
@@ -42,16 +32,16 @@
         <div>Name</div>
         <div>Views</div>
       </div>
-      <!-- LOOP -->
+
       @if (is_array($referrals))
       @for ($i = 0; $i < 10; $i++)
-        <div class="leaderboard__row" style="{{ $i >= $leaderboard->length || ($i >= count($referrals) && count($referrals) > 0) ? "display: none;" : "" }}">
+        <div class="leaderboard__row" style="{{ ($i < $leaderboard->length && ($i < count($referrals) || ($i < count($wizards) && !count($referrals) && $preview))) ? "" : "display: none;" }}">
           @if ($i < count($referrals))
             <div>{{ $referrals[$i]->referrer }}</div>
             <div>{{ $referrals[$i]->count }}</div>
           @elseif ($route === 'dashboard' && $preview)
-            <div>{{ $wizardReferrals[$i]->referrer }}</div>
-            <div>{{ $wizardReferrals[$i]->count }}</div>
+            <div>{{ $wizards[$i] }}</div>
+            <div>0</div>
           @else
             <div></div>
             <div></div>
@@ -59,7 +49,6 @@
         </div>
       @endfor
       @endif
-      <!-- END LOOP -->
     </div>
   </div>
   @endisset
@@ -67,5 +56,6 @@
 <script type="text/javascript">
   var channel = '<?php echo $user->username; ?>';
   var route = '<?php echo $route; ?>';
-  var wizards = '<?php echo json_encode($wizardReferrals); ?>';
+  var wizards = JSON.parse('{!! json_encode($wizards) !!}');
+  console.log(wizards);
 </script>
