@@ -122,7 +122,6 @@ $(document).ready(function() {
   });
 
   $('#settings-submit').click(function(e) {
-    let leaderboard = helpers.getLeaderboardData();
     let $button = $(this);
     let original_button_content = $button.html();
     helpers.waitingButton($button, 'Saving...');
@@ -149,20 +148,25 @@ $(document).ready(function() {
                 if (index > 0) {
                   if (
                     index <= initialSettings['leaderboard-length-slider'] &&
-                    index <= leaderboard.referrals.length &&
-                    leaderboard.referrals.length > 0
+                    index <= helpers.getLeaderboardData().referrals.length &&
+                    helpers.getLeaderboardData().referrals.length > 0
                   ) {
                     $(row).hide();
                     $(row)
                       .find('div:eq(0)')
-                      .text(leaderboard.referrals[index - 1].referrer);
+                      .text(
+                        helpers.getLeaderboardData().referrals[index - 1]
+                          .referrer
+                      );
                     $(row)
                       .find('div:eq(1)')
-                      .text(leaderboard.referrals[index - 1].count);
+                      .text(
+                        helpers.getLeaderboardData().referrals[index - 1].count
+                      );
                     $(row).show('fast');
                   } else if (
                     index <= initialSettings['leaderboard-length-slider'] &&
-                    leaderboard.referrals.length === 0
+                    helpers.getLeaderboardData().referrals.length === 0
                   ) {
                     $(row).hide();
                     $(row).show('fast');

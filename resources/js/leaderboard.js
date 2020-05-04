@@ -1,24 +1,24 @@
 $(document).ready(function() {
-  let leaderboard;
   let $leaderboard = $('.leaderboard');
-  if ($leaderboard && leaderboard) {
+  if ($leaderboard) {
     wizards = JSON.parse(wizards);
     let referralsURL = `/referrals/${channel}`;
     fetch(referralsURL)
       .then((res) => res.json())
       .then((data) => {
         helpers.setLeaderboardData(data);
-        leaderboard = helpers.getLeaderboardData();
       });
     setInterval(() => {
+      let leaderboard = helpers.getLeaderboardData();
       fetch(referralsURL)
         .then((res) => res.json())
         .then((data) => {
           if (
             JSON.stringify(data.referrals) !==
-              JSON.stringify(leaderboard.referrals) ||
+              JSON.stringify(helpers.getLeaderboardData().referrals) ||
             (route !== 'dashboard' &&
-              JSON.stringify(data) !== JSON.stringify(leaderboard))
+              JSON.stringify(data) !==
+                JSON.stringify(helpers.getLeaderboardData()))
           ) {
             if (
               typeof data.leaderboard.theme === 'string' &&
