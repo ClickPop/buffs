@@ -4,13 +4,13 @@ class AppHelpers {
     this.alertTimeout = null;
   }
 
-  copyToClipboard ($copy_data) {
+  copyToClipboard($copy_data) {
     $copy_data.removeAttr('disabled');
     $copy_data.select();
     document.execCommand('copy');
     $copy_data.attr('disabled', 'disabled');
   }
-  displayAlert ($alert, type, text, duration = 3, func = () => {}) {
+  displayAlert($alert, type, text, duration = 3, func = () => {}) {
     if (!$alert.hasClass(`alert-${type}`)) {
       $alert.removeClass().addClass(`alert alert-${type} text-center`);
     }
@@ -19,16 +19,16 @@ class AppHelpers {
       $alert.slideUp('fast');
     }, duration * 1000);
   }
-  betalistAction ($button, action) {
+  betalistAction($button, action) {
     let buttonText = $button.text();
     let email = $button
-        .parents('.betalist')
-        .find('td:eq(0)')
-        .text();
+      .parents('.betalist')
+      .find('td:eq(0)')
+      .text();
     let username = $button
-        .parents('.betalist')
-        .find('td:eq(1)')
-        .text();
+      .parents('.betalist')
+      .find('td:eq(1)')
+      .text();
     let id = $button.parents('.betalist').data('twitch-id');
     this.waitingButton($button, 'Processing..');
     fetch(`betalist/addorupdate`, {
@@ -41,27 +41,26 @@ class AppHelpers {
         email,
         username,
         id,
-        tags: action === 'approve' ? ['beta_enrolled'] : '',
       }),
     })
-        .then((res) => res.json())
-        .then((data) => {
-          $button.hide('fast');
-          this.revertButton($button, buttonText);
-          if (action === 'approve') {
-            if ($button.siblings('.betalist_deny').css('display') === 'none') {
-              $button.siblings('.betalist_deny').show('fast');
-            }
-            this.changeBadge($button, 'success', 'Approved');
-          } else {
-            if ($button.siblings('.betalist_approve').css('display') === 'none') {
-              $button.siblings('.betalist_approve').show('fast');
-            }
-            this.changeBadge($button, 'danger', 'Denied');
+      .then((res) => res.json())
+      .then((data) => {
+        $button.hide('fast');
+        this.revertButton($button, buttonText);
+        if (action === 'approve') {
+          if ($button.siblings('.betalist_deny').css('display') === 'none') {
+            $button.siblings('.betalist_deny').show('fast');
           }
-        });
+          this.changeBadge($button, 'success', 'Approved');
+        } else {
+          if ($button.siblings('.betalist_approve').css('display') === 'none') {
+            $button.siblings('.betalist_approve').show('fast');
+          }
+          this.changeBadge($button, 'danger', 'Denied');
+        }
+      });
   }
-  botAction ($button, action, admin) {
+  botAction($button, action, admin) {
     let join = action === 'join';
     let buttonClass = `
     btn btn-${join ? 'danger part' : 'primary join'}
@@ -73,15 +72,15 @@ class AppHelpers {
     let url = `/chatbot/${isAdmin}`;
     let body = {};
     body.twitch_username = admin
-        ? $button
-            .parents('tr')
-            .find('td:eq(1)')
-            .text()
-            .toLowerCase()
-        : undefined;
+      ? $button
+          .parents('tr')
+          .find('td:eq(1)')
+          .text()
+          .toLowerCase()
+      : undefined;
     body.twitch_userId = admin
-        ? $button.parents('tr').data('twitch-id')
-        : undefined;
+      ? $button.parents('tr').data('twitch-id')
+      : undefined;
     fetchInfo = {
       method: admin ? 'POST' : 'GET',
       headers: {
@@ -89,77 +88,73 @@ class AppHelpers {
       },
     };
     join
-        ? this.waitingButton($button, 'Joining...')
-        : this.waitingButton($button, 'Parting...');
+      ? this.waitingButton($button, 'Joining...')
+      : this.waitingButton($button, 'Parting...');
     if (!admin) {
       var $label = $('#bot-action-statement');
       $label.fadeTo('fast', 0);
       var labelText =
-          action === 'join'
-              ? 'The bot is in your channel'
-              : "The bot isn't in your channel yet";
+        action === 'join'
+          ? 'The bot is in your channel'
+          : "The bot isn't in your channel yet";
     }
 
     fetchInfo.body = admin ? JSON.stringify(body) : undefined;
     fetch(url, fetchInfo)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status_code === 200) {
-            $button.removeClass().addClass(buttonClass);
-            this.revertButton($button, buttonText);
-            if (!admin) {
-              this.changeLabel($label, labelText, false);
-            } else {
-              this.changeBadge($button, badgeType, badgeText);
-            }
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status_code === 200) {
+          $button.removeClass().addClass(buttonClass);
+          this.revertButton($button, buttonText);
+          if (!admin) {
+            this.changeLabel($label, labelText, false);
           } else {
-            this.revertButton($button, !join ? 'Part' : 'Join');
-            if (!admin) {
-              this.changeLabel(
-                  $label,
-                  'An error occured, please try again later',
-                  true
-              );
-            } else {
-              this.changeBadge(
-                  $button,
-                  'danger',
-                  'Error, please check console'
-              );
-            }
+            this.changeBadge($button, badgeType, badgeText);
           }
-        })
-        .catch((err) => {
+        } else {
           this.revertButton($button, !join ? 'Part' : 'Join');
           if (!admin) {
             this.changeLabel(
-                $label,
-                'An error occured, please try again later',
-                true
+              $label,
+              'An error occured, please try again later',
+              true
             );
           } else {
-            _this.changeBadge($button, 'danger', 'Error, please check console');
+            this.changeBadge($button, 'danger', 'Error, please check console');
           }
-          console.error(err);
-        });
+        }
+      })
+      .catch((err) => {
+        this.revertButton($button, !join ? 'Part' : 'Join');
+        if (!admin) {
+          this.changeLabel(
+            $label,
+            'An error occured, please try again later',
+            true
+          );
+        } else {
+          _this.changeBadge($button, 'danger', 'Error, please check console');
+        }
+        console.error(err);
+      });
   }
-  changeLabel ($label, text, error) {
+  changeLabel($label, text, error) {
     let color = error ? 'rgb(194, 0, 0)' : 'rgb(11, 13, 19)';
     $label
-        .fadeTo('fast', 1)
-        .text(text)
-        .css('color', color);
+      .fadeTo('fast', 1)
+      .text(text)
+      .css('color', color);
   }
-  changeBadge ($row, badge, text) {
+  changeBadge($row, badge, text) {
     $row
-        .parents('tr')
-        .find('td:eq(2)')
-        .find('span')
-        .removeClass()
-        .addClass(`badge badge-${badge}`)
-        .text(text);
+      .parents('tr')
+      .find('td:eq(2)')
+      .find('span')
+      .removeClass()
+      .addClass(`badge badge-${badge}`)
+      .text(text);
   }
-  getSettingsObject () {
+  getSettingsObject() {
     let tempTheme = $('#theme-selector').val();
     let tempLength = $('#leaderboard-length-slider').val();
     let tempSettings = {
@@ -169,37 +164,37 @@ class AppHelpers {
 
     return tempSettings;
   }
-  waitingButton ($this, text = 'Saving...') {
+  waitingButton($this, text = 'Saving...') {
     $this.prop('disabled', true);
     $this.html(`<span class="spinner-grow spinner-grow-sm" 
       role="status"
       aria-hidden="true"></span>
       ${text}`);
   }
-  revertButton ($this, original) {
+  revertButton($this, original) {
     $this
-        .html(original)
-        .prop('disabled', false)
-        .removeProp('disabled');
+      .html(original)
+      .prop('disabled', false)
+      .removeProp('disabled');
   }
-  updateTheme ($leaderboard, theme) {
+  updateTheme($leaderboard, theme) {
     $leaderboard.hide();
     $leaderboard
-        .parents('.leaderboard-wrapper')
-        .removeClass((index, className) => {
-          return (className.match(/\btheme-\S+/g) || []).join(' ');
-        })
-        .addClass(`theme-${theme}`);
+      .parents('.leaderboard-wrapper')
+      .removeClass((index, className) => {
+        return (className.match(/\btheme-\S+/g) || []).join(' ');
+      })
+      .addClass(`theme-${theme}`);
     $leaderboard.show(1);
   }
-  getCsrfToken () {
+  getCsrfToken() {
     return document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute('content');
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
   }
-  setLeaderboardData (data) {
+  setLeaderboardData(data) {
     this.leaderboard = data;
   }
-};
+}
 
-window.app = new AppHelpers;
+window.app = new AppHelpers();

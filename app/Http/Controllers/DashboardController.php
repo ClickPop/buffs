@@ -120,14 +120,29 @@ class DashboardController extends Controller
     foreach ($entries as $entry) {
       if (in_array('beta-interest', $entry->tags)) {
         $user = BetaList::where('email', $entry->email)->get()->first();
-
+        if (in_array('beta-interest', $entry->tags)) {
+          $status = 'pending';
+        }
+        if (in_array('beta-enrolled', $entry->tags) || in_array('beta_enrolled', $entry->tags)) {
+          $status = 'approved';
+        }
+        if (in_array('beta-denied', $entry->tags)) {
+          $status = 'denied';
+        }
         if (!$user) {
           $user = BetaList::create([
             'email' => $entry->email
           ]);
         }
-
-        switch ($user->current_status) {
+        if (!$user) {
+          $user = BetaList::create([
+            'email' => $entry->email,
+            'current_status' => $status
+          ]);
+        }
+        $user->current_status = $status;
+        $user->save();
+        switch ($status) {
           case 'approved':
             array_push($approved, $user);
             break;
@@ -202,16 +217,26 @@ class DashboardController extends Controller
       foreach ($entries as $entry) {
         if (in_array('beta-interest', $entry->tags)) {
           $user = BetaList::where('email', $entry->email)->get()->first();
-
+          if (in_array('beta-interest', $entry->tags)) {
+            $status = 'pending';
+          }
+          if (in_array('beta-enrolled', $entry->tags) || in_array('beta_enrolled', $entry->tags)) {
+            $status = 'approved';
+          }
+          if (in_array('beta-denied', $entry->tags)) {
+            $status = 'denied';
+          }
           if (!$user) {
             $user = BetaList::create([
-              'email' => $entry->email
+              'email' => $entry->email,
+              'current_status' => $status
             ]);
           }
-
+          $user->current_status = $status;
+          $user->save();
           $userData = json_decode(json_encode(['id' => $entry->id, 'email' => $user->email, 'username' => $entry->custom_fields->twitch, 'current_status' => $user->current_status]));
 
-          switch ($user->current_status) {
+          switch ($status) {
             case 'approved':
               array_push($approved, $userData);
               break;
@@ -270,8 +295,11 @@ class DashboardController extends Controller
               'twitch' => $username
             ],
             'tags' => [
+              'add' => [
+                'beta-denied'
+              ],
               'remove' => [
-                'beta_enrolled'
+                'beta-enrolled'
               ]
             ],
           ]
@@ -280,44 +308,45 @@ class DashboardController extends Controller
 
       if (!$user) {
         BetaList::create([
-          'email' => $email
+          'email' => $email,
+          'current_status' => 'denied'
         ]);
       }
-
-      $user->current_status = 'denied';
-      $user->save();
 
       return response()->json(['User Denied']);
     }
 
-    $tags = json_decode($req->getContent())->tags;
-
     try {
-      $response = $client->post("https://api.aweber.com/1.0/accounts/$account/lists/$list/subscribers", [
-        'headers' => [
-          'Authorization' => "Bearer $access_token"
-        ],
-        'json' => [
-          'email' => $email,
-          'custom_fields' => [
-            'twitch' => $username
+      $user = BetaList::where('email', $email)->get()->first();
+      if ($user && $user->current_status === 'denied') {
+        $id = json_decode($req->getContent())->id;
+        $response = $client->patch("https://api.aweber.com/1.0/accounts/$account/lists/$list/subscribers/$id", [
+          'headers' => [
+            'Authorization' => "Bearer $access_token"
           ],
-          'tags' => $tags,
-          'update_existing' => 'true'
-        ]
-      ]);
-
-      if ($response->getStatusCode() === 201 && in_array('beta_enrolled', $tags)) {
-        $user = BetaList::where('email', $email)->get()->first();
-        if (!$user) {
-          BetaList::create([
-            'email' => $email
-          ]);
-        }
-        $user->current_status = 'approved';
-        $user->save();
+          'json' => [
+            'email' => $email,
+            'custom_fields' => [
+              'twitch' => $username
+            ],
+            'tags' => [
+              'add' => [
+                'beta-enrolled'
+              ],
+              'remove' => [
+                'beta-denied'
+              ]
+            ],
+          ]
+        ]);
       }
 
+      if (!$user) {
+        BetaList::create([
+          'email' => $email,
+          'current_status' => 'denied'
+        ]);
+      }
       return response()->json(['User Approved']);
     } catch (\Throwable $th) {
       dd($th);
