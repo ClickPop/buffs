@@ -1,4 +1,4 @@
-$(document).ready(() => {
+$(document).ready(function () {
   let $leaderboard = $('.leaderboard');
   if ($leaderboard.length) {
     let referralsURL = `/referrals/${channel}`;
@@ -25,7 +25,7 @@ $(document).ready(() => {
             ) {
               app.updateTheme($leaderboard, data.leaderboard.theme);
             }
-            $('.leaderboard__row').each((index, row) => {
+            $('.leaderboard__row').each(function (index, row) {
               if (index > 0) {
                 if (
                   index <= data.leaderboard.length &&

@@ -1,6 +1,4 @@
-require('../app-helpers');
-
-$(document).ready(() => {
+$(document).ready(function () {
   if ($('.dashboard-wrapper').hasClass('admin-betalist')) {
     $('.app-content').css('overflow', 'auto');
     $('#betalist-table').DataTable();
@@ -8,8 +6,8 @@ $(document).ready(() => {
 
   $('#api_key_copy').click(function(e) {
     e.preventDefault();
-    helpers.copy($('#api_key'));
-    helpers.displayAlert(
+    app.copyToClipboard($('#api_key'));
+    app.displayAlert(
       $('#api_key_copy_alert'),
       'success',
       'API key copied',
@@ -19,13 +17,13 @@ $(document).ready(() => {
 
   $('.betalist_approve').click(function(e) {
     e.preventDefault();
-    $this = $(this);
-    helpers.betalistAction($this, 'approve');
+    let $this = $(this);
+    app.betalistAction($this, 'approve');
   });
 
   $('.betalist_deny').click(function(e) {
     e.preventDefault();
-    $this = $(this);
-    helpers.betalistAction($this, 'deny');
+    let $this = $(this);
+    app.betalistAction($this, 'deny');
   });
 });

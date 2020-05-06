@@ -1,14 +1,14 @@
-$(document).ready(() => {
+$(document).ready(function () {
   let $leaderboard = $('.leaderboard');
   let initialSettings = app.getSettingsObject();
   let currentSettings = initialSettings;
   // Stop modal video when modal closes
-  $('#obsTutorial').on('hidden.bs.modal', () => {
+  $('#obsTutorial').on('hidden.bs.modal', function () {
     $('#obsTutorial iframe').attr('src', $('#obsTutorial iframe').attr('src'));
   });
 
   // Handles the bot action on the dashboard
-  $('#bot-action-button').on('click', (e) => {
+  $('#bot-action-button').on('click', function (e) {
     e.preventDefault();
     let $this = $(this);
     if ($this.hasClass('join')) {
@@ -18,9 +18,9 @@ $(document).ready(() => {
     }
   });
 
-  $('#embed-copy').on('click', (e) => {
+  $('#embed-copy').on('click', function (e) {
     e.preventDefault();
-    app.copy($('#embed-link'));
+    app.copyToClipboard($('#embed-link'));
     app.displayAlert(
       $('#leaderboard-alert'),
       'success',
@@ -30,18 +30,18 @@ $(document).ready(() => {
   });
 
   $('#leaderboard-length-slider')
-    .on('input', (e) => {
+    .on('input', function (e) {
       e.preventDefault();
       $('#leaderboard-length').text(e.target.value);
     })
-    .on('change', (e) => {
+    .on('change', function (e) {
       currentSettings = app.getSettingsObject();
       if (JSON.stringify(currentSettings) !== JSON.stringify(initialSettings)) {
         $('#settings-submit').removeAttr('disabled');
       } else {
         $('#settings-submit').attr('disabled', 'disabled');
       }
-      $('.leaderboard__row').each((index, row) => {
+      $('.leaderboard__row').each(function (index, row) {
         $(row).hide();
       });
       for (let i = 0; i <= e.target.value; i++) {
@@ -49,7 +49,7 @@ $(document).ready(() => {
       }
     });
 
-  $('#theme-selector').on('change', (e) => {
+  $('#theme-selector').on('change', function (e) {
     e.preventDefault();
     let $this = $(this);
     let theme = $this.val();
@@ -64,7 +64,7 @@ $(document).ready(() => {
     app.updateTheme($leaderboard, theme);
   });
 
-  $('#leaderboard-reset').on('click', (e) => {
+  $('#leaderboard-reset').on('click', function (e) {
     e.preventDefault();
     let $button = $(this);
     let original_button_content = $button.html();
@@ -78,7 +78,7 @@ $(document).ready(() => {
           fetch(referralsURL)
             .then((res) => res.json())
             .then((data) => {
-              $('.leaderboard__row').each((index, row) => {
+              $('.leaderboard__row').each(function (index, row) {
                 if (index > 0) {
                   if (
                     index <= data.referrals.length &&
@@ -118,7 +118,7 @@ $(document).ready(() => {
       });
   });
 
-  $('#settings-submit').on('click', (e) => {
+  $('#settings-submit').on('click', function (e) {
     let $button = $(this);
     let original_button_content = $button.html();
     app.waitingButton($button, 'Saving...');
@@ -141,7 +141,7 @@ $(document).ready(() => {
             setTimeout(() => {
               app.revertButton($button, original_button_content);
               $('#theme-selector').trigger('change');
-              $('.leaderboard__row').each((index, row) => {
+              $('.leaderboard__row').each(function (index, row) {
                 if (index > 0) {
                   if (
                     index <= initialSettings['leaderboard-length-slider'] &&
