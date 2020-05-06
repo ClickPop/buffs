@@ -1,6 +1,4 @@
-require('../app-helpers');
-
-$(document).ready(() => {
+$(document).ready(function () {
   if ($('.dashboard-wrapper').hasClass('admin-chatbot')) {
     $('.app-content').css('overflow', 'auto');
     $('.assigned-chatbots-table').DataTable();
@@ -9,11 +7,11 @@ $(document).ready(() => {
 
   $('.admin_bot').click(function(e) {
     e.preventDefault();
-    $this = $(this);
+    let $this = $(this);
     if ($this.hasClass('join')) {
-      helpers.botAction($this, 'join', true);
+      app.botAction($this, 'join', true);
     } else {
-      helpers.botAction($this, 'part', true);
+      app.botAction($this, 'part', true);
     }
   });
 });
