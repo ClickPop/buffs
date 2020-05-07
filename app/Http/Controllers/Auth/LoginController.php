@@ -84,12 +84,10 @@ class LoginController extends Controller
   private function createOrGetUser($platformUser, Platform $platform)
   {
     $account = SocialAccount::where('platform_id', $platform->id)
-      // ->where('platform_user_id', $platformUser->getId())
-      ->where('platform_user_id', $platformUser->id)
+      ->where('platform_user_id', $platformUser->getId())
       ->first();
 
-    // $betaListUser = BetaList::where('email', $platformUser->getEmail())->first();
-    $betaListUser = BetaList::where('email', $platformUser->email)->first();
+    $betaListUser = BetaList::where('email', $platformUser->getEmail())->first();
 
     if ($account) {
       //Return account if found
@@ -109,18 +107,15 @@ class LoginController extends Controller
       return $user;
     } else {
       //Check if user with same email address exist
-      // $user = User::where('email', $platformUser->getEmail())->first();
-      $user = User::where('email', $platformUser->email)->first();
+      $user = User::where('email', $platformUser->getEmail())->first();
 
       //Create user if dont'exist
       if (!$user) {
-        if (env('USER_REGISTRATION_ENABLED', false) === true || $betaListUser) {
+        if (env('USER_REGISTRATION_ENABLED', false) === true || ($betaListUser && $betaListUser->current_status === 'approved')) {
           $username = getUserNameFromSocialAccount($platformUser, $platform);
           $user = User::create([
-            // 'email' => $platformUser->getEmail(),
-            // 'name' => $platformUser->getName(),
-            'email' => $platformUser->email,
-            'name' => $platformUser->display_name,
+            'email' => $platformUser->getEmail(),
+            'name' => $platformUser->getName(),
             'username' => $username,
             'password' => Str::random(24)
           ]);
@@ -137,9 +132,15 @@ class LoginController extends Controller
           $user->username = $tempUsername;
           $user->save();
         }
-        if ($betaListUser && !$betaListUser->user) {
-          $betaListUser->user()->associate($user);
-          $betaListUser->save();
+        if ($betaListUser) {
+          if ($betaListUser->current_status !== 'approved') {
+            $betaListUser->current_status === 'approved';
+            $betaListUser->save();
+          }
+          if (!$betaListUser->user) {
+            $betaListUser->user()->associate($user);
+            $betaListUser->save();
+          }
         }
       }
 
@@ -157,8 +158,7 @@ class LoginController extends Controller
       $refreshToken = property_exists($platformUser, 'refreshToken') ? $platformUser->refreshToken : null;
 
       $user->oauths()->create([
-        // 'platform_user_id' => $platformUser->getID(),
-        'platform_user_id' => $platformUser->id,
+        'platform_user_id' => $platformUser->getID(),
         'platform_id' => $platform->id,
         'token' => $token,
         'tokenSecret' => $tokenSecret,
