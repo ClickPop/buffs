@@ -28,6 +28,6 @@
 		</div>
 	</div>
 	<div style="display: none;">
-		<img src="https://forms.aweber.com/form/displays.htm?id=jEzMrKyMrGwcbA==" alt="">
+		<img src="https://forms.aweber.com/form/displays.htm?id=jEzMrKyMrGwcbA==" alt="" loading="lazy">
 	</div>
 </form>
