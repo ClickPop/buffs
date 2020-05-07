@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="col-12 col-lg-6 my-5 text-center d-none d-lg-block">
-      <img class="img-fluid" src="{{ asset('images/brand/wizard.png') }}">
+      <img class="img-fluid" src="{{ asset('images/brand/wizard.png') }}" loading="lazy">
     </div>
   </div>
   <div class="row mb-4 mt-5">

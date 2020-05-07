@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="col-12 col-lg-6 my-5 text-center d-none d-lg-block">
-            <img class="mb-5 mage" src="{{ asset('images/brand/mage.svg') }}">
+            <img class="mb-5 mage" src="{{ asset('images/brand/mage.svg') }}" loading="lazy">
         </div>
     </div>
 </div>

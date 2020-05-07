@@ -53,7 +53,7 @@
 
       <div class="row my-4 align-items-center d-none d-xl-flex">
         <div class="col-12 col-xl-4">
-          <img src="{{ asset('images/obs-tutorial-thumbnail.png') }}" class="img-fluid rounded" data-toggle="modal" data-target="#obsTutorial" />
+          <img src="{{ asset('images/obs-tutorial-thumbnail.png') }}" class="img-fluid rounded" data-toggle="modal" data-target="#obsTutorial" loading="lazy" / loading="lazy">
         </div>
 
         <div class="col-12 col-xl-8">

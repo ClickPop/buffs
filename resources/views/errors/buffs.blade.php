@@ -7,7 +7,7 @@
         @include('dropins.components.logo-link')
         <h3 class="httpError__code">@yield('code')</h3>
         <p class="h5 httpError__message">@yield('message')</p>
-        <img src="{{asset('images/brand/wizard.png')}}" class="img-fluid httpError__image">
+        <img src="{{asset('images/brand/wizard.png')}}" class="img-fluid httpError__image" loading="lazy">
       </div>
     </div>
   </div>
