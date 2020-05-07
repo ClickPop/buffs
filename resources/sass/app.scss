@@ -69,3 +69,18 @@ body {
     margin: 0;
   }
 }
+
+.httpError {
+  &__code {
+    font-size: 3rem;
+    color: $blueDark;
+    display: block;
+    margin: 0;
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  &__image {
+    max-width: 270px;
+  }
+}

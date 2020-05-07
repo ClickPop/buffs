@@ -111,7 +111,10 @@ class LoginController extends Controller
 
       //Create user if dont'exist
       if (!$user) {
-        if (env('USER_REGISTRATION_ENABLED', false) === true || ($betaListUser && $betaListUser->current_status === 'approved')) {
+        if (env('USER_REGISTRATION_ENABLED', false) === true || $betaListUser) {
+          if (env('USER_REGISTRATION_ENABLED', false) !== true && $betaListUser && $betaListUser->current_status !== 'approved') {
+            abort(420 );
+          }
           $username = getUserNameFromSocialAccount($platformUser, $platform);
           $user = User::create([
             'email' => $platformUser->getEmail(),
