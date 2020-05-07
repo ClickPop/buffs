@@ -64,30 +64,7 @@ class LoginController extends Controller
   public function handleProviderCallback($platform_driver, Request $req)
   {
     $platform = Platform::where('socialite_driver', $platform_driver)->first();
-    $code = $req->query->get('code');
-    $client_id = env('OAUTH_TWITCH_CLIENT_ID');
-    $client_secret = env('OAUTH_TWITCH_CLIENT_SECRET');
-    $callback = env('OAUTH_TWITCH_CALLBACK');
-    $client = new Client();
-    try {
-      $response = $client->post("https://id.twitch.tv/oauth2/token?client_id=$client_id&client_secret=$client_secret&code=$code&redirect_uri=$callback&grant_type=authorization_code");
-      $access_token = json_decode($response->getBody())->access_token;
-    } catch (\Throwable $th) {
-      dd($th);
-    }
-    try {
-      $response = $client->get('https://api.twitch.tv/helix/users', [
-        'headers' => [
-          'Authorization' => "Bearer $access_token",
-          'Client-ID' => $client_id
-        ]
-      ]);
-      $twitch_data = json_decode($response->getBody()->getContents())->data[0];
-    } catch (\Throwable $th) {
-      dd($th);
-    }
-    $user = $this->createOrGetUser($twitch_data, $platform);
-    // $user = $this->createOrGetUser(Socialite::driver($platform->socialite_driver)->user(), $platform);
+    $user = $this->createOrGetUser(Socialite::driver($platform->socialite_driver)->user(), $platform);
     $remember = Session::get('login-remember');
 
     if ($user === false) {
@@ -95,7 +72,6 @@ class LoginController extends Controller
     } else {
       Auth::login($user, $remember);
     }
-
 
     return redirect()->route(RouteServiceProvider::HOME);
   }
