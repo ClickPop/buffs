@@ -9,7 +9,7 @@ class BetaList extends Model
 {
     //
     protected $table = "betalist";
-    protected $fillable = ['email', 'created_by'];
+    protected $fillable = ['email', 'current_status', 'make_admin', 'created_by'];
 
     public function user(): BelongsTo
     {

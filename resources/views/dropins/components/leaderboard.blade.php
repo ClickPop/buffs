@@ -26,7 +26,7 @@
 @endphp
 <div class="leaderboard-wrapper theme-{{ $leaderboard->theme }} {{ $previewClass ?? '' }}"> <!-- Set leaderboard theme in class -->
   @isset($leaderboard)
-  <div class="leaderboard">
+  <div class="leaderboard" data-route="{{ $route }}" data-channel="{{$user->username}}" data-wizards='{!! json_encode($wizards) !!}'>
     <div class="leaderboard__container">
       <div class="leaderboard__row">
         <div>Name</div>
@@ -53,9 +53,3 @@
   </div>
   @endisset
 </div>
-<script type="text/javascript">
-  var channel = '<?php echo $user->username; ?>';
-  var route = '<?php echo $route; ?>';
-  var wizards = JSON.parse('{!! json_encode($wizards) !!}');
-  console.log(wizards);
-</script>

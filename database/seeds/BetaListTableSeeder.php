@@ -11,14 +11,28 @@ class BetaListTableSeeder extends Seeder
      * @return void
      */
     public function run() {
-        $initialBetaList = array(
-            "sean.metzgar@gmail.com",
-            "rescus1221@gmail.com",
-            "chris.vqz@gmail.com"
-        );
+      $initialBetaList = [];
+      $seanBeta = [
+        "email" => "sean.metzgar@gmail.com",
+        "current_status" => "approved",
+        "make_admin" => false
+      ];
+      array_push($initialBetaList, $seanBeta);
+      $chrisBeta = [
+        "email" => "chris.vqz@gmail.com",
+        "current_status" => "approved",
+        "make_admin" => true
+      ];
+      array_push($initialBetaList, $chrisBeta);
+      $grahamBeta = [
+        "email" => "rescus1221@gmail.com",
+        "current_status" => "approved",
+        "make_admin" => true
+      ];
+      array_push($initialBetaList, $grahamBeta);
 
-        foreach ($initialBetaList as $betaUser) {
-            $tempBetaUser = BetaList::create(['email' => $betaUser]);
-        }
+      foreach ($initialBetaList as $betaUser) {
+          $tempBetaUser = BetaList::create($betaUser);
+      }
     }
 }

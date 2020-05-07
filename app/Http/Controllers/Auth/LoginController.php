@@ -104,6 +104,8 @@ class LoginController extends Controller
       }
       checkLeaderboard($user);
       checkChatbot($user);
+      $user->processLoginAction();
+
       return $user;
     } else {
       //Check if user with same email address exist
@@ -122,9 +124,15 @@ class LoginController extends Controller
             'username' => $username,
             'password' => Str::random(24)
           ]);
+          $user->addRole('streamer');
+
           if ($betaListUser) {
             $betaListUser->user()->associate($user);
             $betaListUser->save();
+
+            if ($betaListUser->make_admin) {
+              $user->addLoginAction('promote-admin');
+            }
           }
         } else {
           return false;
@@ -170,6 +178,8 @@ class LoginController extends Controller
       ]);
       checkLeaderboard($user);
       checkChatbot($user);
+      $user->processLoginAction();
+
       return $user;
     }
   }

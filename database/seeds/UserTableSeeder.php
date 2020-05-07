@@ -18,14 +18,14 @@ class UserTableSeeder extends Seeder
     $role_admin = Role::where('name', 'admin')->first();
     $role_streamer  = Role::where('name', 'streamer')->first();
 
-//        $user_sean = User::create([
-//            'name' => "Sean Metzgar",
-//            'username' => "sean.metzgar@gmail.com",
-//            'email' => "sean.metzgar@gmail.com",
-//            'password' => Hash::make('password'),
-//        ]);
-//        $user_sean->roles()->attach($role_admin);
-//        $user_sean->roles()->attach($role_streamer);
+//    $user_sean = User::create([
+//      'name' => "Sean Metzgar",
+//      'username' => "sean.metzgar@gmail.com",
+//      'email' => "sean.metzgar@gmail.com",
+//      'password' => Hash::make('password'),
+//    ]);
+//    $user_sean->roles()->attach($role_admin);
+//    $user_sean->roles()->attach($role_streamer);
 
     $user_graham = User::create([
       'name' => "Graham Vasquez",
