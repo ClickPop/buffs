@@ -1,6 +1,8 @@
 $(document).ready(function () {
   let $leaderboard = $('.leaderboard');
   if ($leaderboard.length) {
+    let channel = $leaderboard.data('channel');
+    let route = $leaderboard.data('route');
     let referralsURL = `/referrals/${channel}`;
     fetch(referralsURL)
       .then((res) => res.json())

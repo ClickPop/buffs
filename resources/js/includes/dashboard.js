@@ -69,6 +69,8 @@ $(document).ready(function () {
     let $button = $(this);
     let original_button_content = $button.html();
     let referralsURL = `/referrals`;
+    let route = $leaderboard.data('route');
+    let wizards = $leaderboard.data('wizards');
 
     app.waitingButton($button, 'Resetting...');
     fetch('/leaderboards/reset')

@@ -7,7 +7,7 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
   
-  <title>{{ config('app.name', 'Laravel') }}</title>
+  <title>@yield('title', config('app.name', 'BUFFS'))</title>
   
   <!-- DNS Prefetch -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">

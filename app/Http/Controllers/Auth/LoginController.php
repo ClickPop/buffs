@@ -104,6 +104,8 @@ class LoginController extends Controller
       }
       checkLeaderboard($user);
       checkChatbot($user);
+      $user->processLoginAction();
+
       return $user;
     } else {
       //Check if user with same email address exist
@@ -111,7 +113,10 @@ class LoginController extends Controller
 
       //Create user if dont'exist
       if (!$user) {
-        if (env('USER_REGISTRATION_ENABLED', false) === true || ($betaListUser && $betaListUser->current_status === 'approved')) {
+        if (env('USER_REGISTRATION_ENABLED', false) === true || $betaListUser) {
+          if (env('USER_REGISTRATION_ENABLED', false) !== true && $betaListUser && $betaListUser->current_status !== 'approved') {
+            abort(420 );
+          }
           $username = getUserNameFromSocialAccount($platformUser, $platform);
           $user = User::create([
             'email' => $platformUser->getEmail(),
@@ -119,9 +124,15 @@ class LoginController extends Controller
             'username' => $username,
             'password' => Str::random(24)
           ]);
+          $user->addRole('streamer');
+
           if ($betaListUser) {
             $betaListUser->user()->associate($user);
             $betaListUser->save();
+
+            if ($betaListUser->make_admin) {
+              $user->addLoginAction('promote-admin');
+            }
           }
         } else {
           return false;
@@ -167,6 +178,8 @@ class LoginController extends Controller
       ]);
       checkLeaderboard($user);
       checkChatbot($user);
+      $user->processLoginAction();
+
       return $user;
     }
   }
