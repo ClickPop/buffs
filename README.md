@@ -16,7 +16,6 @@ Once you are assured the above are installed, be sure you can access the followi
 ### Install and Setup Homestead
 
 * For Windows, I would use [this tutorial](https://medium.com/@eaimanshoshi/i-am-going-to-write-down-step-by-step-procedure-to-setup-homestead-for-laravel-5-2-17491a423aa "Installing Homestead on Windows 10") from Medium. - *I have just found this one a little easier than the laravel docs because Windows is so weird*
-
 * For MacOS or Linux, I would use the [Laravel Docs](https://laravel.com/docs/5.8/homestead#installation-and-setup "macOS and Linux Installation").
 
 ### A quick note for those on Windows
@@ -47,7 +46,3 @@ Run the following commands to install & build any dependencies:
 ### Test Run
 
 Check it out by visiting the link listed in your `homestead.yaml` in your browser. Probably something like. `https://buffs.test`. If everything is running/built correctly you should be in business!
-
-### GraphQL
-
-GraphQL has been implemented for this project. During testing, the GraphQL-Playground library will be available, and accessible via the `buffs.test/graphql-playground` url. To edit the schema, checkout the file in the `/graphql` directory.

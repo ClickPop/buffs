@@ -129,11 +129,12 @@ class LeaderboardController extends Controller
             if (isset($leaderboard) && $leaderboard->count() > 0) {
                 $leaderboard = $leaderboard->first();
                 $referrals = $leaderboard->referralCounts();
+                $firsts = $leaderboard->firstReferralsData();
             } else {
                 $leaderboard = null;
             }
 
-            return response()->json(['leaderboard' => ['theme' => $leaderboard->theme, 'length' => $leaderboard->length], 'referrals' => $referrals]);
+            return response()->json(['leaderboard' => ['theme' => $leaderboard->theme, 'length' => $leaderboard->length], 'referrals' => $referrals, 'firsts' => $firsts]);
         } else {
             return abort(404);
         }

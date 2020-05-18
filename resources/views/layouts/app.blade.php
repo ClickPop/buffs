@@ -5,8 +5,8 @@
     <div class="nav__header">
       <h3>
         <a href="{{ route('dashboard') }}">
-          <img class="logo p-3 d-none d-md-block" src="{{ asset('images/brand/buffs_logo.svg') }}" alt="BUFFS" / loading="lazy">
-          <img class="logo p-3 d-block d-md-none" src="{{ asset('images/brand/potion.png') }}" alt="BUFFS" / loading="lazy">
+          <img class="logo p-3 d-none d-md-block" src="{{ asset('images/brand/buffs_logo.svg') }}" alt="BUFFS" loading="lazy">
+          <img class="logo p-3 d-block d-md-none" src="{{ asset('images/brand/potion.png') }}" alt="BUFFS" loading="lazy">
         </a>
       </h3>
     </div>
