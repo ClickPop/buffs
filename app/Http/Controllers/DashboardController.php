@@ -112,7 +112,7 @@ class DashboardController extends Controller
     }
 
     $entries = getBetaList($client, $access_token);
-
+    dd($entries);
     $beta_list = [];
     $approved = [];
     $pending = [];
@@ -260,7 +260,7 @@ class DashboardController extends Controller
       dd($th);
     }
 
-
+    // dd($beta_list);
     return view('betalist.admin', ['betalist' => $beta_list]);
   }
 
@@ -283,7 +283,7 @@ class DashboardController extends Controller
 
     if ($action === 'deny') {
       $user = BetaList::where('email', $email)->get()->first();
-      if ($user && $user->current_status === 'approved') {
+      if ($user && ($user->current_status === 'approved' || $user->current_status === 'pending')) {
         $id = json_decode($req->getContent())->id;
         $response = $client->patch("https://api.aweber.com/1.0/accounts/$account/lists/$list/subscribers/$id", [
           'headers' => [
@@ -304,6 +304,9 @@ class DashboardController extends Controller
             ],
           ]
         ]);
+
+        $user->current_status = 'denied';
+        $user->save();
       }
 
       if (!$user) {
@@ -318,7 +321,7 @@ class DashboardController extends Controller
 
     try {
       $user = BetaList::where('email', $email)->get()->first();
-      if ($user && $user->current_status === 'denied') {
+      if ($user && ($user->current_status === 'denied' || $user->current_status === 'pending')) {
         $id = json_decode($req->getContent())->id;
         $response = $client->patch("https://api.aweber.com/1.0/accounts/$account/lists/$list/subscribers/$id", [
           'headers' => [
@@ -339,12 +342,14 @@ class DashboardController extends Controller
             ],
           ]
         ]);
+        $user->current_status = 'approved';
+        $user->save();
       }
 
       if (!$user) {
         BetaList::create([
           'email' => $email,
-          'current_status' => 'denied'
+          'current_status' => 'approved'
         ]);
       }
       return response()->json(['User Approved']);
