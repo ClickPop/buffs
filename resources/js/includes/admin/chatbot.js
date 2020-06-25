@@ -5,7 +5,7 @@ $(document).ready(function () {
     $('.unassigned-chatbots-table').DataTable();
   }
 
-  $('.admin_bot').click(function(e) {
+  $('.admin_bot').click(function (e) {
     e.preventDefault();
     let $this = $(this);
     if ($this.hasClass('join')) {

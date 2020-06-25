@@ -4,7 +4,7 @@ $(document).ready(function () {
     $('#betalist-table').DataTable();
   }
 
-  $('#api_key_copy').click(function(e) {
+  $('#api_key_copy').click(function (e) {
     e.preventDefault();
     app.copyToClipboard($('#api_key'));
     app.displayAlert(
@@ -15,13 +15,13 @@ $(document).ready(function () {
     );
   });
 
-  $('.betalist_approve').click(function(e) {
+  $('#betalist-table').on("click", '.betalist_approve', function (e) {
     e.preventDefault();
     let $this = $(this);
     app.betalistAction($this, 'approve');
   });
 
-  $('.betalist_deny').click(function(e) {
+  $('#betalist-table').on("click", '.betalist_deny', function (e) {
     e.preventDefault();
     let $this = $(this);
     app.betalistAction($this, 'deny');
