@@ -31,7 +31,7 @@
                 </td>
                 <td>
                   <button class="betalist_approve btn btn-success btn-sm my-1"
-                    style="display: {{ $user->current_status !== 'approved' ? '' : 'none' }};">Approve</button>
+                    style="display: {{ $user->current_status !== 'approved' ? '' : 'none' }};" >Approve</button>
                   <button class="betalist_deny btn btn-danger btn-sm my-1"
                     style="display: {{ $user->current_status !== 'denied' ? '' : 'none' }};">Deny</button>
                 </td>
