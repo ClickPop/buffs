@@ -13,6 +13,8 @@
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "~6.0",
         "hashids/hashids": "^4.0",
+        "jaybizzle/crawler-detect": "^1.2",
+        "jaybizzle/laravel-crawler-detect": "^1.2",
         "laravel/framework": "^7.0",
         "laravel/passport": "^8.4",
         "laravel/socialite": "^4.3",
