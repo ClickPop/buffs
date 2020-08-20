@@ -1,5 +1,7 @@
 <?php
 
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
+
 function validateReferral(App\Leaderboard $leaderboard, $ip_address, $user_agent) {
     $rVal = true;
 
@@ -9,3 +11,13 @@ function validateReferral(App\Leaderboard $leaderboard, $ip_address, $user_agent
     
     return $rVal;
 }
+
+function isUserAgentValid($user_agent) {
+    $rVal = true;
+
+    $CrawlerDetect = new CrawlerDetect;
+    $rVal = (!$CrawlerDetect->isCrawler($user_agent)) ? true : false;
+
+    return $rVal;
+}
+

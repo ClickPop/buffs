@@ -133,6 +133,7 @@ class LeaderboardReferralController extends Controller
                     if ($user && $user->leaderboards) {
                         $leaderboard = $user->leaderboards->first();
                         $addIt = (\App::environment() === 'production') ? validateReferral($leaderboard, $ip_address, $user_agent) : true;
+                        $addIt = ($addIt && isUserAgentValid($user_agent)) ? true : false;
                         if ($addIt) {
                             $newReferral = LeaderboardReferral::create([
                                 'leaderboard_id' => $leaderboard->id,
